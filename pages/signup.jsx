@@ -19,36 +19,37 @@ const MEMBERSHIP_BENEFITS = [
 
 const PLANS = [
   {
-    id: 'monthly',
-    name: 'Monthly',
-    price: 9.99,
-    period: '/month',
-    description: 'Perfect for planning a trip',
+    id: 'free',
+    name: 'Free',
+    price: 0,
+    period: '',
+    description: 'Basic features to get started',
     popular: false,
   },
   {
-    id: 'yearly',
-    name: 'Yearly',
-    price: 59.99,
-    period: '/year',
-    description: 'Best value - save 50%!',
+    id: 'pro',
+    name: 'Pro',
+    price: 19,
+    period: '/month',
+    description: 'Full access to all features',
     popular: true,
-    savings: 'Save $60',
+    savings: 'Most Popular',
   },
   {
     id: 'lifetime',
     name: 'Lifetime',
-    price: 149.99,
+    price: 99,
     period: 'one-time',
-    description: 'Unlimited access forever',
+    description: 'Best value forever',
     popular: false,
+    savings: 'Best Value',
   },
 ];
 
 export default function SignupPage() {
   const [isLogin, setIsLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState('yearly');
+  const [selectedPlan, setSelectedPlan] = useState('pro');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -279,10 +280,15 @@ export default function SignupPage() {
                   </span>
                 ) : isLogin ? (
                   'Sign In'
+                ) : selectedPlan === 'free' ? (
+                  <>
+                    <Sparkles className="w-5 h-5 mr-2" />
+                    Create Free Account
+                  </>
                 ) : (
                   <>
                     <Crown className="w-5 h-5 mr-2" />
-                    Start Membership - ${PLANS.find(p => p.id === selectedPlan)?.price}
+                    {selectedPlan === 'lifetime' ? 'Get Lifetime Access' : 'Start Pro Membership'} - ${PLANS.find(p => p.id === selectedPlan)?.price}
                   </>
                 )}
               </Button>

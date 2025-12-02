@@ -16,6 +16,14 @@ import EmailModal from './EmailModal';
 import AskAIModal from './AskAIModal';
 import { CITY_DATA, getFoodsForPreference } from './cityData';
 import { toast } from "sonner";
+import { 
+  isFreeUser, 
+  getRemainingItineraries, 
+  incrementItineraryUsage,
+  hasAccess,
+  FEATURES,
+  getUpgradeMessage
+} from '@/lib/accessControl';
 
 const CONTACT_INFO = {
   wechat: 'Shahkarhassan',
@@ -278,6 +286,16 @@ export default function ItineraryResult({ formData, onBack }) {
       return;
     }
     
+    const userPlan = JSON.parse(localStorage.getItem('user') || '{}')?.plan;
+    if (isFreeUser(userPlan)) {
+      const remaining = getRemainingItineraries();
+      if (remaining <= 0) {
+        toast.error('You have reached your monthly limit. Upgrade to Pro for unlimited itineraries!');
+        setShowPaywall(true);
+        return;
+      }
+    }
+    
     const newItinerary = {
       id: Date.now(),
       title: `${formData.duration} Days in China`,
@@ -292,6 +310,7 @@ export default function ItineraryResult({ formData, onBack }) {
     
     savedItineraries.push(newItinerary);
     localStorage.setItem('itineraries', JSON.stringify(savedItineraries));
+    incrementItineraryUsage();
     setIsSaved(true);
     toast.success('Itinerary saved to your dashboard!');
   };

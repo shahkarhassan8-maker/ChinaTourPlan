@@ -5,10 +5,20 @@ import { Input } from "@/components/ui/input";
 import { 
   ArrowLeft, Crown, MapPin, Calendar, Trash2, 
   Plus, Star, Settings, LogOut, Edit, Eye,
-  MessageCircle, Sparkles, Clock, User, AlertTriangle, X
+  MessageCircle, Sparkles, Clock, User, AlertTriangle, X,
+  Lock, Zap, Download, Bot
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { 
+  hasAccess, 
+  isFreeUser, 
+  isPaidUser, 
+  FEATURES, 
+  getRemainingItineraries,
+  getUpgradeMessage,
+  getPlanDisplayName 
+} from '@/lib/accessControl';
 
 const SAMPLE_ITINERARIES = [
   {
@@ -39,6 +49,8 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [viewItinerary, setViewItinerary] = useState(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [upgradeFeature, setUpgradeFeature] = useState(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -71,6 +83,25 @@ export default function DashboardPage() {
 
   const handleViewItinerary = (itinerary) => {
     setViewItinerary(itinerary);
+  };
+
+  const handleFeatureAccess = (feature) => {
+    if (!hasAccess(feature, user?.plan)) {
+      setUpgradeFeature(feature);
+      setShowUpgradeModal(true);
+      return false;
+    }
+    return true;
+  };
+
+  const handleDownloadPDF = (itinerary) => {
+    if (!handleFeatureAccess(FEATURES.OFFLINE_PDF)) return;
+    toast.success('Downloading PDF...');
+  };
+
+  const handleAIAssistant = () => {
+    if (!handleFeatureAccess(FEATURES.AI_BOT)) return;
+    toast.success('Opening AI Assistant...');
   };
 
   const handleSubmitReview = () => {
@@ -168,18 +199,37 @@ export default function DashboardPage() {
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-6 mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-gradient-to-br from-[#E60012] to-red-500 rounded-2xl p-6 text-white"
-          >
-            <Crown className="w-8 h-8 mb-4" />
-            <h3 className="text-lg font-semibold mb-1">
-              {user.plan?.charAt(0).toUpperCase() + user.plan?.slice(1) || 'Premium'} Member
-            </h3>
-            <p className="text-white/80 text-sm">All premium features unlocked</p>
-          </motion.div>
+          {isFreeUser(user?.plan) ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl p-6 text-white"
+            >
+              <Zap className="w-8 h-8 mb-4" />
+              <h3 className="text-lg font-semibold mb-1">Free Plan</h3>
+              <p className="text-white/80 text-sm mb-3">{getRemainingItineraries()} itineraries left this month</p>
+              <Link href="/signup">
+                <Button size="sm" className="bg-white text-amber-600 hover:bg-amber-50">
+                  <Crown className="w-3 h-3 mr-1" />
+                  Upgrade to Pro
+                </Button>
+              </Link>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-gradient-to-br from-[#E60012] to-red-500 rounded-2xl p-6 text-white"
+            >
+              <Crown className="w-8 h-8 mb-4" />
+              <h3 className="text-lg font-semibold mb-1">
+                {getPlanDisplayName(user?.plan)} Member
+              </h3>
+              <p className="text-white/80 text-sm">All premium features unlocked</p>
+            </motion.div>
+          )}
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -198,9 +248,19 @@ export default function DashboardPage() {
             transition={{ delay: 0.3 }}
             className="bg-white rounded-2xl p-6 border border-slate-200"
           >
-            <MessageCircle className="w-8 h-8 text-green-500 mb-4" />
-            <h3 className="text-lg font-semibold text-slate-900">24/7 Support</h3>
-            <p className="text-slate-600 text-sm">WeChat: Shahkarhassan</p>
+            {isPaidUser(user?.plan) ? (
+              <>
+                <MessageCircle className="w-8 h-8 text-green-500 mb-4" />
+                <h3 className="text-lg font-semibold text-slate-900">24/7 Support</h3>
+                <p className="text-slate-600 text-sm">WeChat: Shahkarhassan</p>
+              </>
+            ) : (
+              <>
+                <Lock className="w-8 h-8 text-slate-400 mb-4" />
+                <h3 className="text-lg font-semibold text-slate-900">Live Support</h3>
+                <p className="text-slate-600 text-sm">Upgrade for 24/7 access</p>
+              </>
+            )}
           </motion.div>
         </div>
 
@@ -514,6 +574,85 @@ export default function DashboardPage() {
                     <Button className="w-full bg-[#E60012] hover:bg-[#cc0010] text-white">
                       <Sparkles className="w-4 h-4 mr-2" />
                       Create Similar Trip
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showUpgradeModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+            onClick={() => setShowUpgradeModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-2xl max-w-md w-full shadow-xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="bg-gradient-to-r from-[#E60012] to-red-500 text-white p-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                    <Lock className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold">Upgrade Required</h3>
+                    <p className="text-white/80 text-sm">Unlock this premium feature</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6">
+                <p className="text-slate-600 mb-6">
+                  {upgradeFeature ? getUpgradeMessage(upgradeFeature) : 'Upgrade your plan to access this feature.'}
+                </p>
+
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4 mb-6 border border-amber-200">
+                  <h4 className="font-semibold text-amber-800 mb-2 flex items-center gap-2">
+                    <Zap className="w-4 h-4" />
+                    Pro Benefits
+                  </h4>
+                  <ul className="text-sm text-amber-700 space-y-1">
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+                      Unlimited itineraries
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+                      AI travel assistant
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+                      Offline PDF downloads
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+                      24/7 live support
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => setShowUpgradeModal(false)}
+                  >
+                    Maybe Later
+                  </Button>
+                  <Link href="/signup" className="flex-1">
+                    <Button className="w-full bg-[#E60012] hover:bg-[#cc0010] text-white">
+                      <Crown className="w-4 h-4 mr-2" />
+                      Upgrade Now
                     </Button>
                   </Link>
                 </div>

@@ -5,7 +5,7 @@ import Link from 'next/link';
 const CONTACT_INFO = {
   wechat: 'Shahkarhassan',
   whatsapp: 'Coming Soon',
-  email: 'contact@tourtochina.com',
+  email: 'contact@chinatourplan.com',
 };
 
 export default function Footer() {
@@ -18,7 +18,7 @@ export default function Footer() {
               <div className="w-10 h-10 bg-[#E60012] rounded-xl flex items-center justify-center">
                 <MapPin className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-xl">TourToChina</span>
+              <span className="font-bold text-xl">ChinaTourPlan</span>
             </div>
             <p className="text-slate-400 mb-6 max-w-sm">
               Making China travel accessible and stress-free for travelers worldwide. 
@@ -60,7 +60,7 @@ export default function Footer() {
 
         <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-slate-400 text-sm">
-            © {new Date().getFullYear()} TourToChina. All rights reserved.
+            © {new Date().getFullYear()} ChinaTourPlan. All rights reserved.
           </p>
           <p className="text-slate-400 text-sm flex items-center gap-1">
             Made with <Heart className="w-4 h-4 text-[#E60012] fill-[#E60012]" /> for travelers

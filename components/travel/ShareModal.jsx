@@ -11,7 +11,7 @@ export default function ShareModal({ isOpen, onClose, itinerary, formData }) {
   const duration = formData?.duration || 7;
   
   const shareText = `Check out my ${duration}-day China trip to ${cityNames}! Planning made easy with China Travel Pro.`;
-  const shareUrl = typeof window !== 'undefined' ? window.location.origin : 'https://tourtochina.com';
+  const shareUrl = typeof window !== 'undefined' ? window.location.origin : 'https://chinatourplan.com';
   
   const handleCopyLink = async () => {
     try {
