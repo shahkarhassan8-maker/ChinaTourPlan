@@ -1912,6 +1912,87 @@ export const CITY_DATA = {
         duration: 'Half day',
         ticketPrice: { rmb: 278, usd: 39 },
       },
+      { 
+        name: 'Zhangjiajie Grand Canyon Glass Bridge', 
+        nameChinese: '张家界大峡谷玻璃桥',
+        description: 'The world\'s longest and highest glass-bottomed bridge spanning 430 meters across a breathtaking canyon - an adrenaline-pumping experience with stunning views', 
+        duration: '2-3 hours',
+        address: 'Zhangjiajie Grand Canyon, Cili County',
+        addressChinese: '慈利县张家界大峡谷景区',
+        coordinates: { lat: 29.3847, lng: 110.4892 },
+        openingHours: '7:00 AM - 6:00 PM (Apr-Oct), 8:00 AM - 5:00 PM (Nov-Mar)',
+        ticketPrice: { rmb: 259, usd: 36 },
+        image: 'https://images.unsplash.com/photo-1513415277900-a62401e19be4?w=800&q=80',
+        tips: 'Book tickets online at least 1 day in advance - walk-ups often sell out. Wear non-slip shoes as heels are not allowed on the glass bridge.',
+        localSecrets: [
+          "Morning visits (before 9 AM) offer the clearest views and shortest lines - mist clears by 10 AM",
+          "The bungee jump from the bridge (260m drop) is one of the highest commercial bungee jumps in the world",
+          "Combine with the Grand Canyon zipline and cliff walk for a full adventure day",
+          "The transparent glass panels are 24mm thick triple-laminated and can hold 800 people - completely safe!",
+          "Locals recommend visiting on overcast days when the mist creates a mystical 'walking in clouds' effect"
+        ],
+        bestPhotoSpots: ['Center of the glass bridge looking down', 'Canyon viewpoint at sunset', 'Waterfall from the cliff walk'],
+        metro: { line: 'Bus', station: 'Take tourist bus from Zhangjiajie Central Bus Station (张家界中心汽车站)', exit: '1.5 hour ride' },
+        phrases: [
+          { english: 'I want to go to the Glass Bridge', chinese: '我想去玻璃桥', pinyin: 'Wǒ xiǎng qù bōlí qiáo' },
+          { english: 'Is the bridge safe?', chinese: '这座桥安全吗？', pinyin: 'Zhè zuò qiáo ānquán ma?' },
+          { english: 'I\'m afraid of heights', chinese: '我恐高', pinyin: 'Wǒ kǒnggāo' }
+        ]
+      },
+      { 
+        name: 'Yellow Dragon Cave', 
+        nameChinese: '黄龙洞',
+        description: 'One of China\'s largest and most spectacular limestone caves featuring underground rivers, waterfalls, and the famous "Divine Needle" stalactite worth 100 million yuan insurance', 
+        duration: '2-3 hours',
+        address: 'Suoxiyu Town, Wulingyuan District',
+        addressChinese: '武陵源区索溪峪镇',
+        coordinates: { lat: 29.3456, lng: 110.5234 },
+        openingHours: '8:00 AM - 5:30 PM',
+        ticketPrice: { rmb: 100, usd: 14 },
+        image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80',
+        tips: 'Wear warm clothes - the cave maintains a constant 16°C year-round. The boat ride through the underground river is magical.',
+        localSecrets: [
+          "The 'Dragon Palace' chamber is as large as 10 football fields - one of the biggest cave chambers in China",
+          "The Divine Needle (定海神针) is insured for 100 million yuan and took 200,000 years to form",
+          "Book the VIP tour to access restricted areas with unique formations not seen on regular tours",
+          "The underground waterfall at 50 meters is the highest cave waterfall you can visit in China",
+          "Light shows are held at specific times - check schedule for the Dragon Palace laser show"
+        ],
+        bestPhotoSpots: ['Dragon Palace grand chamber', 'Divine Needle stalactite', 'Underground river boat scene'],
+        metro: { line: 'Bus', station: 'Take Line 1 bus from Wulingyuan town center (武陵源汽车站)', exit: '15 minute ride' },
+        phrases: [
+          { english: 'I want to visit Yellow Dragon Cave', chinese: '我想去黄龙洞', pinyin: 'Wǒ xiǎng qù Huánglóng Dòng' },
+          { english: 'How long is the cave tour?', chinese: '溶洞游览需要多长时间？', pinyin: 'Róngdòng yóulǎn xūyào duō cháng shíjiān?' },
+          { english: 'Is there a boat ride?', chinese: '有船吗？', pinyin: 'Yǒu chuán ma?' }
+        ]
+      },
+      { 
+        name: 'Baofeng Lake', 
+        nameChinese: '宝峰湖',
+        description: 'A stunning alpine lake nestled among the sandstone peaks, known as the "Heavenly Lake in the Mountains" - perfect for serene boat cruises surrounded by dramatic cliffs', 
+        duration: '2-3 hours',
+        address: 'Baofeng Road, Wulingyuan District',
+        addressChinese: '武陵源区宝峰路',
+        coordinates: { lat: 29.2934, lng: 110.4567 },
+        openingHours: '7:30 AM - 5:30 PM',
+        ticketPrice: { rmb: 96, usd: 13 },
+        image: 'https://images.unsplash.com/photo-1580889272989-e0f4c9cc3c87?w=800&q=80',
+        tips: 'The traditional folk song performances on the boat are a highlight - Tujia singers perform from cliffside balconies. Afternoon light is best for photos.',
+        localSecrets: [
+          "The lake is man-made (dammed in 1994) but looks completely natural among the ancient peaks",
+          "Tujia ethnic minority performers sing from cliff platforms as boats pass - an unforgettable experience",
+          "The 2km hike around the lake rim offers quieter views than the crowded boat tour",
+          "The Yingwo Village above the lake has authentic Tujia homestays with mountain views",
+          "Early morning visits (before 9 AM) offer mirror-like reflections before the tour boats create ripples"
+        ],
+        bestPhotoSpots: ['Boat tour with cliff reflections', 'Eagle\'s Nest viewpoint', 'Waterfall cascading into the lake'],
+        metro: { line: 'Bus', station: 'Free shuttle from Wulingyuan entrance area (武陵源门票站)', exit: '10 minute ride' },
+        phrases: [
+          { english: 'I want to go to Baofeng Lake', chinese: '我想去宝峰湖', pinyin: 'Wǒ xiǎng qù Bǎofēng Hú' },
+          { english: 'When does the boat leave?', chinese: '船什么时候开？', pinyin: 'Chuán shénme shíhou kāi?' },
+          { english: 'Is there folk singing?', chinese: '有民歌表演吗？', pinyin: 'Yǒu míngē biǎoyǎn ma?' }
+        ]
+      },
     ],
     foods: {
       anything: [{ name: 'Tujia Cuisine', nameChinese: '土家菜', description: 'Local ethnic food', emoji: '🍖', priceRange: '¥40-80' }],
@@ -1942,6 +2023,113 @@ export const CITY_DATA = {
         addressChinese: '四川省九寨沟县',
         coordinates: { lat: 33.2600, lng: 103.9200 },
         ticketPrice: { rmb: 250, usd: 35 },
+      },
+      { 
+        name: 'Five Flower Lake', 
+        nameChinese: '五花海',
+        description: 'The crown jewel of Jiuzhaigou - a mesmerizing lake with waters that shift through five brilliant colors (blue, green, yellow, purple, and orange) due to underwater minerals and fallen tree trunks', 
+        duration: '1-2 hours',
+        address: 'Rize Valley, Jiuzhaigou Scenic Area',
+        addressChinese: '九寨沟景区日则沟',
+        coordinates: { lat: 33.1847, lng: 103.9156 },
+        openingHours: '7:00 AM - 7:00 PM (Apr-Nov), 8:00 AM - 6:00 PM (Nov-Mar)',
+        ticketPrice: { rmb: 250, usd: 35 },
+        image: 'https://images.unsplash.com/photo-1586953423319-3e0f8c4e4c27?w=800&q=80',
+        tips: 'Visit between 2-4 PM when sunlight hits the lake at the perfect angle to reveal all five colors. The reflection of autumn foliage (Oct) is legendary.',
+        localSecrets: [
+          "The fallen tree trunks at the bottom are over 100 years old but preserved by the mineral-rich water",
+          "Sunrise visits (7 AM) offer mirror-like reflections before wind picks up",
+          "The viewing platform gets extremely crowded - walk 100m past to a quieter spot with equally good views",
+          "Local Tibetan guides know hidden viewpoints not on tourist maps - worth hiring one",
+          "The lake is actually quite shallow (max 5m) despite its infinite depth appearance"
+        ],
+        bestPhotoSpots: ['Main viewing platform', 'Peacock River downstream', 'Tiger\'s Mouth rock formation'],
+        metro: { line: 'Shuttle Bus', station: 'Take green shuttle bus to Rize Valley (日则沟) from park entrance', exit: 'Stop: Five Flower Lake (五花海站)' },
+        phrases: [
+          { english: 'Where is Five Flower Lake?', chinese: '五花海在哪里？', pinyin: 'Wǔhuā Hǎi zài nǎlǐ?' },
+          { english: 'Which bus goes to Rize Valley?', chinese: '哪趟车去日则沟？', pinyin: 'Nǎ tàng chē qù Rìzé Gōu?' },
+          { english: 'Is this the most beautiful lake?', chinese: '这是最美的海子吗？', pinyin: 'Zhè shì zuì měi de hǎizi ma?' }
+        ]
+      },
+      { 
+        name: 'Pearl Shoal Waterfall', 
+        nameChinese: '珍珠滩瀑布',
+        description: 'A stunning wide waterfall cascading over a travertine terrace - famous as the filming location for the classic TV series "Journey to the West" opening credits', 
+        duration: '1 hour',
+        address: 'Rize Valley, Jiuzhaigou Scenic Area',
+        addressChinese: '九寨沟景区日则沟',
+        coordinates: { lat: 33.1923, lng: 103.9134 },
+        openingHours: '7:00 AM - 7:00 PM (Apr-Nov), 8:00 AM - 6:00 PM (Nov-Mar)',
+        ticketPrice: { rmb: 250, usd: 35 },
+        image: 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=800&q=80',
+        tips: 'Walk the wooden boardwalk upstream first to see Pearl Shoal Beach (珍珠滩) where water scatters like pearls, then descend to the waterfall for the full experience.',
+        localSecrets: [
+          "This is where Tang Monk crossed the river in Journey to the West - bring a red cape for that iconic photo!",
+          "The 'pearl' effect is caused by water hitting shallow limestone - best seen in afternoon sun",
+          "The underground forest trail nearby is often empty while crowds gather at the waterfall",
+          "In winter (Dec-Feb), the waterfall partially freezes creating surreal ice formations",
+          "The spray creates perfect rainbows on sunny mornings between 9-11 AM"
+        ],
+        bestPhotoSpots: ['Upper Pearl Shoal terrace', 'Waterfall base viewing platform', 'Rainbow viewing point (morning only)'],
+        metro: { line: 'Shuttle Bus', station: 'Take green shuttle bus to Rize Valley (日则沟)', exit: 'Stop: Pearl Shoal (珍珠滩站)' },
+        phrases: [
+          { english: 'Is this where Journey to the West was filmed?', chinese: '这里是西游记拍摄地吗？', pinyin: 'Zhèlǐ shì Xīyóujì pāishè dì ma?' },
+          { english: 'How do I get to the waterfall?', chinese: '瀑布怎么走？', pinyin: 'Pùbù zěnme zǒu?' }
+        ]
+      },
+      { 
+        name: 'Nuorilang Waterfall', 
+        nameChinese: '诺日朗瀑布',
+        description: 'China\'s widest high-altitude waterfall at 270 meters wide - a thundering curtain of water cascading from a cliff of colorful travertine', 
+        duration: '1 hour',
+        address: 'Nuorilang Center, Jiuzhaigou Scenic Area',
+        addressChinese: '九寨沟景区诺日朗中心',
+        coordinates: { lat: 33.2134, lng: 103.9089 },
+        openingHours: '7:00 AM - 7:00 PM (Apr-Nov), 8:00 AM - 6:00 PM (Nov-Mar)',
+        ticketPrice: { rmb: 250, usd: 35 },
+        image: 'https://images.unsplash.com/photo-1504870712357-65ea720d6078?w=800&q=80',
+        tips: 'The waterfall is at the junction of all three valleys - perfect lunch break spot. The Nuorilang Restaurant nearby is the only dining option inside the park.',
+        localSecrets: [
+          "Nuorilang means 'majestic god' in Tibetan - locals consider this a sacred site",
+          "The waterfall was partially rebuilt after the 2017 earthquake - you can see restoration work",
+          "The viewing platform allows you to walk behind the waterfall - unforgettable experience",
+          "Water flow is strongest in July-August after monsoon rains begin",
+          "The frozen waterfall in January creates massive ice stalactites - equally spectacular"
+        ],
+        bestPhotoSpots: ['Main viewing deck', 'Behind the waterfall walkway', 'Distant view from Nuorilang restaurant'],
+        metro: { line: 'Shuttle Bus', station: 'All shuttle buses pass through Nuorilang Center (诺日朗中心站)', exit: 'Main transfer hub' },
+        phrases: [
+          { english: 'Where is the restaurant?', chinese: '餐厅在哪里？', pinyin: 'Cāntīng zài nǎlǐ?' },
+          { english: 'Can I walk behind the waterfall?', chinese: '可以走到瀑布后面吗？', pinyin: 'Kěyǐ zǒu dào pùbù hòumiàn ma?' },
+          { english: 'Which valley should I visit next?', chinese: '接下来去哪个沟？', pinyin: 'Jiēxiàlái qù nǎge gōu?' }
+        ]
+      },
+      { 
+        name: 'Panda Lake', 
+        nameChinese: '熊猫海',
+        description: 'A pristine turquoise lake named for the giant pandas that once came here to drink - with crystal-clear waters revealing submerged ancient trees', 
+        duration: '1 hour',
+        address: 'Rize Valley, Jiuzhaigou Scenic Area',
+        addressChinese: '九寨沟景区日则沟',
+        coordinates: { lat: 33.1756, lng: 103.9178 },
+        openingHours: '7:00 AM - 7:00 PM (Apr-Nov), 8:00 AM - 6:00 PM (Nov-Mar)',
+        ticketPrice: { rmb: 250, usd: 35 },
+        image: 'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=800&q=80',
+        tips: 'Look for the panda-shaped rock formation on the shore that gives this lake its name. The nearby Panda Lake Waterfall is a short walk downstream.',
+        localSecrets: [
+          "Wild giant pandas were last spotted here in the 1990s - now protected in nearby reserves",
+          "The underwater fallen trees are perfectly preserved and visible down to 20 meters",
+          "The Panda Lake Waterfall just downstream has a hidden cave behind it",
+          "Winter freeze creates a 'tiger skin' pattern on the ice surface - unique to this lake",
+          "Early risers may spot wild golden monkeys near the lake between 6-7 AM"
+        ],
+        bestPhotoSpots: ['Main viewing deck with underwater logs', 'Panda Lake Waterfall', 'Panda-shaped rock on the shore'],
+        metro: { line: 'Shuttle Bus', station: 'Take green shuttle bus to Rize Valley (日则沟)', exit: 'Stop: Panda Lake (熊猫海站)' },
+        phrases: [
+          { english: 'Are there real pandas here?', chinese: '这里有真的熊猫吗？', pinyin: 'Zhèlǐ yǒu zhēn de xióngmāo ma?' },
+          { english: 'How deep is the lake?', chinese: '这个湖有多深？', pinyin: 'Zhège hú yǒu duō shēn?' },
+          { english: 'Where is the waterfall?', chinese: '瀑布在哪里？', pinyin: 'Pùbù zài nǎlǐ?' }
+        ]
       },
     ],
     foods: {
@@ -1981,6 +2169,87 @@ export const CITY_DATA = {
         duration: 'Half day',
         ticketPrice: { rmb: 180, usd: 25 },
       },
+      { 
+        name: 'Black Dragon Pool', 
+        nameChinese: '黑龙潭',
+        description: 'A stunning park featuring a crystal-clear pool reflecting the majestic Jade Dragon Snow Mountain - the most iconic photography spot in all of Lijiang', 
+        duration: '1-2 hours',
+        address: 'Minzhu Road, Gucheng District',
+        addressChinese: '古城区民主路',
+        coordinates: { lat: 26.8856, lng: 100.2289 },
+        openingHours: '7:00 AM - 7:00 PM',
+        ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80',
+        tips: 'Early morning (7-9 AM) offers the calmest water for perfect reflections. Combine with the Dongba Culture Museum which is inside the park.',
+        localSecrets: [
+          "The iconic reflection shot requires clear weather - check if Jade Dragon Mountain is visible before visiting",
+          "The marble arch bridge (得月楼) is the most photographed spot - arrive before 8 AM to avoid crowds",
+          "The pool water comes from underground springs and maintains a constant temperature year-round",
+          "Local Naxi elders practice traditional songs and dances in the pavilions each morning",
+          "The park was the former royal garden of the Mu family rulers - look for hidden Naxi inscriptions"
+        ],
+        bestPhotoSpots: ['Marble bridge with mountain reflection', 'Five Phoenix Hall (五凤楼)', 'Willow tree-lined paths'],
+        metro: { line: 'Bus', station: 'Take Bus 4 or 8 from Old Town North Gate (古城北门)', exit: '15 minute walk from Old Town' },
+        phrases: [
+          { english: 'I want to go to Black Dragon Pool', chinese: '我想去黑龙潭', pinyin: 'Wǒ xiǎng qù Hēilóngtán' },
+          { english: 'Is the mountain visible today?', chinese: '今天能看到雪山吗？', pinyin: 'Jīntiān néng kàndào xuěshān ma?' },
+          { english: 'Where is the best photo spot?', chinese: '哪里拍照最好看？', pinyin: 'Nǎlǐ pāizhào zuì hǎokàn?' }
+        ]
+      },
+      { 
+        name: 'Shuhe Ancient Town', 
+        nameChinese: '束河古镇',
+        description: 'A quieter and more authentic ancient Naxi town than Lijiang - once an important stop on the ancient Tea Horse Road with well-preserved cobblestone streets and traditional architecture', 
+        duration: '3-4 hours',
+        address: 'Shuhe Township, Gucheng District',
+        addressChinese: '古城区束河镇',
+        coordinates: { lat: 26.9178, lng: 100.2089 },
+        openingHours: 'Open 24 hours (shops 9 AM - 9 PM)',
+        ticketPrice: { rmb: 30, usd: 4 },
+        image: 'https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=800&q=80',
+        tips: 'Skip the ticket booth - enter via the back streets from the north for free. Evening brings out local musicians and a more relaxed atmosphere than touristy Lijiang Old Town.',
+        localSecrets: [
+          "Enter from the north village road (束河路) to avoid the main ticket gate - locals do this",
+          "The ancient Qinglong Bridge (青龙桥) dates from the Ming Dynasty and is less touristy than similar bridges in Lijiang",
+          "Shuhe was the original center of the leather trade on the Tea Horse Road - artisan shops still operate",
+          "The Jiuding Dragon Pool (九鼎龙潭) is the source of town water and sacred to locals",
+          "Stay for sunset when day-trippers leave and locals reclaim the streets for evening strolls"
+        ],
+        bestPhotoSpots: ['Qinglong Bridge over the stream', 'Sifang Street (四方街) square', 'Mountain views from rooftop cafes'],
+        metro: { line: 'Bus', station: 'Take Bus 11 from Lijiang Old Town (丽江古城)', exit: '20 minute ride' },
+        phrases: [
+          { english: 'How do I get to Shuhe Ancient Town?', chinese: '束河古镇怎么走？', pinyin: 'Shùhé Gǔzhèn zěnme zǒu?' },
+          { english: 'Is this handmade?', chinese: '这是手工做的吗？', pinyin: 'Zhè shì shǒugōng zuò de ma?' },
+          { english: 'Can you show me the old bridge?', chinese: '您能带我看看古桥吗？', pinyin: 'Nín néng dài wǒ kànkan gǔqiáo ma?' }
+        ]
+      },
+      { 
+        name: 'Dongba Culture Museum', 
+        nameChinese: '东巴文化博物馆',
+        description: 'An essential museum showcasing the ancient Dongba culture and pictographic writing system of the Naxi people - one of the only living hieroglyphic scripts in the world', 
+        duration: '1-2 hours',
+        address: 'Inside Black Dragon Pool Park, Gucheng District',
+        addressChinese: '古城区黑龙潭公园内',
+        coordinates: { lat: 26.8867, lng: 100.2278 },
+        openingHours: '8:30 AM - 5:30 PM (Closed Mondays)',
+        ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80',
+        tips: 'The Dongba pictographic script is a UNESCO Memory of the World - take time to learn a few characters. The museum is included in Black Dragon Pool entry.',
+        localSecrets: [
+          "Ask staff about the Dongba priest demonstrations - they occasionally perform traditional ceremonies",
+          "The gift shop sells authentic Dongba calligraphy by trained practitioners - unique souvenirs",
+          "The script uses over 1,400 pictographs - the phrase for 'Lijiang' looks like a jade dragon",
+          "The museum houses original religious manuscripts used in Naxi shamanistic rituals",
+          "Dongba religion blends Tibetan Buddhism, Taoism, and indigenous animism - truly unique"
+        ],
+        bestPhotoSpots: ['Traditional Dongba ceremonial room', 'Ancient manuscript displays', 'Dongba script stone carvings'],
+        metro: { line: 'Bus', station: 'Take Bus 4 or 8 from Old Town North Gate (古城北门)', exit: 'Inside Black Dragon Pool Park' },
+        phrases: [
+          { english: 'What does this character mean?', chinese: '这个字是什么意思？', pinyin: 'Zhège zì shì shénme yìsi?' },
+          { english: 'Can you write my name in Dongba script?', chinese: '您能用东巴文写我的名字吗？', pinyin: 'Nín néng yòng Dōngbā wén xiě wǒ de míngzi ma?' },
+          { english: 'Where can I buy Dongba calligraphy?', chinese: '哪里可以买东巴书法？', pinyin: 'Nǎlǐ kěyǐ mǎi Dōngbā shūfǎ?' }
+        ]
+      },
     ],
     foods: {
       anything: [{ name: 'Naxi Cuisine', nameChinese: '纳西菜', emoji: '🍲', priceRange: '¥40-80' }],
@@ -2019,6 +2288,87 @@ export const CITY_DATA = {
         ticketPrice: { rmb: 0, usd: 0 },
         tips: 'Rent an e-bike to cycle around the lake',
       },
+      { 
+        name: 'Three Pagodas', 
+        nameChinese: '崇圣寺三塔',
+        description: 'The iconic symbol of Dali - three ancient Buddhist pagodas dating back over 1,000 years to the Tang Dynasty, standing majestically against the backdrop of Cangshan Mountain', 
+        duration: '2-3 hours',
+        address: 'Chongsheng Temple, 1.5km north of Dali Ancient Town',
+        addressChinese: '大理古城北1.5公里崇圣寺',
+        coordinates: { lat: 25.7167, lng: 100.1500 },
+        openingHours: '7:00 AM - 7:00 PM',
+        ticketPrice: { rmb: 75, usd: 10 },
+        image: 'https://images.unsplash.com/photo-1582552938357-32b906df40cb?w=800&q=80',
+        tips: 'Visit early morning for the best light and mountain reflections. The reflection pool behind the pagodas creates the most iconic photo opportunity.',
+        localSecrets: [
+          "The main pagoda (Qianxun Pagoda) is 69.13 meters tall and has survived multiple earthquakes over 1,000 years",
+          "The reflection pool was designed specifically for photography - arrive before 9 AM for mirror-like reflections",
+          "Climb to the Chongsheng Temple behind for panoramic views of the pagodas, Erhai Lake, and Cangshan Mountain",
+          "The two smaller pagodas lean slightly - locals say they bow to each other in eternal friendship",
+          "Sunset turns the pagodas golden against the darkening mountains - a local favorite time to visit"
+        ],
+        bestPhotoSpots: ['Reflection pool with all three pagodas', 'View from Chongsheng Temple looking down', 'Pagodas with Cangshan Mountain backdrop'],
+        metro: { line: 'Bus', station: 'Take Bus 19 from Dali Ancient Town West Gate (古城西门)', exit: '10 minute ride' },
+        phrases: [
+          { english: 'Take me to Three Pagodas', chinese: '带我去三塔', pinyin: 'Dài wǒ qù Sān Tǎ' },
+          { english: 'Where is the reflection pool?', chinese: '倒影池在哪里？', pinyin: 'Dàoyǐng chí zài nǎlǐ?' },
+          { english: 'Can I climb to the temple?', chinese: '可以上去寺庙吗？', pinyin: 'Kěyǐ shàngqù sìmiào ma?' }
+        ]
+      },
+      { 
+        name: 'Cangshan Mountain', 
+        nameChinese: '苍山',
+        description: 'A majestic mountain range with 19 peaks stretching 50km alongside Erhai Lake - featuring ancient temples, pristine streams, and the famous Jade Belt Cloud phenomenon', 
+        duration: '4-6 hours',
+        address: 'Cangshan National Geological Park, west of Dali Ancient Town',
+        addressChinese: '大理古城西侧苍山国家地质公园',
+        coordinates: { lat: 25.6833, lng: 100.0833 },
+        openingHours: '8:30 AM - 5:00 PM (Cable car last ascent 4:00 PM)',
+        ticketPrice: { rmb: 40, usd: 6 },
+        image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80',
+        tips: 'Take the Washeng Temple cable car (round trip 282 RMB) for the best alpine views. The Jade Belt Path connecting cable car stations is a stunning 11km cliffside walk.',
+        localSecrets: [
+          "The Jade Belt Cloud (玉带云) appears after rain when clouds wrap around the mountain like a white ribbon - most common in spring and autumn",
+          "The Jade Belt Path (玉带路) is a scenic cliffside walkway with 360° views - take the cable car up and walk down",
+          "Zhonghe Temple at the middle station serves vegetarian meals with spectacular valley views",
+          "The 18 streams flowing down Cangshan each have different mineral properties - locals believe certain streams cure ailments",
+          "Wildflowers bloom spectacularly from March to May - the azalea season is legendary"
+        ],
+        bestPhotoSpots: ['Jade Belt Path with Erhai Lake below', 'Zhonghe Temple terrace', 'Summit views on clear days'],
+        metro: { line: 'Cable Car', station: 'Washeng Temple Cable Car Station (感通索道站) or Zhonghe Cable Car (中和索道)', exit: 'Walk or taxi from Ancient Town west gate' },
+        phrases: [
+          { english: 'I want to take the cable car', chinese: '我想坐索道', pinyin: 'Wǒ xiǎng zuò suǒdào' },
+          { english: 'How long is the hiking trail?', chinese: '步道有多长？', pinyin: 'Bùdào yǒu duō cháng?' },
+          { english: 'Is the weather good at the top?', chinese: '山顶天气好吗？', pinyin: 'Shāndǐng tiānqì hǎo ma?' }
+        ]
+      },
+      { 
+        name: 'Shuanglang Village', 
+        nameChinese: '双廊古镇',
+        description: 'A picturesque lakeside village known as the "Santorini of Yunnan" - featuring traditional Bai architecture, boutique guesthouses with stunning Erhai Lake views, and a laid-back artistic atmosphere', 
+        duration: '4-5 hours',
+        address: 'Shuanglang Town, northeast shore of Erhai Lake',
+        addressChinese: '洱海东北岸双廊镇',
+        coordinates: { lat: 25.9000, lng: 100.1833 },
+        openingHours: 'Open 24 hours (shops 9 AM - 10 PM)',
+        ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80',
+        tips: 'Stay overnight to experience the magical sunset over Cangshan Mountain from the lakefront. Book a guesthouse with a rooftop terrace for the ultimate experience.',
+        localSecrets: [
+          "Nanzhao Fengqing Island (南诏风情岛) just offshore has the iconic 'Sea Goddess' statue and fewer crowds than the main village",
+          "The famous artist Zhao Qing (赵青) has her studio here - the artistic community has made Shuanglang a creative hub",
+          "Rent a motorboat to nearby Jinsuo Island (金梭岛) for authentic fishing village life untouched by tourism",
+          "The narrow lanes behind the main street have the best hidden cafes with private lake views",
+          "Full moon nights are spectacular - locals gather on the pier to watch the moon rise over Cangshan"
+        ],
+        bestPhotoSpots: ['Lakefront cafes at sunset', 'Nanzhao Fengqing Island sea goddess', 'Traditional Bai houses with mountain backdrop'],
+        metro: { line: 'Bus', station: 'Take Bus 28 from Dali Ancient Town or taxi (40 min)', exit: 'Drop-off at Shuanglang village entrance' },
+        phrases: [
+          { english: 'How do I get to Shuanglang?', chinese: '怎么去双廊？', pinyin: 'Zěnme qù Shuāngláng?' },
+          { english: 'I want to rent a boat', chinese: '我想租船', pinyin: 'Wǒ xiǎng zū chuán' },
+          { english: 'Where can I watch the sunset?', chinese: '哪里可以看日落？', pinyin: 'Nǎlǐ kěyǐ kàn rìluò?' }
+        ]
+      },
     ],
     foods: {
       anything: [{ name: 'Bai Cuisine', nameChinese: '白族菜', emoji: '🍲', priceRange: '¥30-60' }],
@@ -2056,6 +2406,87 @@ export const CITY_DATA = {
         duration: '2-3 hours',
         ticketPrice: { rmb: 0, usd: 0 },
       },
+      { 
+        name: 'Big Buddha & Ngong Ping', 
+        nameChinese: '天坛大佛和昂坪',
+        description: 'The iconic 34-meter bronze Tian Tan Buddha sits serenely atop Lantau Island - combined with the scenic Ngong Ping 360 cable car and Po Lin Monastery for a full spiritual experience', 
+        duration: '4-5 hours',
+        address: 'Ngong Ping, Lantau Island',
+        addressChinese: '大屿山昂坪',
+        coordinates: { lat: 22.2540, lng: 113.9050 },
+        openingHours: '10:00 AM - 5:30 PM (Cable car from 10:00 AM)',
+        ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1536599018102-9f803c979dbd?w=800&q=80',
+        tips: 'Book the Crystal Cabin cable car (HK$315) for glass-bottom views. Arrive early to avoid long queues. The 268 steps to the Buddha are worth the climb for panoramic views.',
+        localSecrets: [
+          "The Buddha faces north to symbolically look after the people of mainland China - the only large outdoor Buddha facing this direction",
+          "The vegetarian lunch at Po Lin Monastery (HK$100-150) is delicious and supports the monks",
+          "Wisdom Path (心经简林) nearby has 38 wooden pillars carved with the Heart Sutra - a peaceful detour most tourists miss",
+          "The cable car offers stunning views of Lantau Peak, airport, and South China Sea - sit on the right side going up",
+          "The Ngong Ping Village is touristy but the free Walking with Buddha multimedia show is surprisingly good"
+        ],
+        bestPhotoSpots: ['Buddha from the base of the 268 steps', 'Cable car with mountain backdrop', 'Wisdom Path wooden pillars'],
+        metro: { line: 'MTR Tung Chung Line', station: 'Tung Chung Station (东涌站)', exit: 'Exit B - Transfer to Ngong Ping 360 Cable Car' },
+        phrases: [
+          { english: 'How do I get to the Big Buddha?', chinese: '怎么去大佛？', pinyin: 'Zěnme qù Dà Fó?' },
+          { english: 'One cable car ticket please', chinese: '一张缆车票', pinyin: 'Yī zhāng lǎnchē piào' },
+          { english: 'Is vegetarian lunch available?', chinese: '有素食午餐吗？', pinyin: 'Yǒu sùshí wǔcān ma?' }
+        ]
+      },
+      { 
+        name: 'Star Ferry & Victoria Harbour', 
+        nameChinese: '天星小轮和维多利亚港',
+        description: 'The quintessential Hong Kong experience - a historic ferry crossing Victoria Harbour with spectacular skyline views, connecting Kowloon and Hong Kong Island since 1888', 
+        duration: '1-2 hours',
+        address: 'Star Ferry Pier, Tsim Sha Tsui or Central',
+        addressChinese: '尖沙咀或中环天星码头',
+        coordinates: { lat: 22.2932, lng: 114.1686 },
+        openingHours: '6:30 AM - 11:30 PM (every 6-12 minutes)',
+        ticketPrice: { rmb: 4, usd: 0.5 },
+        image: 'https://images.unsplash.com/photo-1536599018102-9f803c979dbd?w=800&q=80',
+        tips: 'Take the upper deck for better views and sea breeze. The crossing at night during the Symphony of Lights show (8:00 PM) is magical. Pay with Octopus card for convenience.',
+        localSecrets: [
+          "The green-and-white ferries are the original 1950s vessels - the oldest surviving fleet in Hong Kong",
+          "Sit on the upper deck starboard (right) side going to Hong Kong Island for the best skyline views",
+          "The Tsim Sha Tsui promenade has the best viewing spots for the nightly Symphony of Lights at 8 PM",
+          "Avenue of Stars nearby has handprints of Hong Kong movie stars including Bruce Lee and Jackie Chan",
+          "The ferry costs only HK$3.20 lower deck / HK$4 upper deck - arguably the world's best value scenic ride"
+        ],
+        bestPhotoSpots: ['Skyline from the ferry deck', 'Tsim Sha Tsui waterfront promenade', 'Symphony of Lights from Avenue of Stars'],
+        metro: { line: 'MTR Tsuen Wan Line', station: 'Tsim Sha Tsui Station (尖沙咀站)', exit: 'Exit E - Walk to Star Ferry Pier' },
+        phrases: [
+          { english: 'Which way to Star Ferry?', chinese: '天星小轮怎么走？', pinyin: 'Tiānxīng xiǎolún zěnme zǒu?' },
+          { english: 'Upper deck ticket please', chinese: '上层票', pinyin: 'Shàngcéng piào' },
+          { english: 'What time is the light show?', chinese: '灯光秀几点开始？', pinyin: 'Dēngguāng xiù jǐ diǎn kāishǐ?' }
+        ]
+      },
+      { 
+        name: 'Lan Kwai Fong & SoHo', 
+        nameChinese: '兰桂坊和苏豪区',
+        description: 'Hong Kong\'s legendary nightlife district - a maze of cobblestone streets packed with bars, clubs, restaurants, and galleries that transforms from quiet by day to electric by night', 
+        duration: '3-4 hours',
+        address: 'Central District, Hong Kong Island',
+        addressChinese: '香港岛中环',
+        coordinates: { lat: 22.2809, lng: 114.1551 },
+        openingHours: 'Bars/clubs 5 PM - 4 AM, restaurants 12 PM - 12 AM',
+        ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1536599018102-9f803c979dbd?w=800&q=80',
+        tips: 'Happy hour (5-8 PM) offers great drink deals. The Central-Mid-Levels Escalator is the world\'s longest outdoor covered escalator system - ride it through SoHo for a unique experience.',
+        localSecrets: [
+          "The Mid-Levels Escalator goes up in the morning (6-10 AM) and down the rest of the day - plan accordingly",
+          "Elgin Street and Staunton Street in SoHo have the best mix of local and international cuisine",
+          "Thursdays and Fridays are the busiest nights - for a more relaxed vibe, visit early week",
+          "The PMQ complex (former Police Married Quarters) nearby has great local designer shops and art",
+          "During Halloween and New Year's Eve, the streets become massive outdoor parties - arrive early"
+        ],
+        bestPhotoSpots: ['Neon-lit D\'Aguilar Street', 'Central-Mid-Levels Escalator through SoHo', 'Rooftop bars overlooking the city'],
+        metro: { line: 'MTR Island Line', station: 'Central Station (中环站)', exit: 'Exit D2 - Walk uphill to Lan Kwai Fong' },
+        phrases: [
+          { english: 'Where is Lan Kwai Fong?', chinese: '兰桂坊在哪里？', pinyin: 'Lánguìfāng zài nǎlǐ?' },
+          { english: 'What\'s your happy hour?', chinese: '欢乐时光是几点？', pinyin: 'Huānlè shíguāng shì jǐ diǎn?' },
+          { english: 'One beer please', chinese: '一杯啤酒', pinyin: 'Yī bēi píjiǔ' }
+        ]
+      },
     ],
     foods: {
       anything: [{ name: 'Dim Sum', nameChinese: '点心', emoji: '🥟', priceRange: 'HK$100-300' }],
@@ -2090,6 +2521,87 @@ export const CITY_DATA = {
         description: 'World\'s largest casino resort', 
         duration: '3-4 hours',
         ticketPrice: { rmb: 0, usd: 0 },
+      },
+      { 
+        name: 'Senado Square', 
+        nameChinese: '议事亭前地',
+        description: 'The heart of historic Macau - a stunning UNESCO World Heritage plaza surrounded by pastel-colored Portuguese colonial buildings with distinctive wave-patterned black and white cobblestones', 
+        duration: '2-3 hours',
+        address: 'Largo do Senado, Macau Peninsula',
+        addressChinese: '澳门半岛议事亭前地',
+        coordinates: { lat: 22.1937, lng: 113.5393 },
+        openingHours: 'Open 24 hours',
+        ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1555212697-194d092e3b8f?w=800&q=80',
+        tips: 'Walk from here to the Ruins of St. Paul\'s via the charming Rua de São Paulo shopping street. Evening illumination of the colonial buildings is spectacular.',
+        localSecrets: [
+          "The wave pattern on the ground represents the sea connecting Portugal and Macau - over 500 years of history",
+          "The Leal Senado Building houses the oldest European library in East Asia (free entry)",
+          "St. Dominic\'s Church (玫瑰堂) just off the square has a small but excellent museum of sacred art",
+          "The best almond cookies in Macau are at Koi Kei Bakery (鉅記餅家) on the adjacent street",
+          "Christmas and Chinese New Year decorations transform the square into a magical wonderland"
+        ],
+        bestPhotoSpots: ['Fountain with colonial buildings backdrop', 'St. Dominic\'s Church yellow facade', 'Wave-patterned ground from above'],
+        metro: { line: 'Bus', station: 'Bus routes 3, 3A, 10, 10A to Senado Square (议事亭前地站)', exit: 'Walk from ferry terminal (15 min)' },
+        phrases: [
+          { english: 'Where is Senado Square?', chinese: '议事亭前地在哪里？', pinyin: 'Yìshìtíng qiándì zài nǎlǐ?' },
+          { english: 'How do I walk to Ruins of St. Paul\'s?', chinese: '怎么走到大三巴？', pinyin: 'Zěnme zǒu dào Dàsānbā?' },
+          { english: 'I want to buy almond cookies', chinese: '我想买杏仁饼', pinyin: 'Wǒ xiǎng mǎi xìngrén bǐng' }
+        ]
+      },
+      { 
+        name: 'A-Ma Temple', 
+        nameChinese: '妈阁庙',
+        description: 'The oldest temple in Macau dating from 1488 - dedicated to the sea goddess Mazu who protects fishermen, and the origin of Macau\'s name (from Portuguese pronunciation of "A-Ma")', 
+        duration: '1-2 hours',
+        address: 'Barra Square, Macau Peninsula',
+        addressChinese: '澳门半岛妈阁庙前地',
+        coordinates: { lat: 22.1867, lng: 113.5319 },
+        openingHours: '7:00 AM - 6:00 PM',
+        ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1555212697-194d092e3b8f?w=800&q=80',
+        tips: 'Visit during Chinese New Year or the A-Ma Festival (23rd day of 3rd lunar month) for colorful celebrations. The nearby Maritime Museum provides excellent context.',
+        localSecrets: [
+          "Legend says when Portuguese sailors asked the name of this place, locals replied 'A-Ma-Gau' (Bay of A-Ma) - hence 'Macau'",
+          "The temple complex has six sections built into the hillside over 500 years - explore all levels",
+          "Fishermen still come here to pray before voyages - you may see traditional blessing ceremonies",
+          "The giant incense coils hanging from the ceiling burn for weeks and can be purchased as offerings",
+          "The Barra Pagoda at the top offers views of the Inner Harbour and the bridge to Taipa"
+        ],
+        bestPhotoSpots: ['Temple gate with incense smoke', 'Giant incense coils', 'View of Inner Harbour from upper levels'],
+        metro: { line: 'Bus', station: 'Bus routes 1, 2, 5, 7, 10 to A-Ma Temple (妈阁庙站)', exit: 'Near Macau Tower' },
+        phrases: [
+          { english: 'Take me to A-Ma Temple', chinese: '带我去妈阁庙', pinyin: 'Dài wǒ qù Māgé Miào' },
+          { english: 'I want to light incense', chinese: '我想点香', pinyin: 'Wǒ xiǎng diǎn xiāng' },
+          { english: 'When is the festival?', chinese: '节日是什么时候？', pinyin: 'Jiérì shì shénme shíhou?' }
+        ]
+      },
+      { 
+        name: 'Macau Tower', 
+        nameChinese: '澳门旅游塔',
+        description: 'A 338-meter tower offering panoramic views of Macau, China, and Hong Kong - featuring the world\'s highest commercial bungee jump and the thrilling Skywalk X exterior walk', 
+        duration: '2-3 hours',
+        address: 'Largo da Torre de Macau, Macau Peninsula',
+        addressChinese: '澳门半岛观光塔前地',
+        coordinates: { lat: 22.1803, lng: 113.5344 },
+        openingHours: '10:00 AM - 9:00 PM (weekdays), 9:00 AM - 9:00 PM (weekends)',
+        ticketPrice: { rmb: 165, usd: 23 },
+        image: 'https://images.unsplash.com/photo-1555212697-194d092e3b8f?w=800&q=80',
+        tips: 'The observation deck alone is worthwhile for the views. For thrill-seekers, book the Skywalk X (MOP$888) or Bungee Jump (MOP$3,488) in advance online for discounts.',
+        localSecrets: [
+          "The bungee jump at 233 meters was the world's highest for years - still among the most terrifying",
+          "The revolving restaurant 360° Café offers lunch buffet with views at reasonable prices (MOP$200-300)",
+          "The outdoor Skywalk X lets you walk around the exterior without handrails - harnesses only",
+          "Clear days offer views all the way to Hong Kong's Lantau Island - visibility is best in autumn and winter",
+          "The cinema in the tower shows Macau cultural films and has very comfortable seating"
+        ],
+        bestPhotoSpots: ['Glass floor observation deck', 'View of Macau-Taipa Bridge', 'Sunset panorama toward mainland China'],
+        metro: { line: 'Bus', station: 'Bus routes 9A, 18, 23, 32 to Macau Tower (旅游塔站)', exit: 'Free shuttle from some hotels' },
+        phrases: [
+          { english: 'One observation deck ticket', chinese: '一张观景台票', pinyin: 'Yī zhāng guānjǐng tái piào' },
+          { english: 'I want to do the bungee jump', chinese: '我想蹦极跳', pinyin: 'Wǒ xiǎng bèngjí tiào' },
+          { english: 'Is there a revolving restaurant?', chinese: '有旋转餐厅吗？', pinyin: 'Yǒu xuánzhuǎn cāntīng ma?' }
+        ]
       },
     ],
     foods: {
@@ -2193,6 +2705,113 @@ export const CITY_DATA = {
         duration: 'Full day',
         ticketPrice: { rmb: 130, usd: 18 },
       },
+      { 
+        name: 'Rishengchang Bank', 
+        nameChinese: '日升昌票号',
+        description: 'China\'s first bank established in 1823 - the birthplace of modern Chinese banking that once controlled half of China\'s financial transactions with branches across the empire', 
+        duration: '1-2 hours',
+        address: '38 West Street, Pingyao Ancient City',
+        addressChinese: '平遥古城西大街38号',
+        coordinates: { lat: 37.1989, lng: 112.1756 },
+        openingHours: '8:00 AM - 6:00 PM (Apr-Oct), 8:00 AM - 5:30 PM (Nov-Mar)',
+        ticketPrice: { rmb: 130, usd: 18 },
+        image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=800&q=80',
+        tips: 'Included in the Pingyao Ancient City combo ticket. The underground vault and original accounting rooms are particularly fascinating.',
+        localSecrets: [
+          "The bank\'s secret code system for transferring money was never cracked - guides explain the ingenious cipher",
+          "Look for the original money-counting table worn smooth by millions of silver taels",
+          "The courtyard design follows strict feng shui principles for prosperity - notice the placement of every element",
+          "Former employees\' descendants still live in Pingyao and occasionally give talks about their ancestors"
+        ],
+        bestPhotoSpots: ['Main courtyard with traditional signage', 'Underground vault entrance', 'Original accounting room with abacuses'],
+        metro: { line: 'Train', station: 'Pingyao Ancient City Station (平遥古城站)', exit: 'Take local bus or taxi to West Street' },
+        phrases: [
+          { english: 'I want to see the old bank', chinese: '我想看票号', pinyin: 'Wǒ xiǎng kàn piàohào' },
+          { english: 'Where is the vault?', chinese: '金库在哪里？', pinyin: 'Jīnkù zài nǎlǐ?' },
+          { english: 'Can you explain the code system?', chinese: '能解释一下密码系统吗？', pinyin: 'Néng jiěshì yīxià mìmǎ xìtǒng ma?' }
+        ]
+      },
+      { 
+        name: 'Pingyao City Wall', 
+        nameChinese: '平遥城墙',
+        description: 'One of the best-preserved Ming Dynasty city walls in China - 6km of fortifications with 72 watchtowers representing Confucius\'s 72 disciples', 
+        duration: '2-3 hours',
+        address: 'Pingyao Ancient City, surrounding the entire old town',
+        addressChinese: '平遥古城城墙',
+        coordinates: { lat: 37.1986, lng: 112.1764 },
+        openingHours: '8:00 AM - 6:30 PM (Apr-Oct), 8:00 AM - 5:30 PM (Nov-Mar)',
+        ticketPrice: { rmb: 130, usd: 18 },
+        image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=800&q=80',
+        tips: 'Walk the entire circuit for spectacular views. Rent a bike on top of the wall (30 RMB) to cover the full 6km loop efficiently.',
+        localSecrets: [
+          "The wall has 3,000 crenellations representing the 3,000 disciples of Confucius",
+          "The southeast corner has the best preserved watchtower with original wooden interiors",
+          "Sunrise from the east gate offers magical views over the misty ancient town",
+          "Local photographers gather at the south gate for the best sunset shots",
+          "The wall is wider than most - two horse carriages could pass each other on top"
+        ],
+        bestPhotoSpots: ['South Gate (Yingxun Gate) tower', 'Aerial view of rooftops from any corner tower', 'Sunrise at East Gate'],
+        metro: { line: 'Train', station: 'Pingyao Ancient City Station (平遥古城站)', exit: 'Multiple entrances - South Gate most popular' },
+        phrases: [
+          { english: 'I want to walk on the city wall', chinese: '我想走城墙', pinyin: 'Wǒ xiǎng zǒu chéngqiáng' },
+          { english: 'Where can I rent a bike?', chinese: '哪里可以租自行车？', pinyin: 'Nǎlǐ kěyǐ zū zìxíngchē?' },
+          { english: 'Which gate has the best view?', chinese: '哪个门风景最好？', pinyin: 'Nǎge mén fēngjǐng zuì hǎo?' }
+        ]
+      },
+      { 
+        name: 'Wang Family Compound', 
+        nameChinese: '王家大院',
+        description: 'The most magnificent Qing Dynasty residential complex in China - a sprawling estate of 123 courtyards and 1,118 rooms showcasing the wealth of Shanxi merchants', 
+        duration: '3-4 hours',
+        address: 'Jingsheng Town, Lingshi County (45km from Pingyao)',
+        addressChinese: '灵石县静升镇',
+        coordinates: { lat: 36.8847, lng: 111.7753 },
+        openingHours: '8:00 AM - 6:00 PM (Apr-Oct), 8:00 AM - 5:00 PM (Nov-Mar)',
+        ticketPrice: { rmb: 55, usd: 8 },
+        image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=800&q=80',
+        tips: 'Called the "Forbidden City of Folk Houses" for its grandeur. Hire a guide (80 RMB) to understand the intricate carvings and family history.',
+        localSecrets: [
+          "The compound took 300 years to build across five generations of the Wang family",
+          "Each doorway carving tells a story - look for the \'Five Blessings\' bat carvings",
+          "The drainage system is so sophisticated it never floods despite mountain location",
+          "Secret passages connect different courtyards - ask guides to show you",
+          "The family\'s wealth came from trading salt, grain, and later banking"
+        ],
+        bestPhotoSpots: ['Main ancestral hall with ornate carvings', 'Elevated view from the hillside', 'Stone lion guards at entrance'],
+        metro: { line: 'Bus', station: 'Take bus from Pingyao bus station to Lingshi (灵石)', exit: '1 hour journey, then taxi to compound' },
+        phrases: [
+          { english: 'Take me to Wang Family Compound', chinese: '带我去王家大院', pinyin: 'Dài wǒ qù Wáng Jiā Dàyuàn' },
+          { english: 'I want to hire a guide', chinese: '我想请导游', pinyin: 'Wǒ xiǎng qǐng dǎoyóu' },
+          { english: 'How many rooms are there?', chinese: '有多少个房间？', pinyin: 'Yǒu duōshao ge fángjiān?' }
+        ]
+      },
+      { 
+        name: 'Ming-Qing Street', 
+        nameChinese: '明清街',
+        description: 'The ancient commercial heart of Pingyao - a perfectly preserved Ming-Qing era street lined with traditional shops, old banks, and historic inns that once hosted traveling merchants', 
+        duration: '2-3 hours',
+        address: 'South Street (Nan Dajie), Pingyao Ancient City',
+        addressChinese: '平遥古城南大街',
+        coordinates: { lat: 37.1967, lng: 112.1761 },
+        openingHours: 'Open 24 hours (shops 8:30 AM - 9:00 PM)',
+        ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=800&q=80',
+        tips: 'The street is most atmospheric at dusk when red lanterns are lit. Try local specialties like Pingyao beef and Shanxi vinegar.',
+        localSecrets: [
+          "Many original shop signs date back 200+ years - look for weathered wooden plaques",
+          "The best lacquerware shops are in the side alleys, not on the main street",
+          "Local families still live above many shops - peek into courtyards for authentic daily life",
+          "The ancient escort agencies (镖局) here protected merchant caravans across China",
+          "Morning markets (6-8 AM) see locals shopping before tourists arrive"
+        ],
+        bestPhotoSpots: ['Lantern-lit street at dusk', 'Traditional shopfronts with wooden signs', 'City Tower (市楼) at the street center'],
+        metro: { line: 'Train', station: 'Pingyao Ancient City Station (平遥古城站)', exit: 'Walk to South Gate and enter the main street' },
+        phrases: [
+          { english: 'Where is the old street?', chinese: '老街在哪里？', pinyin: 'Lǎo jiē zài nǎlǐ?' },
+          { english: 'I want to buy Pingyao beef', chinese: '我想买平遥牛肉', pinyin: 'Wǒ xiǎng mǎi Píngyáo niúròu' },
+          { english: 'Is this handmade?', chinese: '这是手工做的吗？', pinyin: 'Zhè shì shǒugōng zuò de ma?' }
+        ]
+      },
     ],
     foods: {
       anything: [{ name: 'Pingyao Beef', nameChinese: '平遥牛肉', emoji: '🥩', priceRange: '¥40-80' }],
@@ -2220,6 +2839,114 @@ export const CITY_DATA = {
         description: 'Phoenix Ancient Town on the river', 
         duration: 'Full day',
         ticketPrice: { rmb: 148, usd: 21 },
+      },
+      { 
+        name: 'Rainbow Bridge (Hong Qiao)', 
+        nameChinese: '虹桥',
+        description: 'The iconic covered bridge spanning the Tuojiang River - a Ming Dynasty architectural masterpiece with shops, teahouses, and the best views of stilted houses', 
+        duration: '1 hour',
+        address: 'Tuojiang River, Fenghuang Ancient Town',
+        addressChinese: '凤凰古城沱江上',
+        coordinates: { lat: 27.9478, lng: 109.5989 },
+        openingHours: 'Open 24 hours (shops 8:00 AM - 10:00 PM)',
+        ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1573455494060-c5595004fb6c?w=800&q=80',
+        tips: 'Visit at dawn for peaceful views, or at night when the bridge and river are illuminated. The second floor teahouse offers perfect river photography spots.',
+        localSecrets: [
+          "The original bridge was built in 1670 and rebuilt after floods - current structure dates from 2000",
+          "The second floor has a hidden art gallery with works by local Miao artists",
+          "Sunrise from the bridge captures the famous stilted houses in golden light",
+          "Local legend says walking across the bridge brings good fortune in love",
+          "The small shops on the bridge sell authentic Miao silver - bargain for 40% off"
+        ],
+        bestPhotoSpots: ['Bridge with stilted houses reflection', 'Night illumination from the riverbank', 'Looking down the river from the bridge center'],
+        metro: { line: 'Bus', station: 'Take bus from Jishou Railway Station (吉首站) to Fenghuang', exit: '1.5 hour journey to ancient town' },
+        phrases: [
+          { english: 'Where is Rainbow Bridge?', chinese: '虹桥在哪里？', pinyin: 'Hóngqiáo zài nǎlǐ?' },
+          { english: 'I want to drink tea on the bridge', chinese: '我想在桥上喝茶', pinyin: 'Wǒ xiǎng zài qiáo shàng hē chá' },
+          { english: 'How old is this bridge?', chinese: '这座桥有多少年历史？', pinyin: 'Zhè zuò qiáo yǒu duōshao nián lìshǐ?' }
+        ]
+      },
+      { 
+        name: 'Shen Congwen\'s Former Residence', 
+        nameChinese: '沈从文故居',
+        description: 'The childhood home of China\'s most beloved modern writer - author of "Border Town" who immortalized Fenghuang in Chinese literature', 
+        duration: '1 hour',
+        address: '10 Zhongying Street, Fenghuang Ancient Town',
+        addressChinese: '凤凰古城中营街10号',
+        coordinates: { lat: 27.9486, lng: 109.5975 },
+        openingHours: '8:00 AM - 6:00 PM',
+        ticketPrice: { rmb: 148, usd: 21 },
+        image: 'https://images.unsplash.com/photo-1573455494060-c5595004fb6c?w=800&q=80',
+        tips: 'Included in the ancient town combo ticket. Read "Border Town" before visiting to appreciate how the author captured this town\'s spirit.',
+        localSecrets: [
+          "Shen Congwen was nominated for the Nobel Prize in Literature - he died just months before the announcement",
+          "His tomb is located outside town at Tingtao Hill - a peaceful pilgrimage for literary fans",
+          "The house contains original manuscripts and personal belongings",
+          "His granddaughter occasionally visits and speaks with tourists about her grandfather",
+          "The courtyard where he played as a child is preserved exactly as described in his memoirs"
+        ],
+        bestPhotoSpots: ['Traditional courtyard entrance', 'Study room with writing desk', 'Inscribed stone tablet with his calligraphy'],
+        metro: { line: 'Bus', station: 'Fenghuang Bus Station (凤凰汽车站)', exit: 'Walk 15 minutes to Zhongying Street' },
+        phrases: [
+          { english: 'I want to visit Shen Congwen\'s home', chinese: '我想参观沈从文故居', pinyin: 'Wǒ xiǎng cānguān Shěn Cóngwén gùjū' },
+          { english: 'Do you have his books?', chinese: '有他的书吗？', pinyin: 'Yǒu tā de shū ma?' },
+          { english: 'Where is his tomb?', chinese: '他的墓在哪里？', pinyin: 'Tā de mù zài nǎlǐ?' }
+        ]
+      },
+      { 
+        name: 'East Gate Tower', 
+        nameChinese: '东门城楼',
+        description: 'The most photographed landmark of Fenghuang - an ancient city gate tower overlooking the Tuojiang River with panoramic views of stilted houses and misty mountains', 
+        duration: '1-2 hours',
+        address: 'East Gate, Fenghuang Ancient Town',
+        addressChinese: '凤凰古城东门',
+        coordinates: { lat: 27.9481, lng: 109.6012 },
+        openingHours: '7:00 AM - 10:00 PM',
+        ticketPrice: { rmb: 148, usd: 21 },
+        image: 'https://images.unsplash.com/photo-1573455494060-c5595004fb6c?w=800&q=80',
+        tips: 'Climb to the top for the classic Fenghuang postcard view. Early morning offers the best light and fewest crowds.',
+        localSecrets: [
+          "The tower dates from the Qing Dynasty and was part of the town\'s defensive walls",
+          "The stepping stones across the river below are original - locals still use them daily",
+          "Miao minority women wash clothes on the river banks in traditional dress each morning",
+          "The cannon on display was used in historical battles against imperial forces",
+          "Photography from the tower is best 6-8 AM when mist rises from the river"
+        ],
+        bestPhotoSpots: ['View from tower top at sunrise', 'Stepping stones with locals crossing', 'Tower reflection in calm morning water'],
+        metro: { line: 'Bus', station: 'Fenghuang Bus Station (凤凰汽车站)', exit: 'Walk through ancient town to East Gate' },
+        phrases: [
+          { english: 'Can I go up the tower?', chinese: '可以上城楼吗？', pinyin: 'Kěyǐ shàng chénglóu ma?' },
+          { english: 'What time is sunrise?', chinese: '日出是几点？', pinyin: 'Rìchū shì jǐ diǎn?' },
+          { english: 'Where are the stepping stones?', chinese: '跳岩在哪里？', pinyin: 'Tiàoyán zài nǎlǐ?' }
+        ]
+      },
+      { 
+        name: 'Tuojiang River Night Scene', 
+        nameChinese: '沱江夜景',
+        description: 'The magical evening transformation when thousands of red lanterns illuminate the stilted houses and their reflections dance on the water - Fenghuang\'s most romantic experience', 
+        duration: '2-3 hours',
+        address: 'Along Tuojiang River, Fenghuang Ancient Town',
+        addressChinese: '凤凰古城沱江沿岸',
+        coordinates: { lat: 27.9475, lng: 109.5995 },
+        openingHours: 'Best viewing 7:00 PM - 11:00 PM',
+        ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1573455494060-c5595004fb6c?w=800&q=80',
+        tips: 'Take an evening boat ride (30 RMB) for the full experience. The riverside bars have live music and outdoor seating overlooking the illuminated scene.',
+        localSecrets: [
+          "The best night photography spot is from the south bank near Wanshou Palace",
+          "Floating lanterns (许愿灯) can be purchased to release on the river - a local tradition",
+          "The bars with rooftop terraces offer the best elevated views - arrive before 8 PM for seats",
+          "Local Miao singers perform on boats around 9 PM - their songs echo hauntingly across the water",
+          "Full moon nights create the most spectacular reflections - check the lunar calendar"
+        ],
+        bestPhotoSpots: ['South bank panorama of illuminated houses', 'Boat ride with lantern reflections', 'Rainbow Bridge at night'],
+        metro: { line: 'Walking', station: 'Accessible from anywhere in the ancient town', exit: 'Follow the river' },
+        phrases: [
+          { english: 'I want to take a night boat ride', chinese: '我想坐夜游船', pinyin: 'Wǒ xiǎng zuò yè yóu chuán' },
+          { english: 'Where can I buy floating lanterns?', chinese: '哪里可以买许愿灯？', pinyin: 'Nǎlǐ kěyǐ mǎi xǔyuàn dēng?' },
+          { english: 'Which bar has the best view?', chinese: '哪个酒吧风景最好？', pinyin: 'Nǎge jiǔbā fēngjǐng zuì hǎo?' }
+        ]
       },
     ],
     foods: {
@@ -2255,6 +2982,87 @@ export const CITY_DATA = {
         description: 'Buddhist temple near Xiamen University', 
         duration: '2 hours',
         ticketPrice: { rmb: 0, usd: 0 },
+      },
+      { 
+        name: 'Zhongshan Road', 
+        nameChinese: '中山路步行街',
+        description: 'Xiamen\'s most famous pedestrian street - a vibrant blend of European colonial architecture, traditional Minnan buildings, and modern shopping spanning over 100 years of history', 
+        duration: '2-3 hours',
+        address: 'Zhongshan Road, Siming District',
+        addressChinese: '思明区中山路',
+        coordinates: { lat: 24.4485, lng: 118.0821 },
+        openingHours: 'Open 24 hours (shops 10:00 AM - 10:00 PM)',
+        ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1517479149777-5f3b1511d5ad?w=800&q=80',
+        tips: 'Start at the Lujiang Hotel end near the ferry terminal and walk toward Siming Road. Evening is best when neon signs illuminate the colonial facades.',
+        localSecrets: [
+          "The arcaded walkways (骑楼) were designed for Xiamen\'s rainy climate - shop without an umbrella",
+          "Huang Zehe Peanut Soup (黄则和花生汤) has been serving its famous dessert since 1945",
+          "The side alleys contain hidden temples and traditional teahouses away from tourist crowds",
+          "The best sea oyster omelets (蚵仔煎) are from street vendors, not fancy restaurants",
+          "Look up at the second floors - many retain original Art Deco and colonial details"
+        ],
+        bestPhotoSpots: ['Colonial buildings at dusk with neon signs', 'Traditional arcade walkways', 'Night scene from Lujiang Hotel terrace'],
+        metro: { line: 'BRT', station: 'Take BRT to First Hospital (第一医院站)', exit: 'Walk 5 minutes to Zhongshan Road' },
+        phrases: [
+          { english: 'Take me to Zhongshan Road', chinese: '带我去中山路', pinyin: 'Dài wǒ qù Zhōngshān Lù' },
+          { english: 'Where is the famous peanut soup?', chinese: '有名的花生汤在哪里？', pinyin: 'Yǒumíng de huāshēng tāng zài nǎlǐ?' },
+          { english: 'I want to try oyster omelet', chinese: '我想吃蚵仔煎', pinyin: 'Wǒ xiǎng chī ézǐjiān' }
+        ]
+      },
+      { 
+        name: 'Xiamen University', 
+        nameChinese: '厦门大学',
+        description: 'China\'s most beautiful university campus - stunning colonial buildings, ancient banyan trees, and a romantic seaside location founded in 1921 by overseas Chinese philanthropist Tan Kah Kee', 
+        duration: '2-3 hours',
+        address: '422 Siming South Road, Siming District',
+        addressChinese: '思明区思明南路422号',
+        coordinates: { lat: 24.4381, lng: 118.0958 },
+        openingHours: 'Weekdays: 12:00-2:00 PM, 5:00-7:00 PM. Weekends: 8:00 AM - 12:00 PM (Limited visitors)',
+        ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1517479149777-5f3b1511d5ad?w=800&q=80',
+        tips: 'Register online in advance through the university\'s WeChat mini-program. The campus connects directly to Nanputuo Temple - combine visits.',
+        localSecrets: [
+          "The Furong Tunnel is covered with student graffiti and artwork - a hidden gem most tourists miss",
+          "Qunxian Tower (群贤楼) was designed to resemble a traditional Chinese palace - the most photographed building",
+          "The lakeside area (芙蓉湖) is where couples row boats - most romantic at sunset",
+          "The campus backs onto the beach - find the secret path behind the Sports Complex",
+          "The original buildings use a unique blend of Western and Minnan architectural styles found nowhere else"
+        ],
+        bestPhotoSpots: ['Qunxian Tower reflecting in Furong Lake', 'Banyan tree-lined main avenue', 'Furong Tunnel graffiti art'],
+        metro: { line: 'BRT', station: 'Take BRT to Xiamen University Station (厦大站)', exit: 'Main entrance on Siming South Road' },
+        phrases: [
+          { english: 'I want to visit Xiamen University', chinese: '我想参观厦门大学', pinyin: 'Wǒ xiǎng cānguān Xiàmén Dàxué' },
+          { english: 'Where is the graffiti tunnel?', chinese: '涂鸦隧道在哪里？', pinyin: 'Túyā suìdào zài nǎlǐ?' },
+          { english: 'Can I take photos here?', chinese: '这里可以拍照吗？', pinyin: 'Zhèlǐ kěyǐ pāizhào ma?' }
+        ]
+      },
+      { 
+        name: 'Huandao Road', 
+        nameChinese: '环岛路',
+        description: 'The stunning 43km coastal road circling Xiamen Island - palm-lined beaches, ocean views, cycling paths, and the famous "I Love Xiamen" landmark facing Taiwan across the strait', 
+        duration: '3-4 hours',
+        address: 'Huandao Road, Xiamen Island',
+        addressChinese: '厦门岛环岛路',
+        coordinates: { lat: 24.4367, lng: 118.1456 },
+        openingHours: 'Open 24 hours (bike rentals 6:00 AM - 10:00 PM)',
+        ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1517479149777-5f3b1511d5ad?w=800&q=80',
+        tips: 'Rent bikes or tandem bikes (30-50 RMB/hour) near Zengcuo\'an. The stretch from Music Square to Huangcuo is most scenic.',
+        localSecrets: [
+          "Zengcuo\'an (曾厝垵) is a former fishing village turned bohemian art district - explore the alleys",
+          "The Music Square (音乐广场) has free outdoor concerts on weekend evenings",
+          "Huangcuo Beach is less crowded than the main beaches and has better swimming",
+          "The \'One Country Two Systems\' billboard faces Taiwan - you can see Kinmen Island on clear days",
+          "Sunrise from the eastern beaches is spectacular - locals practice tai chi here"
+        ],
+        bestPhotoSpots: ['I Love Xiamen (我爱厦门) sign at sunset', 'Cycling past palm trees and ocean', 'Zengcuo\'an colorful murals'],
+        metro: { line: 'Bus', station: 'Take Bus 29 or 47 to Huandao Road sections', exit: 'Multiple stops along the route' },
+        phrases: [
+          { english: 'I want to rent a bicycle', chinese: '我想租自行车', pinyin: 'Wǒ xiǎng zū zìxíngchē' },
+          { english: 'Where is the best beach?', chinese: '最好的海滩在哪里？', pinyin: 'Zuì hǎo de hǎitān zài nǎlǐ?' },
+          { english: 'Can I swim here?', chinese: '这里可以游泳吗？', pinyin: 'Zhèlǐ kěyǐ yóuyǒng ma?' }
+        ]
       },
     ],
     foods: {
