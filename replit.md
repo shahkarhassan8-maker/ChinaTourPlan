@@ -7,10 +7,20 @@ This is a Next.js application for planning travel itineraries to China. The app 
 - `pages/` - Next.js pages directory
   - `index.js` - Entry point that imports Home component
   - `Home.jsx` - Main home page with wizard and itinerary views
+  - `signup.jsx` - Membership signup/login page with plan selection
+  - `dashboard.jsx` - User dashboard showing saved itineraries and review submission
   - `_app.js` - Next.js app wrapper
 - `components/` - React components
-  - `travel/` - Travel-specific components (HeroSection, InputWizard, ItineraryResult, etc.)
-  - `ui/` - Reusable UI components (buttons, dialogs, inputs, etc.)
+  - `travel/` - Travel-specific components
+    - `HeroSection.jsx` - Landing page hero with CTA
+    - `InputWizard.jsx` - Multi-step trip planning wizard
+    - `ItineraryResult.jsx` - Generated itinerary display
+    - `ReviewsSection.jsx` - Customer reviews section with user-submitted reviews
+    - `Navbar.jsx` - Navigation bar with user authentication status
+    - `FeaturesSection.jsx` - Features showcase section
+    - `Footer.jsx` - Site footer with contact info
+    - `cityData.jsx` - City information database
+  - `ui/` - Reusable UI components (buttons, dialogs, inputs, sliders, etc.)
 - `styles/` - Global CSS styles
 - `lib/` - Utility functions
 
@@ -50,31 +60,63 @@ The app is configured for autoscale deployment on Replit:
 - Deployment type: Autoscale (stateless)
 
 ## Recent Changes (Dec 2, 2025)
-- Fixed folder naming for Next.js conventions (Pages → pages, Components → components, Travel → travel)
-- Configured dev server to run on 0.0.0.0:5000 for Replit environment
-- Set up workflow for Next.js dev server
-- Configured deployment settings for production
-- Removed invalid experimental config from next.config.js
-- Removed bottom chat features (FloatingAssistButton and LiveAssistanceModal components)
-- Fixed critical city selection bug - added complete data for 15+ cities that were missing from CITY_DATA:
-  - hangzhou, suzhou, huangshan, zhangjiajie, jiuzhaigou, lijiang, yunnan (Dali)
-  - hongkong, macau, tibet (Lhasa), harbin, pingyao, fenghuang, xiamen, chongqing
-- Enhanced ItineraryResult page with:
-  - Contact Support Banner (always visible with WeChat and WhatsApp info)
-  - Testimonials section with 3 customer reviews
-  - Trust indicators (5,000+ travelers, 50+ countries, 4.9/5 rating, 100% guarantee)
-  - Footer contact information
+### New Features Added:
+- **Membership Signup Page** (`/signup`):
+  - Three pricing tiers: Monthly ($9.99), Yearly ($59.99), Lifetime ($149.99)
+  - Form validation for email, password, and name
+  - Toggle between signup and login modes
+  - Benefits showcase with icons
+  
+- **User Dashboard** (`/dashboard`):
+  - Shows saved itineraries with ability to view/delete
+  - Member status display
+  - Write review functionality for members
+  - Loading state for proper client-side hydration
+  
+- **Reviews Section** (Homepage):
+  - 6 pre-populated fake reviews from international travelers
+  - Carousel navigation for viewing more reviews
+  - Displays user-submitted reviews from members
+  - Trust indicators (5,000+ travelers, 50+ countries, 4.9/5 rating)
+  
+- **Navigation & Footer**:
+  - Fixed navbar with scroll effect
+  - Mobile-responsive menu
+  - User authentication status display
+  - Footer with contact info and quick links
+  
+- **Features Section**:
+  - 8 feature cards showcasing app capabilities
+  - AI-powered itineraries, Chinese addresses, phrases, 24/7 support, etc.
+
+### UI/UX Fixes:
+- Fixed slider visibility - thicker track, visible red color, larger thumb
+- Improved wizard animation performance - reduced lag with faster transitions
+- Added padding to hero section for navbar visibility
+
+### Previous Changes:
+- Fixed folder naming for Next.js conventions
+- Configured dev server for Replit environment
+- Fixed critical city selection bug for 15+ cities
+- Enhanced ItineraryResult with contact banner and testimonials
 - Added WeChat contact: Shahkarhassan
 
 ## Contact Information
 - **WeChat**: Shahkarhassan
 - **WhatsApp**: Coming Soon (placeholder)
 
+## User Data Storage
+Currently using localStorage for:
+- User authentication (`user` key)
+- Saved itineraries (`itineraries` key)
+- User reviews (`userReviews` key)
+
 ## Future Features (Planned)
-- Premium membership signup page with user accounts
-- Saved itineraries feature for registered users
-- Database integration for storing user data
-- Authentication system (Replit Auth integration)
+- Database integration for persistent user data storage
+- Real payment processing (Stripe integration)
+- Actual user authentication (Replit Auth)
+- Email notifications for trip reminders
+- Social sharing features
 
 ## Notes
 - The app uses path aliasing with `@/` prefix pointing to project root
