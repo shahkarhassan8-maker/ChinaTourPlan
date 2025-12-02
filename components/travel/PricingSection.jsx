@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Check, Sparkles, Star, Zap } from 'lucide-react';
+import { Check, Sparkles, Star, Zap, MessageCircle, Bell, Plane, Users } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 
@@ -30,7 +30,11 @@ const PRICING_PLANS = [
       'Detailed Chinese addresses',
       'Essential travel phrases',
       'Offline PDF downloads',
-      '24/7 live support',
+      '24/7 live WeChat/WhatsApp support',
+      'Admin-suggested itineraries on WeChat',
+      'Free Exhibition Alerts',
+      'Discuss itinerary with admin before trip',
+      'Flight ticket booking assistance',
       'Priority response times',
     ],
     cta: 'Start Pro Trial',
@@ -44,11 +48,12 @@ const PRICING_PLANS = [
     description: 'Best value for frequent travelers',
     features: [
       'Everything in Pro',
-      'Lifetime access',
+      'Lifetime access - pay once',
       'VIP support channel',
       'Early access to new features',
       'Exclusive travel deals',
       'Personalized trip consulting',
+      'Priority admin assistance',
     ],
     cta: 'Get Lifetime Access',
     popular: false,
@@ -130,6 +135,8 @@ export default function PricingSection() {
                   className={`w-full ${
                     plan.popular 
                       ? 'bg-[#E60012] hover:bg-[#cc0010] text-white' 
+                      : plan.name === 'Lifetime'
+                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
                       : 'bg-slate-900 hover:bg-slate-800 text-white'
                   }`}
                 >
@@ -148,7 +155,7 @@ export default function PricingSection() {
           className="mt-12 text-center"
         >
           <p className="text-slate-500 text-sm">
-            All plans include a 30-day money-back guarantee. No questions asked.
+            All plans include a 30-day money-back guarantee. Prices may vary slightly based on promotions.
           </p>
         </motion.div>
       </div>

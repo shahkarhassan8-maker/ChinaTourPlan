@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { 
   Check, Lock, MapPin, MessageCircle, Phone, 
   FileText, Clock, Shield, Star, Sparkles,
-  Zap, Crown, Gift
+  Zap, Crown, Gift, Plane, Bell, Users
 } from 'lucide-react';
 
 const VisuallyHidden = ({ children }) => (
@@ -27,49 +27,72 @@ const VisuallyHidden = ({ children }) => (
 const PLANS = [
   {
     id: 'basic',
-    name: 'Detailed Itinerary',
-    price: 5,
-    originalPrice: 15,
+    name: 'Free Preview',
+    price: 0,
+    originalPrice: null,
     popular: false,
-    color: 'blue',
+    color: 'slate',
     icon: FileText,
     features: [
-      'Full detailed day-by-day itinerary',
-      'All location addresses in Chinese',
-      'Copy-paste addresses for taxi/DiDi',
-      'Google Maps integration',
-      '50+ essential Chinese phrases',
-      'Restaurant recommendations with menus',
-      'Hotel booking details',
-      'Offline PDF download',
+      'Basic itinerary overview',
+      '3 itineraries per month',
+      'General travel tips',
+      'Email support',
     ],
     notIncluded: [
-      'Live WeChat/WhatsApp support',
-      '24/7 emergency assistance',
-      'Real-time translation help',
-    ]
+      'Detailed addresses & Chinese text',
+      'Offline PDF downloads',
+      '24/7 live support',
+      'Admin itinerary suggestions',
+      'Free exhibition alerts',
+      'Flight ticket assistance',
+    ],
+    cta: 'Continue Free',
   },
   {
-    id: 'premium',
-    name: 'Premium + Live Support',
-    price: 25,
-    originalPrice: 50,
+    id: 'pro',
+    name: 'Pro',
+    price: 19,
+    originalPrice: 39,
+    period: '/month',
     popular: true,
     color: 'red',
+    icon: Star,
+    features: [
+      'Unlimited itineraries',
+      'Detailed Chinese addresses',
+      'Essential travel phrases',
+      'Offline PDF downloads',
+      '24/7 live WeChat/WhatsApp support',
+      'Admin-suggested itineraries on WeChat',
+      'Free Exhibition Alerts',
+      'Discuss itinerary with admin before trip',
+      'Flight ticket booking assistance',
+      'Priority response times',
+    ],
+    notIncluded: [],
+    cta: 'Start Pro Trial',
+  },
+  {
+    id: 'lifetime',
+    name: 'Lifetime',
+    price: 99,
+    originalPrice: 199,
+    period: 'one-time',
+    popular: false,
+    color: 'amber',
     icon: Crown,
     features: [
-      'Everything in Detailed Itinerary',
-      '24/7 WeChat/WhatsApp support',
-      'Live human translation assistance',
-      'Emergency help hotline',
-      'Restaurant reservation help',
-      'Taxi/DiDi ordering assistance',
-      'Real-time problem solving',
-      'Local insider tips on demand',
-      'Flight/train rebooking help',
-      'Valid for entire trip duration',
+      'Everything in Pro',
+      'Lifetime access - pay once',
+      'VIP support channel',
+      'Early access to new features',
+      'Exclusive travel deals',
+      'Personalized trip consulting',
+      'Priority admin assistance',
     ],
-    notIncluded: []
+    notIncluded: [],
+    cta: 'Get Lifetime Access',
   },
 ];
 
@@ -87,126 +110,165 @@ const FeatureItem = ({ text, included = true }) => (
 );
 
 export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration }) {
-  const [selectedPlan, setSelectedPlan] = useState('premium');
+  const [selectedPlan, setSelectedPlan] = useState('pro');
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handlePurchase = async () => {
     setIsProcessing(true);
-    // Simulate payment processing
     await new Promise(resolve => setTimeout(resolve, 1500));
     onPurchase(selectedPlan);
     setIsProcessing(false);
   };
 
+  const selectedPlanData = PLANS.find(p => p.id === selectedPlan);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl p-0 gap-0 overflow-hidden bg-slate-50 max-h-[90vh] overflow-y-auto" aria-describedby="paywall-description">
+      <DialogContent className="sm:max-w-3xl p-0 gap-0 overflow-hidden bg-slate-50 max-h-[90vh] overflow-y-auto" aria-describedby="paywall-description">
         <VisuallyHidden>
           <DialogTitle>Unlock Your Complete China Travel Guide</DialogTitle>
           <DialogDescription id="paywall-description">
             Choose a plan to get your detailed itinerary with Chinese addresses, phrases, and optional live support.
           </DialogDescription>
         </VisuallyHidden>
-        {/* Header */}
+        
         <div className="bg-gradient-to-br from-[#E60012] to-red-700 p-6 text-white text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-sm mb-4">
             <Gift className="w-4 h-4" />
-            Limited Time: 60% Off
+            Limited Time: 50% Off Pro & Lifetime
           </div>
           <h2 className="text-2xl font-bold mb-2">Unlock Your Complete China Travel Guide</h2>
           <p className="text-white/80">Everything you need for a stress-free trip</p>
         </div>
 
-        {/* Plans */}
         <div className="p-6">
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-3 gap-4">
             {PLANS.map((plan) => (
               <motion.button
                 key={plan.id}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSelectedPlan(plan.id)}
-                className={`relative p-5 rounded-2xl border-2 text-left transition-all ${
+                className={`relative p-4 rounded-2xl border-2 text-left transition-all ${
                   selectedPlan === plan.id
-                    ? plan.id === 'premium' 
+                    ? plan.id === 'pro' 
                       ? 'border-[#E60012] bg-red-50'
-                      : 'border-blue-500 bg-blue-50'
+                      : plan.id === 'lifetime'
+                      ? 'border-amber-500 bg-amber-50'
+                      : 'border-slate-400 bg-slate-50'
                     : 'border-slate-200 bg-white hover:border-slate-300'
                 }`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#FFD700] text-amber-900 text-xs font-bold rounded-full flex items-center gap-1">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#E60012] text-white text-xs font-bold rounded-full flex items-center gap-1">
                     <Star className="w-3 h-3" />
-                    BEST VALUE
+                    MOST POPULAR
                   </div>
                 )}
 
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                    plan.id === 'premium' ? 'bg-red-100' : 'bg-blue-100'
+                <div className="flex items-center gap-2 mb-3">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                    plan.id === 'pro' ? 'bg-red-100' : plan.id === 'lifetime' ? 'bg-amber-100' : 'bg-slate-100'
                   }`}>
-                    <plan.icon className={`w-5 h-5 ${
-                      plan.id === 'premium' ? 'text-[#E60012]' : 'text-blue-600'
+                    <plan.icon className={`w-4 h-4 ${
+                      plan.id === 'pro' ? 'text-[#E60012]' : plan.id === 'lifetime' ? 'text-amber-600' : 'text-slate-600'
                     }`} />
                   </div>
-                  <div>
-                    <h3 className="font-bold text-slate-900">{plan.name}</h3>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-bold text-slate-900">${plan.price}</span>
-                      <span className="text-sm text-slate-400 line-through">${plan.originalPrice}</span>
-                    </div>
-                  </div>
+                  <h3 className="font-bold text-slate-900">{plan.name}</h3>
                 </div>
 
-                <div className="space-y-2">
-                  {plan.features.map((feature, idx) => (
+                <div className="flex items-baseline gap-1 mb-3">
+                  <span className="text-2xl font-bold text-slate-900">
+                    {plan.price === 0 ? 'Free' : `$${plan.price}`}
+                  </span>
+                  {plan.originalPrice && (
+                    <span className="text-sm text-slate-400 line-through">${plan.originalPrice}</span>
+                  )}
+                  {plan.period && (
+                    <span className="text-sm text-slate-500">{plan.period}</span>
+                  )}
+                </div>
+
+                <div className="space-y-1.5 text-xs">
+                  {plan.features.slice(0, 5).map((feature, idx) => (
                     <FeatureItem key={idx} text={feature} included={true} />
                   ))}
-                  {plan.notIncluded.map((feature, idx) => (
+                  {plan.features.length > 5 && (
+                    <p className="text-xs text-slate-500 pl-6">+{plan.features.length - 5} more...</p>
+                  )}
+                  {plan.notIncluded.slice(0, 2).map((feature, idx) => (
                     <FeatureItem key={idx} text={feature} included={false} />
                   ))}
                 </div>
 
-                {/* Selection indicator */}
                 {selectedPlan === plan.id && (
-                  <div className={`absolute top-4 right-4 w-6 h-6 rounded-full flex items-center justify-center ${
-                    plan.id === 'premium' ? 'bg-[#E60012]' : 'bg-blue-500'
+                  <div className={`absolute top-3 right-3 w-5 h-5 rounded-full flex items-center justify-center ${
+                    plan.id === 'pro' ? 'bg-[#E60012]' : plan.id === 'lifetime' ? 'bg-amber-500' : 'bg-slate-500'
                   }`}>
-                    <Check className="w-4 h-4 text-white" />
+                    <Check className="w-3 h-3 text-white" />
                   </div>
                 )}
               </motion.button>
             ))}
           </div>
 
-          {/* What You Get Preview */}
-          <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-200">
-            <h4 className="font-semibold text-amber-900 mb-3 flex items-center gap-2">
-              <Sparkles className="w-5 h-5" />
-              Included in Your {tripDuration}-Day Itinerary:
+          {selectedPlan === 'pro' && (
+            <div className="mt-4 p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border border-red-200">
+              <h4 className="font-semibold text-red-900 mb-2 flex items-center gap-2">
+                <Star className="w-4 h-4" />
+                Pro Features Include:
+              </h4>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div className="flex items-center gap-2 text-red-800">
+                  <MessageCircle className="w-4 h-4" />
+                  Admin itinerary suggestions on WeChat
+                </div>
+                <div className="flex items-center gap-2 text-red-800">
+                  <Bell className="w-4 h-4" />
+                  Free Exhibition Alerts
+                </div>
+                <div className="flex items-center gap-2 text-red-800">
+                  <Users className="w-4 h-4" />
+                  Discuss with admin before trip
+                </div>
+                <div className="flex items-center gap-2 text-red-800">
+                  <Plane className="w-4 h-4" />
+                  Flight ticket booking help
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="mt-4 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-200">
+            <h4 className="font-semibold text-amber-900 mb-2 flex items-center gap-2">
+              <Sparkles className="w-4 h-4" />
+              Your {tripDuration || 7}-Day Itinerary Includes:
             </h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-center text-sm">
               <div className="p-2">
-                <div className="text-2xl font-bold text-amber-700">{tripDuration * 3}+</div>
+                <div className="text-xl font-bold text-amber-700">{(tripDuration || 7) * 3}+</div>
                 <div className="text-xs text-amber-600">Activities</div>
               </div>
               <div className="p-2">
-                <div className="text-2xl font-bold text-amber-700">100+</div>
+                <div className="text-xl font-bold text-amber-700">100+</div>
                 <div className="text-xs text-amber-600">Chinese Phrases</div>
               </div>
               <div className="p-2">
-                <div className="text-2xl font-bold text-amber-700">{tripDuration}</div>
+                <div className="text-xl font-bold text-amber-700">{tripDuration || 7}</div>
                 <div className="text-xs text-amber-600">Restaurant Picks</div>
               </div>
               <div className="p-2">
-                <div className="text-2xl font-bold text-amber-700">All</div>
+                <div className="text-xl font-bold text-amber-700">All</div>
                 <div className="text-xs text-amber-600">Maps & Addresses</div>
               </div>
             </div>
           </div>
 
-          {/* Trust Badges */}
-          <div className="mt-6 flex items-center justify-center gap-6 text-sm text-slate-500">
+          <p className="mt-3 text-xs text-center text-slate-500">
+            * Prices may vary slightly based on exchange rates and seasonal promotions
+          </p>
+
+          <div className="mt-4 flex items-center justify-center gap-6 text-sm text-slate-500">
             <div className="flex items-center gap-1">
               <Shield className="w-4 h-4" />
               <span>Secure Payment</span>
@@ -221,24 +283,35 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
             </div>
           </div>
 
-          {/* CTA */}
           <Button 
             onClick={handlePurchase}
             disabled={isProcessing}
-            className="w-full mt-6 bg-[#E60012] hover:bg-[#cc0010] text-white py-6 text-lg font-semibold rounded-xl"
+            className={`w-full mt-4 py-6 text-lg font-semibold rounded-xl ${
+              selectedPlan === 'lifetime' 
+                ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
+                : selectedPlan === 'pro'
+                ? 'bg-[#E60012] hover:bg-[#cc0010] text-white'
+                : 'bg-slate-800 hover:bg-slate-700 text-white'
+            }`}
           >
             {isProcessing ? (
               <>Processing...</>
+            ) : selectedPlan === 'basic' ? (
+              <>Continue with Free Preview</>
             ) : (
               <>
-                Unlock Now - ${PLANS.find(p => p.id === selectedPlan)?.price}
+                {selectedPlanData?.cta} - ${selectedPlanData?.price}
                 <Sparkles className="w-5 h-5 ml-2" />
               </>
             )}
           </Button>
 
           <p className="text-center text-xs text-slate-500 mt-3">
-            One-time payment • No subscription • Lifetime access to this itinerary
+            {selectedPlan === 'lifetime' 
+              ? 'One-time payment • Lifetime access • No subscription'
+              : selectedPlan === 'pro'
+              ? 'Cancel anytime • 30-day money-back guarantee'
+              : 'Limited features • Upgrade anytime'}
           </p>
         </div>
       </DialogContent>

@@ -299,11 +299,19 @@ export default function ItineraryResult({ formData, onBack }) {
   const handlePurchase = (planId) => {
     setPurchasedPlan(planId);
     setShowPaywall(false);
-    toast.success(`🎉 ${planId === 'premium' ? 'Premium' : 'Basic'} plan unlocked! Enjoy your trip!`);
+    if (planId === 'lifetime') {
+      toast.success('🎉 Lifetime Access unlocked! Enjoy unlimited trips!');
+    } else if (planId === 'pro') {
+      toast.success('🎉 Pro plan activated! All features unlocked!');
+    } else {
+      toast.success('Free preview activated! Upgrade for full access.');
+    }
   };
 
-  const isPremium = purchasedPlan === 'premium';
-  const hasAnyPlan = purchasedPlan === 'premium' || purchasedPlan === 'basic';
+  const isPro = purchasedPlan === 'pro' || purchasedPlan === 'lifetime';
+  const isLifetime = purchasedPlan === 'lifetime';
+  const hasFullAccess = purchasedPlan === 'pro' || purchasedPlan === 'lifetime';
+  const isPremium = hasFullAccess; // backwards compatibility
 
   if (isGenerating) {
     return (
@@ -355,9 +363,15 @@ export default function ItineraryResult({ formData, onBack }) {
           </Button>
           <div className="flex items-center gap-2">
             {purchasedPlan && (
-              <Badge className="bg-green-100 text-green-800">
+              <Badge className={`${
+                purchasedPlan === 'lifetime' 
+                  ? 'bg-amber-100 text-amber-800' 
+                  : purchasedPlan === 'pro' 
+                  ? 'bg-green-100 text-green-800' 
+                  : 'bg-slate-100 text-slate-600'
+              }`}>
                 <CheckCircle className="w-3 h-3 mr-1" />
-                {purchasedPlan === 'premium' ? 'Premium' : 'Basic'} Unlocked
+                {purchasedPlan === 'lifetime' ? 'Lifetime' : purchasedPlan === 'pro' ? 'Pro' : 'Free'} Unlocked
               </Badge>
             )}
             <Button 
@@ -565,7 +579,7 @@ export default function ItineraryResult({ formData, onBack }) {
         </motion.div>
 
         {/* Premium Support Banner */}
-        {purchasedPlan === 'premium' && (
+        {hasFullAccess && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -577,7 +591,7 @@ export default function ItineraryResult({ formData, onBack }) {
                   <CheckCircle className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-bold">Premium Support Active</h4>
+                  <h4 className="font-bold">{isLifetime ? 'Lifetime VIP Support' : 'Pro Support Active'}</h4>
                   <p className="text-sm text-white/80">Your 24/7 travel assistance is now unlocked</p>
                 </div>
               </div>
@@ -586,6 +600,17 @@ export default function ItineraryResult({ formData, onBack }) {
           </motion.div>
         )}
 
+        {/* Price Variation Notice */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-xl"
+        >
+          <p className="text-sm text-amber-800 text-center">
+            💡 Note: Prices shown are estimates and may vary slightly based on season, availability, and exchange rates.
+          </p>
+        </motion.div>
+
         {/* Timeline */}
         <div className="relative">
           {itinerary.map((day, index) => (
@@ -593,7 +618,7 @@ export default function ItineraryResult({ formData, onBack }) {
               key={day.dayNumber} 
               day={day} 
               isLast={index === itinerary.length - 1}
-              isPremium={hasAnyPlan}
+              isPremium={hasFullAccess}
               onUpgrade={() => setShowPaywall(true)}
             />
           ))}
@@ -628,10 +653,10 @@ export default function ItineraryResult({ formData, onBack }) {
               className="bg-[#E60012] hover:bg-[#cc0010] text-white px-10 py-6 text-lg rounded-xl"
             >
               <Crown className="w-5 h-5 mr-2" />
-              Unlock Full Itinerary - From $5
+              Unlock Full Itinerary - From $19/month
             </Button>
             <p className="text-sm text-slate-500 mt-3">
-              One-time payment • Instant access • Money back guarantee
+              Pro $19/month or Lifetime $99 one-time • Instant access • Money back guarantee
             </p>
           </motion.div>
         )}

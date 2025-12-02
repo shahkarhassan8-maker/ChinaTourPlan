@@ -16,11 +16,10 @@ import AccommodationSelector from './AccommodationSelector';
 import { CITY_DATA } from './cityData';
 
 const STEPS = [
-  { id: 'duration', title: 'Trip Duration', icon: Calendar, description: 'How many days will you explore?' },
+  { id: 'pace', title: 'Travel Pace', icon: Gauge, description: 'How do you like to travel? This helps us recommend days per city' },
   { id: 'cities', title: 'Destinations', icon: MapPin, description: 'Select your dream destinations (pick multiple!)' },
-  { id: 'cityDays', title: 'Days per City', icon: Calendar, description: 'Customize how long you stay in each city' },
+  { id: 'cityDays', title: 'Days per City', icon: Calendar, description: 'See our recommendations and customize your stay' },
   { id: 'places', title: 'Places to Visit', icon: Camera, description: 'Select attractions you want to see' },
-  { id: 'pace', title: 'Travel Pace', icon: Gauge, description: 'How do you like to travel?' },
   { id: 'accommodation', title: 'Accommodation', icon: Bed, description: 'Where would you like to stay?' },
   { id: 'budget', title: 'Budget Level', icon: Wallet, description: 'What\'s your comfort level?' },
   { id: 'food', title: 'Food Preferences', icon: Utensils, description: 'Any dietary preferences?' },
@@ -86,7 +85,6 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
   const [activePlacesCity, setActivePlacesCity] = useState(null);
   const [activeAccommodationCity, setActiveAccommodationCity] = useState(null);
   const [formData, setFormData] = useState({
-    duration: 7,
     cities: [],
     cityDays: {},
     selectedPlaces: {},
@@ -95,6 +93,9 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
     budget: 'comfort',
     food: 'anything',
   });
+  
+  // Calculate total duration from city days
+  const totalDuration = Object.values(formData.cityDays).reduce((sum, d) => sum + d, 0);
 
   // Initialize city days when cities change
   React.useEffect(() => {
@@ -119,7 +120,8 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
     if (currentStep < STEPS.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      onSubmit(formData);
+      // Include calculated duration when submitting
+      onSubmit({ ...formData, duration: totalDuration });
       onClose();
     }
   };
@@ -140,11 +142,15 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
   };
 
   const canProceed = () => {
+    // Step 0: Pace - always can proceed
+    // Step 1: Cities - need at least one city selected
     if (currentStep === 1 && formData.cities.length === 0) return false;
+    // Step 2: City Days - need at least some days allocated
     if (currentStep === 2) {
       const allocatedDays = Object.values(formData.cityDays).reduce((sum, d) => sum + d, 0);
-      if (allocatedDays > formData.duration) return false;
+      if (allocatedDays === 0) return false;
     }
+    // Step 3: Places - need at least one place selected
     if (currentStep === 3) {
       const hasPlaces = formData.cities.some(cityId => 
         formData.selectedPlaces[cityId]?.length > 0
@@ -155,10 +161,12 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
   };
   
   React.useEffect(() => {
+    // Places step is now step 3
     if (currentStep === 3 && formData.cities.length > 0 && !activePlacesCity) {
       setActivePlacesCity(formData.cities[0]);
     }
-    if (currentStep === 5 && formData.cities.length > 0 && !activeAccommodationCity) {
+    // Accommodation step is now step 4
+    if (currentStep === 4 && formData.cities.length > 0 && !activeAccommodationCity) {
       setActiveAccommodationCity(formData.cities[0]);
     }
   }, [currentStep, formData.cities]);
@@ -172,28 +180,37 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
 
   const renderStepContent = () => {
     switch (currentStep) {
-      case 0: // Duration
+      case 0: // Pace (moved to first step)
         return (
-          <div className="space-y-8">
-            <div className="text-center">
-              <div className="text-6xl font-bold text-slate-900 mb-2">{formData.duration}</div>
-              <div className="text-lg text-slate-500">days of adventure</div>
-            </div>
-            <div className="px-4">
-              <Slider
-                value={[formData.duration]}
-                onValueChange={(value) => setFormData({ ...formData, duration: value[0] })}
-                min={3}
-                max={30}
-                step={1}
-                className="py-4"
-              />
-              <div className="flex justify-between text-sm text-slate-500 mt-2">
-                <span>3 days</span>
-                <span>30 days</span>
-              </div>
-            </div>
-          </div>
+          <RadioGroup
+            value={formData.pace}
+            onValueChange={(value) => setFormData({ ...formData, pace: value })}
+            className="space-y-4"
+          >
+            {PACES.map((pace) => (
+              <label
+                key={pace.id}
+                className={`flex items-center p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 ${
+                  formData.pace === pace.id
+                    ? 'border-[#E60012] bg-red-50/50'
+                    : 'border-slate-200 hover:border-slate-300 bg-white'
+                }`}
+              >
+                <RadioGroupItem value={pace.id} className="sr-only" />
+                <div className={`w-5 h-5 rounded-full border-2 mr-4 flex items-center justify-center ${
+                  formData.pace === pace.id ? 'border-[#E60012]' : 'border-slate-300'
+                }`}>
+                  {formData.pace === pace.id && (
+                    <div className="w-3 h-3 rounded-full bg-[#E60012]" />
+                  )}
+                </div>
+                <div>
+                  <div className="font-semibold text-slate-900">{pace.name}</div>
+                  <div className="text-sm text-slate-500">{pace.description}</div>
+                </div>
+              </label>
+            ))}
+          </RadioGroup>
         );
 
       case 1: // Cities
@@ -266,7 +283,7 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
             selectedCities={formData.cities}
             cityDays={formData.cityDays}
             setCityDays={(newCityDays) => setFormData({ ...formData, cityDays: newCityDays })}
-            totalDays={formData.duration}
+            pace={formData.pace}
           />
         );
 
@@ -312,40 +329,7 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
           </div>
         );
 
-      case 4: // Pace
-        return (
-          <RadioGroup
-            value={formData.pace}
-            onValueChange={(value) => setFormData({ ...formData, pace: value })}
-            className="space-y-4"
-          >
-            {PACES.map((pace) => (
-              <label
-                key={pace.id}
-                className={`flex items-center p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 ${
-                  formData.pace === pace.id
-                    ? 'border-[#E60012] bg-red-50/50'
-                    : 'border-slate-200 hover:border-slate-300 bg-white'
-                }`}
-              >
-                <RadioGroupItem value={pace.id} className="sr-only" />
-                <div className={`w-5 h-5 rounded-full border-2 mr-4 flex items-center justify-center ${
-                  formData.pace === pace.id ? 'border-[#E60012]' : 'border-slate-300'
-                }`}>
-                  {formData.pace === pace.id && (
-                    <div className="w-3 h-3 rounded-full bg-[#E60012]" />
-                  )}
-                </div>
-                <div>
-                  <div className="font-semibold text-slate-900">{pace.name}</div>
-                  <div className="text-sm text-slate-500">{pace.description}</div>
-                </div>
-              </label>
-            ))}
-          </RadioGroup>
-        );
-
-      case 5: // Accommodation
+      case 4: // Accommodation
         return (
           <div className="space-y-4">
             <div className="flex gap-2 overflow-x-auto pb-2">
@@ -384,7 +368,7 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
           </div>
         );
 
-      case 6: // Budget
+      case 5: // Budget
         return (
           <RadioGroup
             value={formData.budget}
@@ -420,7 +404,7 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
           </RadioGroup>
         );
 
-      case 7: // Food
+      case 6: // Food
         return (
           <div className="grid grid-cols-2 gap-4">
             {FOOD_PREFS.map((pref) => (
