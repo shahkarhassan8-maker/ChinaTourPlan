@@ -54,6 +54,18 @@ const TESTIMONIALS = [
   },
 ];
 
+const getEffectiveBudgetTier = (formData) => {
+  const accommodations = Object.values(formData.accommodation || {});
+  if (accommodations.length === 0) return 'comfort';
+  const tierCounts = { budget: 0, comfort: 0, luxury: 0 };
+  accommodations.forEach(tier => {
+    if (tierCounts[tier] !== undefined) tierCounts[tier]++;
+  });
+  if (tierCounts.luxury > tierCounts.comfort && tierCounts.luxury > tierCounts.budget) return 'luxury';
+  if (tierCounts.budget > tierCounts.comfort && tierCounts.budget > tierCounts.luxury) return 'budget';
+  return 'comfort';
+};
+
 const convertAIItinerary = (aiData, formData) => {
   if (!aiData?.itinerary) return [];
   
@@ -62,7 +74,8 @@ const convertAIItinerary = (aiData, formData) => {
     comfort: { cost: 150, hotelKey: 'comfort' },
     luxury: { cost: 400, hotelKey: 'luxury' },
   };
-  const defaultMultiplier = budgetMultipliers[formData.budget] || budgetMultipliers.comfort;
+  const effectiveBudget = getEffectiveBudgetTier(formData);
+  const defaultMultiplier = budgetMultipliers[effectiveBudget] || budgetMultipliers.comfort;
   
   return aiData.itinerary.map((day, index) => {
     const cityId = formData.cities.find(c => 
@@ -117,7 +130,8 @@ const generateDetailedItinerary = (formData) => {
     luxury: { cost: 400, hotelKey: 'luxury' },
   };
 
-  const multiplier = budgetMultipliers[formData.budget];
+  const effectiveBudget = getEffectiveBudgetTier(formData);
+  const multiplier = budgetMultipliers[effectiveBudget];
   
   const selectedCities = formData.cities.length > 0 
     ? formData.cities 
@@ -239,10 +253,10 @@ export default function ItineraryResult({ formData, onBack }) {
           cityDays: formData.cityDays,
           selectedPlaces: formData.selectedPlaces,
           pace: formData.pace,
-          budget: formData.budget,
           food: formData.food,
           accommodation: formData.accommodation,
-          placesData: CITY_DATA
+          placesData: CITY_DATA,
+          duration: formData.duration || Object.values(formData.cityDays || {}).reduce((a, b) => a + b, 0)
         })
       });
       
@@ -481,18 +495,23 @@ export default function ItineraryResult({ formData, onBack }) {
           </div>
         </motion.div>
 
-        {/* Budget & Pace Badges */}
+        {/* Accommodation & Pace Badges */}
         <div className="flex justify-center gap-3 mb-8">
-          <Badge className={`px-4 py-2 text-sm ${
-            formData.budget === 'luxury' 
-              ? 'bg-gradient-to-r from-[#FFD700] to-amber-400 text-amber-900'
-              : formData.budget === 'comfort'
-              ? 'bg-blue-100 text-blue-800'
-              : 'bg-green-100 text-green-800'
-          }`}>
-            {formData.budget === 'luxury' && '✨ '}
-            {formData.budget.charAt(0).toUpperCase() + formData.budget.slice(1)} Trip
-          </Badge>
+          {(() => {
+            const tier = getEffectiveBudgetTier(formData);
+            return (
+              <Badge className={`px-4 py-2 text-sm ${
+                tier === 'luxury' 
+                  ? 'bg-gradient-to-r from-[#FFD700] to-amber-400 text-amber-900'
+                  : tier === 'comfort'
+                  ? 'bg-blue-100 text-blue-800'
+                  : 'bg-green-100 text-green-800'
+              }`}>
+                {tier === 'luxury' && '✨ '}
+                {tier.charAt(0).toUpperCase() + tier.slice(1)} Trip
+              </Badge>
+            );
+          })()}
           <Badge className="px-4 py-2 text-sm bg-purple-100 text-purple-800">
             {formData.pace.charAt(0).toUpperCase() + formData.pace.slice(1)} Pace
           </Badge>
@@ -654,7 +673,7 @@ export default function ItineraryResult({ formData, onBack }) {
           <div className="text-4xl font-bold mb-1">¥{totalCostRMB.toLocaleString()}</div>
           <div className="text-xl text-slate-400">≈ ${totalCostUSD.toLocaleString()} USD</div>
           <p className="text-sm text-slate-400 mt-4 max-w-md mx-auto">
-            Includes accommodation, meals, transport, and activities. Prices are estimates based on your {formData.budget} budget selection.
+            Includes accommodation, meals, transport, and activities. Prices are estimates based on your selected accommodations.
           </p>
         </motion.div>
 
