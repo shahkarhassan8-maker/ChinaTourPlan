@@ -1055,6 +1055,547 @@ export const CITY_DATA = {
       ambulance: '120',
     },
   },
+
+  hangzhou: {
+    name: 'Hangzhou',
+    nameChinese: '杭州',
+    image: 'https://images.unsplash.com/photo-1537531383496-f4749b4a4e99?w=800&q=80',
+    recommendedDays: 2,
+    highlights: [
+      { 
+        name: 'West Lake', 
+        nameChinese: '西湖',
+        description: 'UNESCO World Heritage scenic lake', 
+        duration: '3-4 hours',
+        address: 'Xihu District, Hangzhou',
+        addressChinese: '杭州市西湖区',
+        coordinates: { lat: 30.2587, lng: 120.1397 },
+        openingHours: 'Open 24 hours',
+        ticketPrice: { rmb: 0, usd: 0 },
+        tips: 'Rent a bike to circle the lake, visit at sunset',
+      },
+      { 
+        name: 'Lingyin Temple', 
+        nameChinese: '灵隐寺',
+        description: 'Ancient Buddhist temple in the hills', 
+        duration: '2 hours',
+        address: 'Lingyin Road, Xihu District',
+        addressChinese: '西湖区灵隐路',
+        coordinates: { lat: 30.2425, lng: 120.1011 },
+        ticketPrice: { rmb: 75, usd: 10 },
+      },
+    ],
+    foods: {
+      anything: [
+        { name: 'Dongpo Pork', nameChinese: '东坡肉', description: 'Braised pork belly', emoji: '🍖', priceRange: '¥50-80' },
+      ],
+      halal: [
+        { name: 'Lanzhou Noodles', nameChinese: '兰州拉面', description: 'Hand-pulled beef noodles', emoji: '🍜', priceRange: '¥20-35' },
+      ],
+      vegetarian: [
+        { name: 'Buddhist Temple Cuisine', nameChinese: '素斋', description: 'Vegetarian temple food', emoji: '🥬', priceRange: '¥40-80' },
+      ],
+      spicy: [
+        { name: 'Sichuan Restaurant', nameChinese: '川菜馆', description: 'Spicy Sichuan dishes', emoji: '🌶️', priceRange: '¥60-100' },
+      ],
+    },
+    hotels: {
+      budget: { name: 'West Lake Youth Hostel', nameChinese: '西湖青年旅舍', type: 'Hostel', pricePerNight: { rmb: 100, usd: 14 }, amenities: ['Lake Views', 'Free WiFi'] },
+      comfort: { name: 'Wyndham Grand Plaza Royale', nameChinese: '温德姆至尊豪廷大酒店', type: '4-Star', pricePerNight: { rmb: 600, usd: 83 }, amenities: ['Pool', 'Spa'] },
+      luxury: { name: 'Amanfayun', nameChinese: '安缦法云', type: '5-Star Resort', pricePerNight: { rmb: 5000, usd: 694 }, amenities: ['Private Villas', 'Tea House'] },
+    },
+    emergencyInfo: { police: '110', ambulance: '120' },
+  },
+
+  suzhou: {
+    name: 'Suzhou',
+    nameChinese: '苏州',
+    image: 'https://images.unsplash.com/photo-1567429379107-0f5cf8e8c7c8?w=800&q=80',
+    recommendedDays: 2,
+    highlights: [
+      { 
+        name: 'Humble Administrator\'s Garden', 
+        nameChinese: '拙政园',
+        description: 'China\'s finest classical garden', 
+        duration: '2-3 hours',
+        address: '178 Dongbei Street, Gusu District',
+        addressChinese: '姑苏区东北街178号',
+        coordinates: { lat: 31.3250, lng: 120.6294 },
+        ticketPrice: { rmb: 80, usd: 11 },
+      },
+      { 
+        name: 'Tiger Hill', 
+        nameChinese: '虎丘',
+        description: 'Historic hill with leaning pagoda', 
+        duration: '2 hours',
+        address: 'Huqiu District, Suzhou',
+        addressChinese: '苏州市虎丘区',
+        ticketPrice: { rmb: 80, usd: 11 },
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Squirrel-Shaped Mandarin Fish', nameChinese: '松鼠桂鱼', description: 'Sweet and sour fish', emoji: '🐟', priceRange: '¥80-120' }],
+      halal: [{ name: 'Halal Noodles', nameChinese: '清真拉面', emoji: '🍜', priceRange: '¥20-35' }],
+      vegetarian: [{ name: 'Garden Vegetarian', nameChinese: '园林素食', emoji: '🥗', priceRange: '¥50-80' }],
+      spicy: [{ name: 'Hunan Kitchen', nameChinese: '湘菜馆', emoji: '🌶️', priceRange: '¥60-100' }],
+    },
+    hotels: {
+      budget: { name: 'Suzhou Youth Hostel', nameChinese: '苏州青年旅舍', type: 'Hostel', pricePerNight: { rmb: 80, usd: 11 }, amenities: ['Garden Views'] },
+      comfort: { name: 'Pan Pacific Suzhou', nameChinese: '苏州泛太平洋酒店', type: '4-Star', pricePerNight: { rmb: 550, usd: 76 }, amenities: ['Pool', 'Gym'] },
+      luxury: { name: 'Tonino Lamborghini Hotel', nameChinese: '苏州托尼洛·兰博基尼酒店', type: '5-Star', pricePerNight: { rmb: 1500, usd: 208 }, amenities: ['Luxury Suites'] },
+    },
+    emergencyInfo: { police: '110', ambulance: '120' },
+  },
+
+  huangshan: {
+    name: 'Huangshan',
+    nameChinese: '黄山',
+    image: 'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=800&q=80',
+    recommendedDays: 2,
+    highlights: [
+      { 
+        name: 'Yellow Mountain Scenic Area', 
+        nameChinese: '黄山风景区',
+        description: 'Granite peaks, ancient pines, hot springs', 
+        duration: 'Full day',
+        address: 'Huangshan City, Anhui Province',
+        addressChinese: '安徽省黄山市',
+        coordinates: { lat: 30.1328, lng: 118.1657 },
+        ticketPrice: { rmb: 190, usd: 26 },
+        tips: 'Stay overnight on the mountain to see sunrise',
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Stinky Tofu', nameChinese: '臭豆腐', description: 'Local fermented tofu', emoji: '🫘', priceRange: '¥10-20' }],
+      halal: [{ name: 'Halal Restaurant', nameChinese: '清真餐厅', emoji: '🥘', priceRange: '¥40-60' }],
+      vegetarian: [{ name: 'Mountain Vegetables', nameChinese: '山野菜', emoji: '🥬', priceRange: '¥30-50' }],
+      spicy: [{ name: 'Anhui Cuisine', nameChinese: '徽菜', emoji: '🍲', priceRange: '¥50-80' }],
+    },
+    hotels: {
+      budget: { name: 'Mountain Top Hostel', nameChinese: '山顶青旅', type: 'Hostel', pricePerNight: { rmb: 150, usd: 21 } },
+      comfort: { name: 'Beihai Hotel', nameChinese: '北海宾馆', type: 'Mountain Hotel', pricePerNight: { rmb: 800, usd: 111 } },
+      luxury: { name: 'Xihai Hotel', nameChinese: '西海饭店', type: '4-Star', pricePerNight: { rmb: 1200, usd: 167 } },
+    },
+    emergencyInfo: { police: '110', ambulance: '120' },
+  },
+
+  zhangjiajie: {
+    name: 'Zhangjiajie',
+    nameChinese: '张家界',
+    image: 'https://images.unsplash.com/photo-1513415277900-a62401e19be4?w=800&q=80',
+    recommendedDays: 3,
+    highlights: [
+      { 
+        name: 'Zhangjiajie National Forest Park', 
+        nameChinese: '张家界国家森林公园',
+        description: 'Avatar mountains and glass bridge', 
+        duration: 'Full day',
+        address: 'Wulingyuan District, Zhangjiajie',
+        addressChinese: '张家界市武陵源区',
+        coordinates: { lat: 29.3252, lng: 110.4341 },
+        ticketPrice: { rmb: 225, usd: 31 },
+        tips: 'Buy 4-day pass for full exploration',
+      },
+      { 
+        name: 'Tianmen Mountain', 
+        nameChinese: '天门山',
+        description: 'Glass walkway and cable car', 
+        duration: 'Half day',
+        ticketPrice: { rmb: 278, usd: 39 },
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Tujia Cuisine', nameChinese: '土家菜', description: 'Local ethnic food', emoji: '🍖', priceRange: '¥40-80' }],
+      halal: [{ name: 'Muslim Restaurant', nameChinese: '清真餐厅', emoji: '🥘', priceRange: '¥30-50' }],
+      vegetarian: [{ name: 'Temple Vegetarian', nameChinese: '素食', emoji: '🥬', priceRange: '¥25-45' }],
+      spicy: [{ name: 'Hunan Spicy Food', nameChinese: '湘菜', emoji: '🌶️', priceRange: '¥40-70' }],
+    },
+    hotels: {
+      budget: { name: 'Zhangjiajie Hostel', nameChinese: '张家界青旅', type: 'Hostel', pricePerNight: { rmb: 80, usd: 11 } },
+      comfort: { name: 'Pullman Zhangjiajie', nameChinese: '张家界铂尔曼', type: '4-Star', pricePerNight: { rmb: 600, usd: 83 } },
+      luxury: { name: 'Zhangjiajie Grand Skylight', nameChinese: '张家界天恒大酒店', type: '5-Star', pricePerNight: { rmb: 1000, usd: 139 } },
+    },
+    emergencyInfo: { police: '110', ambulance: '120' },
+  },
+
+  jiuzhaigou: {
+    name: 'Jiuzhaigou',
+    nameChinese: '九寨沟',
+    image: 'https://images.unsplash.com/photo-1586953423319-3e0f8c4e4c27?w=800&q=80',
+    recommendedDays: 2,
+    highlights: [
+      { 
+        name: 'Jiuzhaigou Valley', 
+        nameChinese: '九寨沟景区',
+        description: 'Colorful lakes and waterfalls', 
+        duration: 'Full day',
+        address: 'Jiuzhaigou County, Sichuan',
+        addressChinese: '四川省九寨沟县',
+        coordinates: { lat: 33.2600, lng: 103.9200 },
+        ticketPrice: { rmb: 250, usd: 35 },
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Tibetan Yak Meat', nameChinese: '牦牛肉', emoji: '🥩', priceRange: '¥60-100' }],
+      halal: [{ name: 'Halal Options Available', nameChinese: '清真餐厅', emoji: '🥘', priceRange: '¥40-70' }],
+      vegetarian: [{ name: 'Vegetable Dishes', nameChinese: '素菜', emoji: '🥬', priceRange: '¥30-50' }],
+      spicy: [{ name: 'Sichuan Hotpot', nameChinese: '四川火锅', emoji: '🌶️', priceRange: '¥80-150' }],
+    },
+    hotels: {
+      budget: { name: 'Jiuzhaigou Guesthouse', nameChinese: '九寨沟民宿', type: 'Guesthouse', pricePerNight: { rmb: 150, usd: 21 } },
+      comfort: { name: 'Jiuzhaigou Sheraton', nameChinese: '九寨沟喜来登', type: '4-Star', pricePerNight: { rmb: 800, usd: 111 } },
+      luxury: { name: 'Jiuzhai Paradise', nameChinese: '九寨天堂', type: '5-Star', pricePerNight: { rmb: 1500, usd: 208 } },
+    },
+    emergencyInfo: { police: '110', ambulance: '120' },
+  },
+
+  lijiang: {
+    name: 'Lijiang',
+    nameChinese: '丽江',
+    image: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80',
+    recommendedDays: 2,
+    highlights: [
+      { 
+        name: 'Lijiang Old Town', 
+        nameChinese: '丽江古城',
+        description: 'UNESCO World Heritage Naxi town', 
+        duration: '3-4 hours',
+        address: 'Gucheng District, Lijiang',
+        addressChinese: '丽江市古城区',
+        coordinates: { lat: 26.8722, lng: 100.2333 },
+        ticketPrice: { rmb: 50, usd: 7 },
+      },
+      { 
+        name: 'Jade Dragon Snow Mountain', 
+        nameChinese: '玉龙雪山',
+        description: 'Glacier-capped mountain peaks', 
+        duration: 'Half day',
+        ticketPrice: { rmb: 180, usd: 25 },
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Naxi Cuisine', nameChinese: '纳西菜', emoji: '🍲', priceRange: '¥40-80' }],
+      halal: [{ name: 'Muslim Quarter Food', nameChinese: '清真美食', emoji: '🥘', priceRange: '¥30-60' }],
+      vegetarian: [{ name: 'Buddhist Vegetarian', nameChinese: '素食', emoji: '🥬', priceRange: '¥30-50' }],
+      spicy: [{ name: 'Yunnan Spicy', nameChinese: '云南辣味', emoji: '🌶️', priceRange: '¥40-70' }],
+    },
+    hotels: {
+      budget: { name: 'Lijiang Old Town Hostel', nameChinese: '丽江古城青旅', type: 'Hostel', pricePerNight: { rmb: 80, usd: 11 } },
+      comfort: { name: 'Lijiang Wangfu Hotel', nameChinese: '丽江王府酒店', type: '4-Star', pricePerNight: { rmb: 500, usd: 69 } },
+      luxury: { name: 'Amandayan', nameChinese: '安缦达岩', type: '5-Star', pricePerNight: { rmb: 6000, usd: 833 } },
+    },
+    emergencyInfo: { police: '110', ambulance: '120' },
+  },
+
+  yunnan: {
+    name: 'Dali',
+    nameChinese: '大理',
+    image: 'https://images.unsplash.com/photo-1582552938357-32b906df40cb?w=800&q=80',
+    recommendedDays: 2,
+    highlights: [
+      { 
+        name: 'Dali Ancient Town', 
+        nameChinese: '大理古城',
+        description: 'Bai ethnic culture and architecture', 
+        duration: '3 hours',
+        address: 'Dali City, Yunnan',
+        addressChinese: '云南省大理市',
+        ticketPrice: { rmb: 0, usd: 0 },
+      },
+      { 
+        name: 'Erhai Lake', 
+        nameChinese: '洱海',
+        description: 'Beautiful highland lake', 
+        duration: 'Half day',
+        ticketPrice: { rmb: 0, usd: 0 },
+        tips: 'Rent an e-bike to cycle around the lake',
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Bai Cuisine', nameChinese: '白族菜', emoji: '🍲', priceRange: '¥30-60' }],
+      halal: [{ name: 'Muslim Restaurants', nameChinese: '清真餐厅', emoji: '🥘', priceRange: '¥30-50' }],
+      vegetarian: [{ name: 'Local Vegetables', nameChinese: '素菜', emoji: '🥬', priceRange: '¥20-40' }],
+      spicy: [{ name: 'Yunnan Chili Dishes', nameChinese: '云南辣菜', emoji: '🌶️', priceRange: '¥30-60' }],
+    },
+    hotels: {
+      budget: { name: 'Dali Backpacker', nameChinese: '大理背包客', type: 'Hostel', pricePerNight: { rmb: 60, usd: 8 } },
+      comfort: { name: 'Landscape Hotel', nameChinese: '大理风景酒店', type: '4-Star', pricePerNight: { rmb: 400, usd: 56 } },
+      luxury: { name: 'Regent Dali', nameChinese: '大理丽晶酒店', type: '5-Star', pricePerNight: { rmb: 2000, usd: 278 } },
+    },
+    emergencyInfo: { police: '110', ambulance: '120' },
+  },
+
+  hongkong: {
+    name: 'Hong Kong',
+    nameChinese: '香港',
+    image: 'https://images.unsplash.com/photo-1536599018102-9f803c979dbd?w=800&q=80',
+    recommendedDays: 3,
+    highlights: [
+      { 
+        name: 'Victoria Peak', 
+        nameChinese: '太平山顶',
+        description: 'Iconic city skyline views', 
+        duration: '2-3 hours',
+        address: 'The Peak, Hong Kong Island',
+        addressChinese: '香港岛山顶',
+        ticketPrice: { rmb: 60, usd: 8 },
+      },
+      { 
+        name: 'Temple Street Night Market', 
+        nameChinese: '庙街夜市',
+        description: 'Famous night market experience', 
+        duration: '2-3 hours',
+        ticketPrice: { rmb: 0, usd: 0 },
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Dim Sum', nameChinese: '点心', emoji: '🥟', priceRange: 'HK$100-300' }],
+      halal: [{ name: 'Halal Restaurants', nameChinese: '清真餐厅', emoji: '🥘', priceRange: 'HK$80-150' }],
+      vegetarian: [{ name: 'Pure Veggie House', nameChinese: '素食馆', emoji: '🥬', priceRange: 'HK$100-200' }],
+      spicy: [{ name: 'Sichuan Kitchen', nameChinese: '川菜馆', emoji: '🌶️', priceRange: 'HK$150-300' }],
+    },
+    hotels: {
+      budget: { name: 'Mini Hotel Central', nameChinese: '迷你酒店中环', type: 'Budget Hotel', pricePerNight: { rmb: 500, usd: 69 } },
+      comfort: { name: 'Hotel ICON', nameChinese: '唯港荟酒店', type: '4-Star', pricePerNight: { rmb: 1500, usd: 208 } },
+      luxury: { name: 'The Peninsula', nameChinese: '半岛酒店', type: '5-Star', pricePerNight: { rmb: 4000, usd: 556 } },
+    },
+    emergencyInfo: { police: '999', ambulance: '999' },
+  },
+
+  macau: {
+    name: 'Macau',
+    nameChinese: '澳门',
+    image: 'https://images.unsplash.com/photo-1555212697-194d092e3b8f?w=800&q=80',
+    recommendedDays: 2,
+    highlights: [
+      { 
+        name: 'Ruins of St. Paul\'s', 
+        nameChinese: '大三巴牌坊',
+        description: 'Iconic Portuguese ruins', 
+        duration: '1 hour',
+        ticketPrice: { rmb: 0, usd: 0 },
+      },
+      { 
+        name: 'The Venetian Macau', 
+        nameChinese: '威尼斯人',
+        description: 'World\'s largest casino resort', 
+        duration: '3-4 hours',
+        ticketPrice: { rmb: 0, usd: 0 },
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Portuguese Egg Tart', nameChinese: '葡式蛋挞', emoji: '🥧', priceRange: 'MOP$10-20' }],
+      halal: [{ name: 'Halal Options', nameChinese: '清真餐厅', emoji: '🥘', priceRange: 'MOP$80-150' }],
+      vegetarian: [{ name: 'Vegetarian Restaurants', nameChinese: '素食', emoji: '🥬', priceRange: 'MOP$80-150' }],
+      spicy: [{ name: 'Spicy Asian Fusion', nameChinese: '辣味美食', emoji: '🌶️', priceRange: 'MOP$100-200' }],
+    },
+    hotels: {
+      budget: { name: 'Ole London Hotel', nameChinese: '澳莱英京酒店', type: 'Budget', pricePerNight: { rmb: 400, usd: 56 } },
+      comfort: { name: 'Sofitel Macau', nameChinese: '澳门索菲特', type: '4-Star', pricePerNight: { rmb: 1200, usd: 167 } },
+      luxury: { name: 'The Venetian Macao', nameChinese: '威尼斯人酒店', type: '5-Star', pricePerNight: { rmb: 2500, usd: 347 } },
+    },
+    emergencyInfo: { police: '999', ambulance: '999' },
+  },
+
+  tibet: {
+    name: 'Lhasa',
+    nameChinese: '拉萨',
+    image: 'https://images.unsplash.com/photo-1517329782449-810562a4ec2f?w=800&q=80',
+    recommendedDays: 4,
+    highlights: [
+      { 
+        name: 'Potala Palace', 
+        nameChinese: '布达拉宫',
+        description: 'Former residence of Dalai Lama', 
+        duration: '3-4 hours',
+        address: '35 Beijing Middle Road, Lhasa',
+        addressChinese: '拉萨市北京中路35号',
+        ticketPrice: { rmb: 200, usd: 28 },
+        tips: 'Acclimatize for 1-2 days before visiting',
+      },
+      { 
+        name: 'Jokhang Temple', 
+        nameChinese: '大昭寺',
+        description: 'Most sacred temple in Tibet', 
+        duration: '2 hours',
+        ticketPrice: { rmb: 85, usd: 12 },
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Tibetan Momos', nameChinese: '藏式饺子', emoji: '🥟', priceRange: '¥20-40' }],
+      halal: [{ name: 'Muslim Restaurant', nameChinese: '清真餐厅', emoji: '🥘', priceRange: '¥30-60' }],
+      vegetarian: [{ name: 'Tsampa', nameChinese: '糌粑', emoji: '🥣', priceRange: '¥15-30' }],
+      spicy: [{ name: 'Sichuan Food', nameChinese: '川菜', emoji: '🌶️', priceRange: '¥40-80' }],
+    },
+    hotels: {
+      budget: { name: 'Lhasa Backpacker', nameChinese: '拉萨背包客', type: 'Hostel', pricePerNight: { rmb: 100, usd: 14 } },
+      comfort: { name: 'Shangri-La Lhasa', nameChinese: '拉萨香格里拉', type: '4-Star', pricePerNight: { rmb: 800, usd: 111 } },
+      luxury: { name: 'St. Regis Lhasa', nameChinese: '拉萨瑞吉酒店', type: '5-Star', pricePerNight: { rmb: 2500, usd: 347 } },
+    },
+    emergencyInfo: { police: '110', ambulance: '120' },
+  },
+
+  harbin: {
+    name: 'Harbin',
+    nameChinese: '哈尔滨',
+    image: 'https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=800&q=80',
+    recommendedDays: 2,
+    highlights: [
+      { 
+        name: 'Ice and Snow World', 
+        nameChinese: '冰雪大世界',
+        description: 'World\'s largest ice festival', 
+        duration: '3-4 hours',
+        ticketPrice: { rmb: 330, usd: 46 },
+        tips: 'Best in January-February',
+      },
+      { 
+        name: 'Saint Sophia Cathedral', 
+        nameChinese: '圣索菲亚教堂',
+        description: 'Russian Orthodox cathedral', 
+        duration: '1 hour',
+        ticketPrice: { rmb: 20, usd: 3 },
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Russian Bread', nameChinese: '大列巴', emoji: '🍞', priceRange: '¥20-40' }],
+      halal: [{ name: 'Halal Lamb', nameChinese: '清真羊肉', emoji: '🥩', priceRange: '¥50-100' }],
+      vegetarian: [{ name: 'Vegetarian Dumplings', nameChinese: '素饺子', emoji: '🥟', priceRange: '¥20-40' }],
+      spicy: [{ name: 'Korean BBQ', nameChinese: '韩式烤肉', emoji: '🌶️', priceRange: '¥80-150' }],
+    },
+    hotels: {
+      budget: { name: 'Harbin Hostel', nameChinese: '哈尔滨青旅', type: 'Hostel', pricePerNight: { rmb: 80, usd: 11 } },
+      comfort: { name: 'Sofitel Harbin', nameChinese: '哈尔滨索菲特', type: '4-Star', pricePerNight: { rmb: 600, usd: 83 } },
+      luxury: { name: 'Shangri-La Harbin', nameChinese: '哈尔滨香格里拉', type: '5-Star', pricePerNight: { rmb: 1200, usd: 167 } },
+    },
+    emergencyInfo: { police: '110', ambulance: '120' },
+  },
+
+  pingyao: {
+    name: 'Pingyao',
+    nameChinese: '平遥',
+    image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=800&q=80',
+    recommendedDays: 2,
+    highlights: [
+      { 
+        name: 'Pingyao Ancient City', 
+        nameChinese: '平遥古城',
+        description: 'Best preserved ancient walled city', 
+        duration: 'Full day',
+        ticketPrice: { rmb: 130, usd: 18 },
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Pingyao Beef', nameChinese: '平遥牛肉', emoji: '🥩', priceRange: '¥40-80' }],
+      halal: [{ name: 'Halal Noodles', nameChinese: '清真面', emoji: '🍜', priceRange: '¥15-30' }],
+      vegetarian: [{ name: 'Local Vegetables', nameChinese: '素菜', emoji: '🥬', priceRange: '¥20-40' }],
+      spicy: [{ name: 'Shanxi Noodles', nameChinese: '山西面食', emoji: '🍜', priceRange: '¥15-35' }],
+    },
+    hotels: {
+      budget: { name: 'Pingyao Guesthouse', nameChinese: '平遥民宿', type: 'Guesthouse', pricePerNight: { rmb: 100, usd: 14 } },
+      comfort: { name: 'Jing\'s Residence', nameChinese: '锦宅', type: 'Boutique', pricePerNight: { rmb: 500, usd: 69 } },
+      luxury: { name: 'Pingyao Yunjincheng', nameChinese: '云锦成宾舍', type: '5-Star', pricePerNight: { rmb: 1200, usd: 167 } },
+    },
+    emergencyInfo: { police: '110', ambulance: '120' },
+  },
+
+  fenghuang: {
+    name: 'Fenghuang',
+    nameChinese: '凤凰',
+    image: 'https://images.unsplash.com/photo-1573455494060-c5595004fb6c?w=800&q=80',
+    recommendedDays: 2,
+    highlights: [
+      { 
+        name: 'Fenghuang Ancient Town', 
+        nameChinese: '凤凰古城',
+        description: 'Phoenix Ancient Town on the river', 
+        duration: 'Full day',
+        ticketPrice: { rmb: 148, usd: 21 },
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Blood Cake', nameChinese: '血粑鸭', emoji: '🦆', priceRange: '¥50-80' }],
+      halal: [{ name: 'Halal Options', nameChinese: '清真餐厅', emoji: '🥘', priceRange: '¥30-50' }],
+      vegetarian: [{ name: 'River Vegetables', nameChinese: '河鲜素菜', emoji: '🥬', priceRange: '¥25-45' }],
+      spicy: [{ name: 'Hunan Cuisine', nameChinese: '湘菜', emoji: '🌶️', priceRange: '¥40-70' }],
+    },
+    hotels: {
+      budget: { name: 'Riverside Hostel', nameChinese: '河畔青旅', type: 'Hostel', pricePerNight: { rmb: 80, usd: 11 } },
+      comfort: { name: 'Phoenix Holiday Hotel', nameChinese: '凤凰假日酒店', type: '3-Star', pricePerNight: { rmb: 300, usd: 42 } },
+      luxury: { name: 'Fenghuang Grand Hotel', nameChinese: '凤凰大酒店', type: '4-Star', pricePerNight: { rmb: 800, usd: 111 } },
+    },
+    emergencyInfo: { police: '110', ambulance: '120' },
+  },
+
+  xiamen: {
+    name: 'Xiamen',
+    nameChinese: '厦门',
+    image: 'https://images.unsplash.com/photo-1517479149777-5f3b1511d5ad?w=800&q=80',
+    recommendedDays: 2,
+    highlights: [
+      { 
+        name: 'Gulangyu Island', 
+        nameChinese: '鼓浪屿',
+        description: 'Car-free island with colonial architecture', 
+        duration: 'Full day',
+        ticketPrice: { rmb: 35, usd: 5 },
+      },
+      { 
+        name: 'Nanputuo Temple', 
+        nameChinese: '南普陀寺',
+        description: 'Buddhist temple near Xiamen University', 
+        duration: '2 hours',
+        ticketPrice: { rmb: 0, usd: 0 },
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Seafood', nameChinese: '海鲜', emoji: '🦐', priceRange: '¥80-200' }],
+      halal: [{ name: 'Muslim Restaurant', nameChinese: '清真餐厅', emoji: '🥘', priceRange: '¥40-80' }],
+      vegetarian: [{ name: 'Temple Vegetarian', nameChinese: '寺院素食', emoji: '🥬', priceRange: '¥30-60' }],
+      spicy: [{ name: 'Fujian Spicy', nameChinese: '闽南辣味', emoji: '🌶️', priceRange: '¥50-100' }],
+    },
+    hotels: {
+      budget: { name: 'Xiamen Youth Hostel', nameChinese: '厦门青旅', type: 'Hostel', pricePerNight: { rmb: 100, usd: 14 } },
+      comfort: { name: 'Millennium Harbourview', nameChinese: '海景千禧', type: '4-Star', pricePerNight: { rmb: 600, usd: 83 } },
+      luxury: { name: 'Conrad Xiamen', nameChinese: '厦门康莱德', type: '5-Star', pricePerNight: { rmb: 1500, usd: 208 } },
+    },
+    emergencyInfo: { police: '110', ambulance: '120' },
+  },
+
+  chongqing: {
+    name: 'Chongqing',
+    nameChinese: '重庆',
+    image: 'https://images.unsplash.com/photo-1602320233067-c7a4c3c19e0f?w=800&q=80',
+    recommendedDays: 2,
+    highlights: [
+      { 
+        name: 'Hongya Cave', 
+        nameChinese: '洪崖洞',
+        description: 'Spirited Away-inspired hillside complex', 
+        duration: '2-3 hours',
+        ticketPrice: { rmb: 0, usd: 0 },
+      },
+      { 
+        name: 'Yangtze River Cable Car', 
+        nameChinese: '长江索道',
+        description: 'Cross the river by cable car', 
+        duration: '30 min',
+        ticketPrice: { rmb: 30, usd: 4 },
+      },
+    ],
+    foods: {
+      anything: [{ name: 'Chongqing Hotpot', nameChinese: '重庆火锅', emoji: '🍲', priceRange: '¥80-150' }],
+      halal: [{ name: 'Halal Hotpot', nameChinese: '清真火锅', emoji: '🥘', priceRange: '¥60-120' }],
+      vegetarian: [{ name: 'Veggie Hotpot', nameChinese: '素火锅', emoji: '🥬', priceRange: '¥50-100' }],
+      spicy: [{ name: 'Mala Hotpot', nameChinese: '麻辣火锅', emoji: '🌶️', priceRange: '¥80-180' }],
+    },
+    hotels: {
+      budget: { name: 'Chongqing Hostel', nameChinese: '重庆青旅', type: 'Hostel', pricePerNight: { rmb: 80, usd: 11 } },
+      comfort: { name: 'JW Marriott Chongqing', nameChinese: '重庆JW万豪', type: '4-Star', pricePerNight: { rmb: 700, usd: 97 } },
+      luxury: { name: 'Intercontinental Chongqing', nameChinese: '重庆洲际', type: '5-Star', pricePerNight: { rmb: 1200, usd: 167 } },
+    },
+    emergencyInfo: { police: '110', ambulance: '120' },
+  },
 };
 
 // Helper functions
