@@ -101,7 +101,7 @@ export default function ReviewsSection({ userReviews = [] }) {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-full text-sm font-medium mb-4">
             <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
-            Trusted by 5,000+ Travelers
+            Trusted by 20+ Travelers
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
             What Our Travelers Say
@@ -205,12 +205,12 @@ export default function ReviewsSection({ userReviews = [] }) {
           className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 text-center"
         >
           <div className="bg-white rounded-xl p-4 border border-slate-200">
-            <p className="text-3xl font-bold text-slate-900">5,000+</p>
+            <p className="text-3xl font-bold text-slate-900">20+</p>
             <p className="text-sm text-slate-500">Happy Travelers</p>
           </div>
           <div className="bg-white rounded-xl p-4 border border-slate-200">
-            <p className="text-3xl font-bold text-slate-900">50+</p>
-            <p className="text-sm text-slate-500">Countries Served</p>
+            <p className="text-3xl font-bold text-slate-900">24/7</p>
+            <p className="text-sm text-slate-500">Prompt Responses</p>
           </div>
           <div className="bg-white rounded-xl p-4 border border-slate-200">
             <p className="text-3xl font-bold text-slate-900">4.9/5</p>

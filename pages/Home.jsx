@@ -6,6 +6,7 @@ import ReviewsSection from '@/components/travel/ReviewsSection';
 import Navbar from '@/components/travel/Navbar';
 import FeaturesSection from '@/components/travel/FeaturesSection';
 import CityGallery from '@/components/travel/CityGallery';
+import PricingSection from '@/components/travel/PricingSection';
 import Footer from '@/components/travel/Footer';
 
 export default function Home() {
@@ -43,6 +44,7 @@ export default function Home() {
       <HeroSection onStartPlanning={() => setIsWizardOpen(true)} />
       <FeaturesSection />
       <CityGallery />
+      <PricingSection />
       <ReviewsSection userReviews={userReviews} />
       <Footer />
       

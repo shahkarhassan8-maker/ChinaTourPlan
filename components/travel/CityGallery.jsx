@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MapPin, ChevronLeft, ChevronRight, Star, Camera } from 'lucide-react';
+import { X, MapPin, ChevronLeft, ChevronRight, Camera } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { CITY_DATA } from './cityData';
 
 const CITY_GALLERY_DATA = {
   beijing: {
@@ -11,10 +10,10 @@ const CITY_GALLERY_DATA = {
     description: 'The ancient capital where imperial palaces meet modern skyscrapers',
     specialties: ['Peking Duck', 'Great Wall', 'Forbidden City', 'Temple of Heaven'],
     images: [
-      'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80',
-      'https://images.unsplash.com/photo-1529921879218-f99546d03a96?w=800&q=80',
-      'https://images.unsplash.com/photo-1584114614576-49f6f4813ed7?w=800&q=80',
-      'https://images.unsplash.com/photo-1599571234909-29ed5d1321d6?w=800&q=80',
+      'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1529921879218-f99546d03a96?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1584114614576-49f6f4813ed7?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=800&q=80&auto=format&fit=crop',
     ]
   },
   shanghai: {
@@ -23,10 +22,10 @@ const CITY_GALLERY_DATA = {
     description: 'A dazzling metropolis where East meets West in spectacular fashion',
     specialties: ['The Bund', 'Yu Garden', 'Xiaolongbao', 'French Concession'],
     images: [
-      'https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?w=800&q=80',
-      'https://images.unsplash.com/photo-1538428494232-9c0d8a3ab403?w=800&q=80',
-      'https://images.unsplash.com/photo-1548919973-5cef591cdbc9?w=800&q=80',
-      'https://images.unsplash.com/photo-1517309246141-d22814846ee0?w=800&q=80',
+      'https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1538428494232-9c0d8a3ab403?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548919973-5cef591cdbc9?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1517309246141-d22814846ee0?w=800&q=80&auto=format&fit=crop',
     ]
   },
   chengdu: {
@@ -35,10 +34,10 @@ const CITY_GALLERY_DATA = {
     description: 'Home to giant pandas and the spiciest cuisine in China',
     specialties: ['Giant Pandas', 'Hot Pot', 'Jinli Street', 'Tea Houses'],
     images: [
-      'https://images.unsplash.com/photo-1527838832700-5059252407fa?w=800&q=80',
-      'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800&q=80',
-      'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80',
-      'https://images.unsplash.com/photo-1587381420270-0e20f2e31dd1?w=800&q=80',
+      'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1587381420270-0e20f2e31dd1?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1527838832700-5059252407fa?w=800&q=80&auto=format&fit=crop',
     ]
   },
   xian: {
@@ -47,10 +46,10 @@ const CITY_GALLERY_DATA = {
     description: 'Ancient Silk Road starting point with the famous Terracotta Warriors',
     specialties: ['Terracotta Warriors', 'City Wall', 'Muslim Quarter', 'Biangbiang Noodles'],
     images: [
-      'https://images.unsplash.com/photo-1591104451049-5c4ddb3fb13c?w=800&q=80',
-      'https://images.unsplash.com/photo-1568791772916-c97e3dd88ac2?w=800&q=80',
-      'https://images.unsplash.com/photo-1599571234909-29ed5d1321d6?w=800&q=80',
-      'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=800&q=80',
+      'https://images.unsplash.com/photo-1591104451049-5c4ddb3fb13c?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1568791772916-c97e3dd88ac2?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80&auto=format&fit=crop',
     ]
   },
   guilin: {
@@ -59,10 +58,10 @@ const CITY_GALLERY_DATA = {
     description: 'Stunning karst landscapes that inspired countless Chinese paintings',
     specialties: ['Li River Cruise', 'Karst Mountains', 'Rice Terraces', 'Bamboo Rafting'],
     images: [
-      'https://images.unsplash.com/photo-1533552337737-c97e3dec3f73?w=800&q=80',
-      'https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=800&q=80',
-      'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=800&q=80',
-      'https://images.unsplash.com/photo-1580650051573-a7e70b0a3508?w=800&q=80',
+      'https://images.unsplash.com/photo-1533552337737-c97e3dec3f73?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1580650051573-a7e70b0a3508?w=800&q=80&auto=format&fit=crop',
     ]
   },
   hangzhou: {
@@ -71,22 +70,22 @@ const CITY_GALLERY_DATA = {
     description: 'Paradise on Earth with the legendary West Lake',
     specialties: ['West Lake', 'Longjing Tea', 'Lingyin Temple', 'Silk Market'],
     images: [
-      'https://images.unsplash.com/photo-1591474200742-8e512e6f98f8?w=800&q=80',
-      'https://images.unsplash.com/photo-1598887142623-38433d3ed3e4?w=800&q=80',
-      'https://images.unsplash.com/photo-1576016770956-debb63d92058?w=800&q=80',
-      'https://images.unsplash.com/photo-1545893835-abaa50cbe628?w=800&q=80',
+      'https://images.unsplash.com/photo-1591474200742-8e512e6f98f8?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1576016770956-debb63d92058?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1545893835-abaa50cbe628?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1598887142623-38433d3ed3e4?w=800&q=80&auto=format&fit=crop',
     ]
   },
   zhangjiajie: {
     name: 'Zhangjiajie',
     nameChinese: '张家界',
-    description: 'The inspiration for Avatar\'s floating mountains',
+    description: "The inspiration for Avatar's floating mountains",
     specialties: ['Avatar Mountains', 'Glass Bridge', 'Tianmen Mountain', 'Baofeng Lake'],
     images: [
-      'https://images.unsplash.com/photo-1513415564515-763d91423bdd?w=800&q=80',
-      'https://images.unsplash.com/photo-1564221710304-0b37c8b9d729?w=800&q=80',
-      'https://images.unsplash.com/photo-1509023464722-18d996393ca8?w=800&q=80',
-      'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=800&q=80',
+      'https://images.unsplash.com/photo-1513415564515-763d91423bdd?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1564221710304-0b37c8b9d729?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1509023464722-18d996393ca8?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=800&q=80&auto=format&fit=crop',
     ]
   },
   hongkong: {
@@ -95,13 +94,36 @@ const CITY_GALLERY_DATA = {
     description: 'Where traditional temples meet towering skyscrapers',
     specialties: ['Victoria Peak', 'Dim Sum', 'Star Ferry', 'Temple Street'],
     images: [
-      'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800&q=80',
-      'https://images.unsplash.com/photo-1536599018102-9f803c979b5d?w=800&q=80',
-      'https://images.unsplash.com/photo-1518599807935-37015b9cefcb?w=800&q=80',
-      'https://images.unsplash.com/photo-1532364158125-02d75a0f7fb0?w=800&q=80',
+      'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1536599018102-9f803c979b5d?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1518599807935-37015b9cefcb?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1532364158125-02d75a0f7fb0?w=800&q=80&auto=format&fit=crop',
     ]
   },
 };
+
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80&auto=format&fit=crop';
+
+function ImageWithFallback({ src, alt, className, ...props }) {
+  const [imgSrc, setImgSrc] = useState(src);
+  const [isLoading, setIsLoading] = useState(true);
+
+  return (
+    <div className="relative w-full h-full">
+      {isLoading && (
+        <div className="absolute inset-0 bg-slate-200 animate-pulse" />
+      )}
+      <img
+        src={imgSrc}
+        alt={alt}
+        className={className}
+        onError={() => setImgSrc(FALLBACK_IMAGE)}
+        onLoad={() => setIsLoading(false)}
+        {...props}
+      />
+    </div>
+  );
+}
 
 export default function CityGallery() {
   const [selectedCity, setSelectedCity] = useState(null);
@@ -166,7 +188,7 @@ export default function CityGallery() {
               onClick={() => openGallery(cityId)}
             >
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
-                <img
+                <ImageWithFallback
                   src={city.images[0]}
                   alt={city.name}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -208,7 +230,7 @@ export default function CityGallery() {
                 </button>
 
                 <div className="relative aspect-video rounded-2xl overflow-hidden">
-                  <img
+                  <ImageWithFallback
                     src={CITY_GALLERY_DATA[selectedCity].images[currentImageIndex]}
                     alt={CITY_GALLERY_DATA[selectedCity].name}
                     className="w-full h-full object-cover"
