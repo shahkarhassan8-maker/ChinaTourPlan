@@ -11,9 +11,6 @@ const nextConfig = {
     };
     return config;
   },
-  experimental: {
-    allowedOrigins: ['*'],
-  },
 };
 
 module.exports = nextConfig;
