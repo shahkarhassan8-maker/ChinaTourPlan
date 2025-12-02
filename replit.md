@@ -10,6 +10,8 @@ This is a Next.js application for planning travel itineraries to China. The app 
   - `signup.jsx` - Membership signup/login page with plan selection
   - `dashboard.jsx` - User dashboard showing saved itineraries and review submission
   - `_app.js` - Next.js app wrapper
+- `pages/api/` - API routes
+  - `chat.js` - GROQ AI chat endpoint for premium users
 - `components/` - React components
   - `travel/` - Travel-specific components
     - `HeroSection.jsx` - Landing page hero with CTA
@@ -18,8 +20,10 @@ This is a Next.js application for planning travel itineraries to China. The app 
     - `ReviewsSection.jsx` - Customer reviews section with user-submitted reviews
     - `Navbar.jsx` - Navigation bar with user authentication status
     - `FeaturesSection.jsx` - Features showcase section
+    - `CityGallery.jsx` - Interactive city photo gallery
+    - `AskAIModal.jsx` - AI chat assistant modal (premium only)
     - `Footer.jsx` - Site footer with contact info
-    - `cityData.jsx` - City information database
+    - `cityData.jsx` - City information database (20 cities)
   - `ui/` - Reusable UI components (buttons, dialogs, inputs, sliders, etc.)
 - `styles/` - Global CSS styles
 - `lib/` - Utility functions
@@ -28,11 +32,15 @@ This is a Next.js application for planning travel itineraries to China. The app 
 - **Framework**: Next.js 14.0.0
 - **Language**: JavaScript/JSX
 - **Styling**: TailwindCSS
+- **AI Integration**: GROQ SDK (llama-3.3-70b-versatile model)
 - **UI Libraries**: 
   - Radix UI (dialogs, sliders, radio groups)
   - Framer Motion (animations)
   - Lucide React (icons)
   - Sonner (toast notifications)
+
+## Environment Variables
+- `GROQ_API_KEY` - API key for GROQ AI chat integration (required for premium AI features)
 
 ## Development
 The dev server runs on port 5000 at 0.0.0.0 to work with Replit's proxy system.
@@ -60,7 +68,32 @@ The app is configured for autoscale deployment on Replit:
 - Deployment type: Autoscale (stateless)
 
 ## Recent Changes (Dec 2, 2025)
-### New Features Added:
+
+### Latest Updates:
+- **GROQ AI Chat Integration** (`pages/api/chat.js`, `components/travel/AskAIModal.jsx`):
+  - AI-powered travel assistant for premium users only
+  - Uses GROQ's llama-3.3-70b-versatile model
+  - Contextual responses based on user's itinerary
+  - Suggested questions and chat history
+  - Floating AI button for quick access
+
+- **City Gallery** (`components/travel/CityGallery.jsx`):
+  - Interactive gallery showcasing 8 major Chinese cities
+  - Lightbox-style image viewer with navigation
+  - City information including specialties and descriptions
+  - Beautiful card layout with hover effects
+
+- **Navigation Updates**:
+  - Added Gallery link to navbar (desktop and mobile)
+  - Smooth scroll to gallery section
+  - All 20 cities fully supported in wizard
+
+- **Paywall System**:
+  - Free users: See only first activity per day
+  - Basic plan: Full itinerary access
+  - Premium plan: Full itinerary + AI chat assistant
+
+### Previous Features:
 - **Membership Signup Page** (`/signup`):
   - Three pricing tiers: Monthly ($9.99), Yearly ($59.99), Lifetime ($149.99)
   - Form validation for email, password, and name
@@ -94,7 +127,7 @@ The app is configured for autoscale deployment on Replit:
 - Improved wizard animation performance - reduced lag with faster transitions
 - Added padding to hero section for navbar visibility
 
-### Previous Changes:
+### Earlier Changes:
 - Fixed folder naming for Next.js conventions
 - Configured dev server for Replit environment
 - Fixed critical city selection bug for 15+ cities
