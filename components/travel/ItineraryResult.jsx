@@ -5,7 +5,7 @@ import {
   Download, Sparkles, DollarSign, Lock, Crown,
   MessageCircle, Phone, FileText, CheckCircle,
   Star, Quote, Globe, Shield, Clock, Users,
-  Bookmark, BookmarkCheck, Mail, Bot
+  Bookmark, BookmarkCheck, Mail, Bot, Loader2
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -45,6 +45,61 @@ const TESTIMONIALS = [
     trip: '7 days in Chengdu & Zhangjiajie',
   },
 ];
+
+const convertAIItinerary = (aiData, formData) => {
+  if (!aiData?.itinerary) return [];
+  
+  const budgetMultipliers = {
+    budget: { cost: 50, hotelKey: 'budget' },
+    comfort: { cost: 150, hotelKey: 'comfort' },
+    luxury: { cost: 400, hotelKey: 'luxury' },
+  };
+  const multiplier = budgetMultipliers[formData.budget] || budgetMultipliers.comfort;
+  
+  return aiData.itinerary.map((day, index) => {
+    const cityId = formData.cities.find(c => 
+      CITY_DATA[c]?.name === day.city || c === day.city.toLowerCase()
+    );
+    const cityData = cityId ? CITY_DATA[cityId] : null;
+    
+    const activities = (day.schedule || []).map(item => {
+      const highlightMatch = cityData?.highlights?.find(h => 
+        h.name === item.activity || h.nameChinese === item.activityChinese
+      );
+      
+      return highlightMatch || {
+        name: item.activity,
+        nameChinese: item.activityChinese || '',
+        description: item.notes || '',
+        duration: item.duration,
+        tips: item.notes,
+      };
+    });
+    
+    const hotel = cityData?.hotels?.[multiplier.hotelKey];
+    const foods = cityData?.foods?.[formData.food] || cityData?.foods?.anything || [];
+    
+    return {
+      dayNumber: day.day,
+      city: day.city,
+      cityChinese: day.cityChinese || cityData?.nameChinese || '',
+      title: day.theme || activities[0]?.name || `Explore ${day.city}`,
+      image: cityData?.image || '',
+      activities,
+      aiSchedule: day.schedule,
+      meals: day.meals,
+      transport: null,
+      food: foods[index % Math.max(1, foods.length)] || null,
+      hotel,
+      tips: day.tips || [],
+      emergencyInfo: cityData?.emergencyInfo,
+      cost: {
+        rmb: (day.estimatedCost?.activities || 0) + (day.estimatedCost?.meals || 0) + (day.estimatedCost?.transport || 0),
+        usd: Math.round(((day.estimatedCost?.activities || 0) + (day.estimatedCost?.meals || 0) + (day.estimatedCost?.transport || 0)) / 7.2),
+      },
+    };
+  });
+};
 
 const generateDetailedItinerary = (formData) => {
   const budgetMultipliers = {
@@ -148,11 +203,60 @@ export default function ItineraryResult({ formData, onBack }) {
   const [showAskAI, setShowAskAI] = useState(false);
   const [purchasedPlan, setPurchasedPlan] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [aiItinerary, setAiItinerary] = useState(null);
+  const [generationError, setGenerationError] = useState(null);
   
-  const itinerary = generateDetailedItinerary(formData);
+  const hasSelectedPlaces = formData.selectedPlaces && 
+    Object.values(formData.selectedPlaces).some(places => places?.length > 0);
   
-  const totalCostUSD = itinerary.reduce((sum, day) => sum + day.cost.usd, 0);
-  const totalCostRMB = itinerary.reduce((sum, day) => sum + day.cost.rmb, 0);
+  useEffect(() => {
+    if (hasSelectedPlaces && !aiItinerary && !isGenerating) {
+      generateAIItinerary();
+    }
+  }, [hasSelectedPlaces]);
+  
+  const generateAIItinerary = async () => {
+    setIsGenerating(true);
+    setGenerationError(null);
+    
+    try {
+      const response = await fetch('/api/generate-itinerary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cities: formData.cities,
+          cityDays: formData.cityDays,
+          selectedPlaces: formData.selectedPlaces,
+          pace: formData.pace,
+          budget: formData.budget,
+          food: formData.food,
+          accommodation: formData.accommodation,
+          placesData: CITY_DATA
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to generate itinerary');
+      }
+      
+      const data = await response.json();
+      setAiItinerary(data.itinerary);
+    } catch (error) {
+      console.error('Error generating AI itinerary:', error);
+      setGenerationError(error.message);
+      toast.error('Failed to generate AI itinerary, using standard version');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+  
+  const itinerary = hasSelectedPlaces && aiItinerary?.itinerary 
+    ? convertAIItinerary(aiItinerary, formData)
+    : generateDetailedItinerary(formData);
+  
+  const totalCostUSD = itinerary.reduce((sum, day) => sum + (day.cost?.usd || 0), 0);
+  const totalCostRMB = itinerary.reduce((sum, day) => sum + (day.cost?.rmb || 0), 0);
   const cityNames = [...new Set(itinerary.map(d => d.city))];
 
   useEffect(() => {
@@ -198,6 +302,45 @@ export default function ItineraryResult({ formData, onBack }) {
 
   const isPremium = purchasedPlan === 'premium';
   const hasAnyPlan = purchasedPlan === 'premium' || purchasedPlan === 'basic';
+
+  if (isGenerating) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-3xl p-8 shadow-xl"
+          >
+            <div className="w-20 h-20 mx-auto mb-6 relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#E60012] to-red-500 rounded-full animate-pulse" />
+              <div className="absolute inset-2 bg-white rounded-full flex items-center justify-center">
+                <Loader2 className="w-8 h-8 text-[#E60012] animate-spin" />
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-3">Creating Your Perfect Itinerary</h2>
+            <p className="text-slate-600 mb-4">
+              Our AI is optimizing your {formData.duration}-day trip across {formData.cities.length} cities...
+            </p>
+            <div className="space-y-2 text-sm text-slate-500">
+              <div className="flex items-center justify-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-500" />
+                <span>Grouping nearby attractions</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <Clock className="w-4 h-4 text-blue-500" />
+                <span>Optimizing travel times</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <MapPin className="w-4 h-4 text-green-500" />
+                <span>Planning efficient routes</span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">

@@ -7,17 +7,21 @@ import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowRight, ArrowLeft, Calendar, MapPin, Gauge, 
-  Wallet, Utensils, Sparkles, Check, Search
+  Wallet, Utensils, Sparkles, Check, Search, Camera, Bed
 } from 'lucide-react';
 
 import CityDaysSelector from './CityDaysSelector';
+import PlaceSelector from './PlaceSelector';
+import AccommodationSelector from './AccommodationSelector';
 import { CITY_DATA } from './cityData';
 
 const STEPS = [
   { id: 'duration', title: 'Trip Duration', icon: Calendar, description: 'How many days will you explore?' },
   { id: 'cities', title: 'Destinations', icon: MapPin, description: 'Select your dream destinations (pick multiple!)' },
   { id: 'cityDays', title: 'Days per City', icon: Calendar, description: 'Customize how long you stay in each city' },
+  { id: 'places', title: 'Places to Visit', icon: Camera, description: 'Select attractions you want to see' },
   { id: 'pace', title: 'Travel Pace', icon: Gauge, description: 'How do you like to travel?' },
+  { id: 'accommodation', title: 'Accommodation', icon: Bed, description: 'Where would you like to stay?' },
   { id: 'budget', title: 'Budget Level', icon: Wallet, description: 'What\'s your comfort level?' },
   { id: 'food', title: 'Food Preferences', icon: Utensils, description: 'Any dietary preferences?' },
 ];
@@ -79,11 +83,15 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRegion, setSelectedRegion] = useState('All');
+  const [activePlacesCity, setActivePlacesCity] = useState(null);
+  const [activeAccommodationCity, setActiveAccommodationCity] = useState(null);
   const [formData, setFormData] = useState({
     duration: 7,
     cities: [],
     cityDays: {},
+    selectedPlaces: {},
     pace: 'moderate',
+    accommodation: {},
     budget: 'comfort',
     food: 'anything',
   });
@@ -137,8 +145,23 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
       const allocatedDays = Object.values(formData.cityDays).reduce((sum, d) => sum + d, 0);
       if (allocatedDays > formData.duration) return false;
     }
+    if (currentStep === 3) {
+      const hasPlaces = formData.cities.some(cityId => 
+        formData.selectedPlaces[cityId]?.length > 0
+      );
+      if (!hasPlaces) return false;
+    }
     return true;
   };
+  
+  React.useEffect(() => {
+    if (currentStep === 3 && formData.cities.length > 0 && !activePlacesCity) {
+      setActivePlacesCity(formData.cities[0]);
+    }
+    if (currentStep === 5 && formData.cities.length > 0 && !activeAccommodationCity) {
+      setActiveAccommodationCity(formData.cities[0]);
+    }
+  }, [currentStep, formData.cities]);
 
   const filteredCities = CITIES.filter(city => {
     const matchesSearch = city.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -247,7 +270,49 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
           />
         );
 
-      case 3: // Pace
+      case 3: // Places
+        return (
+          <div className="space-y-4">
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {formData.cities.map((cityId) => {
+                const city = CITY_DATA[cityId];
+                const placesCount = formData.selectedPlaces[cityId]?.length || 0;
+                return (
+                  <button
+                    key={cityId}
+                    onClick={() => setActivePlacesCity(cityId)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all ${
+                      activePlacesCity === cityId
+                        ? 'bg-[#E60012] text-white'
+                        : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'
+                    }`}
+                  >
+                    <span className="font-medium">{city?.name || cityId}</span>
+                    {placesCount > 0 && (
+                      <span className={`w-5 h-5 rounded-full text-xs flex items-center justify-center ${
+                        activePlacesCity === cityId ? 'bg-white text-[#E60012]' : 'bg-[#E60012] text-white'
+                      }`}>
+                        {placesCount}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            
+            {activePlacesCity && (
+              <PlaceSelector
+                cityId={activePlacesCity}
+                cityDays={formData.cityDays[activePlacesCity]}
+                selectedPlaces={formData.selectedPlaces}
+                onPlacesChange={(newPlaces) => setFormData({ ...formData, selectedPlaces: newPlaces })}
+                pace={formData.pace}
+              />
+            )}
+          </div>
+        );
+
+      case 4: // Pace
         return (
           <RadioGroup
             value={formData.pace}
@@ -280,7 +345,46 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
           </RadioGroup>
         );
 
-      case 4: // Budget
+      case 5: // Accommodation
+        return (
+          <div className="space-y-4">
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {formData.cities.map((cityId) => {
+                const city = CITY_DATA[cityId];
+                const hasAccommodation = formData.accommodation[cityId];
+                return (
+                  <button
+                    key={cityId}
+                    onClick={() => setActiveAccommodationCity(cityId)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all ${
+                      activeAccommodationCity === cityId
+                        ? 'bg-[#E60012] text-white'
+                        : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'
+                    }`}
+                  >
+                    <span className="font-medium">{city?.name || cityId}</span>
+                    {hasAccommodation && (
+                      <Check className={`w-4 h-4 ${
+                        activeAccommodationCity === cityId ? 'text-white' : 'text-green-600'
+                      }`} />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            
+            {activeAccommodationCity && (
+              <AccommodationSelector
+                cityId={activeAccommodationCity}
+                selectedAccommodation={formData.accommodation}
+                onAccommodationChange={(newAccommodation) => setFormData({ ...formData, accommodation: newAccommodation })}
+                budget={formData.budget}
+              />
+            )}
+          </div>
+        );
+
+      case 6: // Budget
         return (
           <RadioGroup
             value={formData.budget}
@@ -316,7 +420,7 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
           </RadioGroup>
         );
 
-      case 5: // Food
+      case 7: // Food
         return (
           <div className="grid grid-cols-2 gap-4">
             {FOOD_PREFS.map((pref) => (
