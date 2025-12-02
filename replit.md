@@ -69,7 +69,32 @@ The app is configured for autoscale deployment on Replit:
 
 ## Recent Changes (Dec 2, 2025)
 
-### Latest Updates:
+### Latest Updates - Comprehensive City Data Enhancement:
+- **Pace-Based Time Limits** (`components/travel/PlaceSelector.jsx`):
+  - Relaxed pace: 4 hours/day maximum
+  - Moderate pace: 7 hours/day maximum  
+  - Packed pace: 10 hours/day maximum
+  - Validation prevents over-scheduling attractions
+
+- **Major City Attraction Enhancements** (`components/travel/cityData.jsx`):
+  - **Beijing**: 9 attractions including Forbidden City, Great Wall Mutianyu, Temple of Heaven, Summer Palace, Hutong Tours, Tiananmen Square, Lama Temple, 798 Art District, Olympic Park
+  - **Shanghai**: 9 attractions including The Bund, Yu Garden, French Concession, Jade Buddha Temple, Nanjing Road, Jing'an Temple, Tianzifang, Shanghai Museum, Oriental Pearl Tower
+  - **Xi'an**: 8 attractions including Terracotta Warriors, Ancient City Wall, Muslim Quarter, Big Wild Goose Pagoda, Bell & Drum Towers, Huaqing Palace, Shaanxi History Museum, Small Wild Goose Pagoda
+  - **Chengdu**: 9 attractions including Giant Panda Base, Jinli Ancient Street, People's Park, Leshan Giant Buddha, Kuanzhai Alley, Wenshu Temple, Du Fu Thatched Cottage, Mount Qingcheng, Chengdu Museum
+  - **Guilin**: 9 attractions including Li River Cruise, Yangshuo Cycling, Reed Flute Cave, Elephant Trunk Hill, Longji Rice Terraces, Moon Hill, West Street, Impression Liu Sanjie, Xingping Ancient Town
+
+- **Enhanced Attraction Data Structure**:
+  - Every attraction includes: name, nameChinese, description, duration, address, addressChinese, coordinates, openingHours, ticketPrice (RMB/USD), image (Unsplash URL), tips
+  - New `localSecrets` arrays: 5 insider tips per attraction researched from local sources
+  - New `bestPhotoSpots` arrays: Instagram-worthy locations for each attraction
+  - Metro/transport directions with Chinese station names and exit info
+  - Useful Chinese phrases with pinyin for each attraction
+
+### Previous Updates:
+- **Accommodation Selection Bug Fix** (`components/travel/ItineraryResult.jsx`, `pages/api/generate-itinerary.js`):
+  - Fixed issue where user's accommodation selections weren't applied to itinerary
+  - Both AI and fallback generation now honor user's per-city accommodation choices
+
 - **New Place Selection Step** (`components/travel/PlaceSelector.jsx`):
   - Interactive place selection UI with category filters (history, nature, temple, modern, culture)
   - Time tracking showing hours remaining per city based on allocated days
@@ -93,10 +118,6 @@ The app is configured for autoscale deployment on Replit:
   - Now 8-step flow: Duration → Cities → City Days → Places → Pace → Accommodation → Budget → Food
   - Places selection step with city tabs and time validation
   - Accommodation selection step with city tabs
-
-- **Accommodation Selection Bug Fix** (`components/travel/ItineraryResult.jsx`, `pages/api/generate-itinerary.js`):
-  - Fixed issue where user's accommodation selections weren't applied to itinerary
-  - Both AI and fallback generation now honor user's per-city accommodation choices
 
 ### Earlier Updates:
 - **Professional Itinerary Enhancements** (`components/travel/cityData.jsx`, `components/travel/DetailedDayCard.jsx`):
