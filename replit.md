@@ -55,8 +55,29 @@ The app is configured for autoscale deployment on Replit:
 - Set up workflow for Next.js dev server
 - Configured deployment settings for production
 - Removed invalid experimental config from next.config.js
+- Removed bottom chat features (FloatingAssistButton and LiveAssistanceModal components)
+- Fixed critical city selection bug - added complete data for 15+ cities that were missing from CITY_DATA:
+  - hangzhou, suzhou, huangshan, zhangjiajie, jiuzhaigou, lijiang, yunnan (Dali)
+  - hongkong, macau, tibet (Lhasa), harbin, pingyao, fenghuang, xiamen, chongqing
+- Enhanced ItineraryResult page with:
+  - Contact Support Banner (always visible with WeChat and WhatsApp info)
+  - Testimonials section with 3 customer reviews
+  - Trust indicators (5,000+ travelers, 50+ countries, 4.9/5 rating, 100% guarantee)
+  - Footer contact information
+- Added WeChat contact: Shahkarhassan
+
+## Contact Information
+- **WeChat**: Shahkarhassan
+- **WhatsApp**: Coming Soon (placeholder)
+
+## Future Features (Planned)
+- Premium membership signup page with user accounts
+- Saved itineraries feature for registered users
+- Database integration for storing user data
+- Authentication system (Replit Auth integration)
 
 ## Notes
 - The app uses path aliasing with `@/` prefix pointing to project root
 - Images are served from Unsplash domains
 - Webpack is configured with custom alias resolution
+- City data includes: highlights, foods (by dietary preference), hotels (budget/comfort/luxury), transport info, and emergency contacts
