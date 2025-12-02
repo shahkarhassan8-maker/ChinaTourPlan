@@ -19,27 +19,13 @@ import {
   getUpgradeMessage,
   getPlanDisplayName 
 } from '@/lib/accessControl';
-
-const SAMPLE_ITINERARIES = [
-  {
-    id: 1,
-    title: '14 Days in China',
-    cities: ['Beijing', 'Shanghai', 'Chengdu'],
-    duration: 14,
-    createdAt: '2024-11-15',
-    budget: 'comfort',
-    pace: 'moderate',
-  },
-  {
-    id: 2,
-    title: '7 Days Adventure',
-    cities: ['Zhangjiajie', 'Guilin'],
-    duration: 7,
-    createdAt: '2024-11-10',
-    budget: 'budget',
-    pace: 'intense',
-  },
-];
+import { 
+  supabase, 
+  signOut, 
+  getUserItineraries, 
+  deleteItinerary as deleteItineraryFromDb,
+  submitReview as submitReviewToDb
+} from '@/lib/supabase';
 
 export default function DashboardPage() {
   const [user, setUser] = useState(null);
@@ -51,34 +37,76 @@ export default function DashboardPage() {
   const [viewItinerary, setViewItinerary] = useState(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeFeature, setUpgradeFeature] = useState(null);
+  const [supabaseAvailable, setSupabaseAvailable] = useState(false);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    
-    const storedItineraries = localStorage.getItem('itineraries');
-    if (storedItineraries) {
-      setItineraries(JSON.parse(storedItineraries));
-    } else {
-      setItineraries(SAMPLE_ITINERARIES);
-    }
-    setIsLoading(false);
+    setSupabaseAvailable(!!supabase);
+    loadUserData();
   }, []);
 
-  const handleLogout = () => {
+  const loadUserData = async () => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const userData = JSON.parse(storedUser);
+      setUser(userData);
+      
+      if (supabase && userData.id) {
+        try {
+          const dbItineraries = await getUserItineraries(userData.id);
+          if (dbItineraries && dbItineraries.length > 0) {
+            const formattedItineraries = dbItineraries.map(it => ({
+              id: it.id,
+              title: it.title,
+              cities: it.cities,
+              duration: it.duration,
+              createdAt: it.created_at,
+              pace: it.pace,
+              itineraryData: it.itinerary_data
+            }));
+            setItineraries(formattedItineraries);
+            setIsLoading(false);
+            return;
+          }
+        } catch (error) {
+          console.log('Supabase not configured, using local storage');
+        }
+      }
+      
+      const storedItineraries = localStorage.getItem('itineraries');
+      if (storedItineraries) {
+        setItineraries(JSON.parse(storedItineraries));
+      }
+    }
+    setIsLoading(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      if (supabase) {
+        await signOut();
+      }
+    } catch (error) {
+      console.log('Signout error:', error);
+    }
     localStorage.removeItem('user');
     toast.success('Logged out successfully');
     window.location.href = '/';
   };
 
-  const handleDeleteItinerary = (id) => {
-    const updated = itineraries.filter(i => i.id !== id);
-    setItineraries(updated);
-    localStorage.setItem('itineraries', JSON.stringify(updated));
-    setDeleteConfirm(null);
-    toast.success('Itinerary deleted');
+  const handleDeleteItinerary = async (id) => {
+    try {
+      if (supabase && user?.id) {
+        await deleteItineraryFromDb(id, user.id);
+      }
+      const updated = itineraries.filter(i => i.id !== id);
+      setItineraries(updated);
+      localStorage.setItem('itineraries', JSON.stringify(updated));
+      setDeleteConfirm(null);
+      toast.success('Itinerary deleted');
+    } catch (error) {
+      console.error('Delete error:', error);
+      toast.error('Failed to delete itinerary');
+    }
   };
 
   const handleViewItinerary = (itinerary) => {
@@ -104,29 +132,42 @@ export default function DashboardPage() {
     toast.success('Opening AI Assistant...');
   };
 
-  const handleSubmitReview = () => {
+  const handleSubmitReview = async () => {
     if (review.text.trim().length < 10) {
       toast.error('Please write at least 10 characters');
       return;
     }
     
-    const existingReviews = JSON.parse(localStorage.getItem('userReviews') || '[]');
-    const newReview = {
-      id: Date.now(),
-      name: user?.name || 'Anonymous',
-      country: 'Member',
-      rating: review.rating,
-      date: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
-      trip: 'China Travel Pro Member',
-      text: review.text,
-      verified: true,
-    };
-    existingReviews.push(newReview);
-    localStorage.setItem('userReviews', JSON.stringify(existingReviews));
-    
-    toast.success('Thank you for your review!');
-    setShowReviewModal(false);
-    setReview({ rating: 5, text: '' });
+    try {
+      if (supabase && user?.id) {
+        await submitReviewToDb(user.id, {
+          rating: review.rating,
+          text: review.text,
+          trip: 'China Travel Pro Member'
+        });
+      }
+      
+      const existingReviews = JSON.parse(localStorage.getItem('userReviews') || '[]');
+      const newReview = {
+        id: Date.now(),
+        name: user?.name || 'Anonymous',
+        country: 'Member',
+        rating: review.rating,
+        date: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+        trip: 'China Travel Pro Member',
+        text: review.text,
+        verified: true,
+      };
+      existingReviews.push(newReview);
+      localStorage.setItem('userReviews', JSON.stringify(existingReviews));
+      
+      toast.success('Thank you for your review!');
+      setShowReviewModal(false);
+      setReview({ rating: 5, text: '' });
+    } catch (error) {
+      console.error('Review error:', error);
+      toast.error('Failed to submit review');
+    }
   };
 
   if (isLoading) {
@@ -312,7 +353,7 @@ export default function DashboardPage() {
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-slate-900">{itinerary.title}</h3>
-                    <p className="text-sm text-slate-500">{itinerary.cities.join(' → ')}</p>
+                    <p className="text-sm text-slate-500">{itinerary.cities?.join(' → ')}</p>
                   </div>
                   <div className="flex gap-2">
                     <Button 
@@ -343,7 +384,7 @@ export default function DashboardPage() {
                   </span>
                   <span className="flex items-center gap-1">
                     <MapPin className="w-4 h-4" />
-                    {itinerary.cities.length} cities
+                    {itinerary.cities?.length} cities
                   </span>
                 </div>
 
@@ -352,9 +393,6 @@ export default function DashboardPage() {
                     Created {new Date(itinerary.createdAt).toLocaleDateString()}
                   </span>
                   <div className="flex gap-2">
-                    <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full capitalize">
-                      {itinerary.budget}
-                    </span>
                     <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full capitalize">
                       {itinerary.pace}
                     </span>
@@ -528,10 +566,6 @@ export default function DashboardPage() {
                   <h4 className="font-semibold text-slate-900 mb-3">Trip Details</h4>
                   <div className="space-y-2">
                     <div className="flex justify-between py-2 border-b border-slate-100">
-                      <span className="text-slate-600">Budget Level</span>
-                      <span className="font-medium text-slate-900 capitalize">{viewItinerary.budget}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-slate-100">
                       <span className="text-slate-600">Travel Pace</span>
                       <span className="font-medium text-slate-900 capitalize">{viewItinerary.pace}</span>
                     </div>
@@ -539,12 +573,6 @@ export default function DashboardPage() {
                       <span className="text-slate-600">Created</span>
                       <span className="font-medium text-slate-900">{new Date(viewItinerary.createdAt).toLocaleDateString()}</span>
                     </div>
-                    {viewItinerary.totalCost && (
-                      <div className="flex justify-between py-2">
-                        <span className="text-slate-600">Estimated Cost</span>
-                        <span className="font-bold text-[#E60012]">${viewItinerary.totalCost}</span>
-                      </div>
-                    )}
                   </div>
                 </div>
 
@@ -572,87 +600,8 @@ export default function DashboardPage() {
                   </Button>
                   <Link href="/" className="flex-1">
                     <Button className="w-full bg-[#E60012] hover:bg-[#cc0010] text-white">
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      Create Similar Trip
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {showUpgradeModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-            onClick={() => setShowUpgradeModal(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-2xl max-w-md w-full shadow-xl overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="bg-gradient-to-r from-[#E60012] to-red-500 text-white p-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                    <Lock className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold">Upgrade Required</h3>
-                    <p className="text-white/80 text-sm">Unlock this premium feature</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6">
-                <p className="text-slate-600 mb-6">
-                  {upgradeFeature ? getUpgradeMessage(upgradeFeature) : 'Upgrade your plan to access this feature.'}
-                </p>
-
-                <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4 mb-6 border border-amber-200">
-                  <h4 className="font-semibold text-amber-800 mb-2 flex items-center gap-2">
-                    <Zap className="w-4 h-4" />
-                    Pro Benefits
-                  </h4>
-                  <ul className="text-sm text-amber-700 space-y-1">
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
-                      Unlimited itineraries
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
-                      AI travel assistant
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
-                      Offline PDF downloads
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
-                      24/7 live support
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="flex gap-3">
-                  <Button
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => setShowUpgradeModal(false)}
-                  >
-                    Maybe Later
-                  </Button>
-                  <Link href="/signup" className="flex-1">
-                    <Button className="w-full bg-[#E60012] hover:bg-[#cc0010] text-white">
-                      <Crown className="w-4 h-4 mr-2" />
-                      Upgrade Now
+                      <Plus className="w-4 h-4 mr-2" />
+                      Create Similar
                     </Button>
                   </Link>
                 </div>

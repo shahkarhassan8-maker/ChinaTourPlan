@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { supabase, signUp, signIn } from '@/lib/supabase';
 
 const MEMBERSHIP_BENEFITS = [
   { icon: MapPin, title: 'Unlimited Itineraries', description: 'Create and save unlimited trip plans' },
@@ -56,6 +57,11 @@ export default function SignupPage() {
     password: '',
   });
   const [loading, setLoading] = useState(false);
+  const [supabaseAvailable, setSupabaseAvailable] = useState(false);
+
+  useEffect(() => {
+    setSupabaseAvailable(!!supabase);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,21 +83,52 @@ export default function SignupPage() {
     
     setLoading(true);
     
-    setTimeout(() => {
-      setLoading(false);
-      if (isLogin) {
-        toast.success('Welcome back! Redirecting to your dashboard...');
+    try {
+      if (supabaseAvailable) {
+        if (isLogin) {
+          const { user, profile } = await signIn(formData.email, formData.password);
+          toast.success('Welcome back! Redirecting to your dashboard...');
+          localStorage.setItem('user', JSON.stringify({
+            id: user.id,
+            name: profile?.name || formData.name || 'Traveler',
+            email: user.email,
+            plan: profile?.plan || 'free',
+            memberSince: profile?.created_at || new Date().toISOString(),
+          }));
+        } else {
+          const { user } = await signUp(formData.email, formData.password, formData.name);
+          toast.success('Account created! Please check your email to verify your account.');
+          localStorage.setItem('user', JSON.stringify({
+            id: user.id,
+            name: formData.name,
+            email: user.email,
+            plan: selectedPlan,
+            memberSince: new Date().toISOString(),
+          }));
+        }
+        window.location.href = '/dashboard';
       } else {
-        toast.success('Account created! Welcome to China Travel Pro!');
+        setTimeout(() => {
+          if (isLogin) {
+            toast.success('Welcome back! Redirecting to your dashboard...');
+          } else {
+            toast.success('Account created! Welcome to China Travel Pro!');
+          }
+          localStorage.setItem('user', JSON.stringify({
+            name: formData.name || 'Traveler',
+            email: formData.email,
+            plan: selectedPlan,
+            memberSince: new Date().toISOString(),
+          }));
+          window.location.href = '/dashboard';
+        }, 1500);
       }
-      localStorage.setItem('user', JSON.stringify({
-        name: formData.name || 'Traveler',
-        email: formData.email,
-        plan: selectedPlan,
-        memberSince: new Date().toISOString(),
-      }));
-      window.location.href = '/dashboard';
-    }, 1500);
+    } catch (error) {
+      console.error('Auth error:', error);
+      toast.error(error.message || 'Authentication failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

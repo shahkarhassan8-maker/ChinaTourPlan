@@ -37,20 +37,11 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-14 h-14 bg-gradient-to-br from-[#E60012] to-[#CC0010] rounded-2xl flex items-center justify-center shadow-xl shadow-red-500/30 border border-red-400/20">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="16" cy="16" r="12" fill="#FFD700" fillOpacity="0.2"/>
-                <path d="M16 4C16 4 8 8 8 16C8 24 16 28 16 28C16 28 24 24 24 16C24 8 16 4 16 4Z" fill="white" fillOpacity="0.9"/>
-                <path d="M16 6L17.5 10H14.5L16 6Z" fill="#FFD700"/>
-                <path d="M11 12H21L20 14H12L11 12Z" fill="#E60012"/>
-                <path d="M12 15H20V23C20 23 18 25 16 25C14 25 12 23 12 23V15Z" fill="white"/>
-                <path d="M14 17H18V21H14V17Z" fill="#E60012" fillOpacity="0.15"/>
-                <path d="M15 18H17V20H15V18Z" fill="#FFD700" fillOpacity="0.5"/>
-                <circle cx="10" cy="16" r="1.5" fill="#FFD700"/>
-                <circle cx="22" cy="16" r="1.5" fill="#FFD700"/>
-                <path d="M13 10C13 10 14.5 11 16 11C17.5 11 19 10 19 10" stroke="#E60012" strokeWidth="1" strokeLinecap="round"/>
-              </svg>
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="ChinaTourPlan Logo" 
+              className="w-12 h-12 rounded-xl object-contain"
+            />
             <span className={`font-bold text-2xl tracking-tight ${scrolled ? 'text-slate-900' : 'text-slate-900'}`}>
               ChinaTourPlan
             </span>
