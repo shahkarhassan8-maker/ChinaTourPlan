@@ -72,7 +72,7 @@ export default function PlaceSelector({
   const daysForCity = cityDays || cityData.recommendedDays || 2;
   const places = cityData.highlights || [];
   
-  const hoursPerDay = pace === 'relaxed' ? 5 : pace === 'moderate' ? 7 : 10;
+  const hoursPerDay = pace === 'relaxed' ? 4 : pace === 'moderate' ? 7 : 10;
   const totalAvailableHours = daysForCity * hoursPerDay;
   
   const selectedPlacesForCity = selectedPlaces[cityId] || [];

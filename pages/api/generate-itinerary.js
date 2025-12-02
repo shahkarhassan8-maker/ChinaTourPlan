@@ -76,7 +76,7 @@ export default async function handler(req, res) {
       };
     });
 
-    const hoursPerDay = pace === 'relaxed' ? 5 : pace === 'moderate' ? 7 : 10;
+    const hoursPerDay = pace === 'relaxed' ? 4 : pace === 'moderate' ? 7 : 10;
     
     const prompt = `You are a professional China travel planner. Create an optimized day-by-day itinerary based on the following travel plan.
 
