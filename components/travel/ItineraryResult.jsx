@@ -196,7 +196,8 @@ export default function ItineraryResult({ formData, onBack }) {
     toast.success(`🎉 ${planId === 'premium' ? 'Premium' : 'Basic'} plan unlocked! Enjoy your trip!`);
   };
 
-  const isPremium = purchasedPlan === 'premium' || purchasedPlan === 'basic';
+  const isPremium = purchasedPlan === 'premium';
+  const hasAnyPlan = purchasedPlan === 'premium' || purchasedPlan === 'basic';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
@@ -447,7 +448,7 @@ export default function ItineraryResult({ formData, onBack }) {
               key={day.dayNumber} 
               day={day} 
               isLast={index === itinerary.length - 1}
-              isPremium={isPremium}
+              isPremium={hasAnyPlan}
               onUpgrade={() => setShowPaywall(true)}
             />
           ))}
