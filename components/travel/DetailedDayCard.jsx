@@ -4,7 +4,7 @@ import {
   Train, Utensils, MapPin, DollarSign, Lightbulb, 
   Hotel, Camera, Clock, ChevronDown, ChevronUp, 
   Copy, ExternalLink, Navigation, MessageCircle, 
-  Lock, Phone, Globe, Star
+  Lock, Phone, Globe, Star, Sparkles, Image
 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -150,6 +150,41 @@ const LocationCard = ({ item, type, locked }) => {
               <p className="text-sm text-blue-700">{item.metro.station}</p>
               {item.metro.exit && <p className="text-xs text-blue-600">{item.metro.exit}</p>}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Local Secrets / Insider Tips */}
+      {item.localSecrets?.length > 0 && (
+        <div className="pt-2 border-t border-slate-100">
+          <p className="text-xs font-semibold text-[#E60012] uppercase tracking-wide mb-2 flex items-center gap-1">
+            <Sparkles className="w-3 h-3" />
+            Local Secrets
+          </p>
+          <ul className="space-y-2">
+            {item.localSecrets.map((secret, idx) => (
+              <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                <Star className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                {secret}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Best Photo Spots */}
+      {item.bestPhotoSpots?.length > 0 && (
+        <div className="pt-2 border-t border-slate-100">
+          <p className="text-xs font-semibold text-purple-600 uppercase tracking-wide mb-2 flex items-center gap-1">
+            <Image className="w-3 h-3" />
+            Best Photo Spots
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {item.bestPhotoSpots.map((spot, idx) => (
+              <span key={idx} className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-sm">
+                {spot}
+              </span>
+            ))}
           </div>
         </div>
       )}

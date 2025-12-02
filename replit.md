@@ -70,31 +70,44 @@ The app is configured for autoscale deployment on Replit:
 ## Recent Changes (Dec 2, 2025)
 
 ### Latest Updates:
-- **TourToChina Logo** (`components/travel/Navbar.jsx`):
-  - New pagoda-style SVG logo in the navbar
-  - Red gradient background with Chinese architectural design
-  - Professional branding visible on all pages
+- **Professional Itinerary Enhancements** (`components/travel/cityData.jsx`, `components/travel/DetailedDayCard.jsx`):
+  - Added `localInsights` field to each city with practical travel tips
+  - Added `localSecrets` arrays to attractions with RedNote-researched hidden gems
+  - Added `bestPhotoSpots` arrays for Instagram-worthy locations
+  - Enhanced descriptions with more detail and cultural context
+  - Updated DetailedDayCard to display new Local Secrets and Best Photo Spots sections
 
-- **Pricing Section** (`components/travel/PricingSection.jsx`):
-  - New pricing section with three tiers: Free, Pro ($19/mo), Lifetime ($99)
-  - Clicking "Pricing" in navbar now scrolls to pricing section
-  - Clear feature comparison and CTAs
+- **Dashboard Improvements** (`pages/dashboard.jsx`):
+  - Added "See Itinerary" button (eye icon) - opens full itinerary view modal
+  - Added delete confirmation dialog with "Are you sure?" message
+  - Shows itinerary details including cities, duration, budget level, and creation date
+  - "Create Similar Trip" button in view modal
 
-- **Language Toggle Removed**:
-  - Removed non-functional language switcher from navbar
-  - Cleaner navbar interface
+- **Enlarged TourToChina Logo** (`components/travel/Navbar.jsx`):
+  - Increased logo size from 10x10 to 14x14 with enhanced SVG design
+  - Larger text (text-2xl) for better brand visibility
+  - More detailed pagoda architecture in the icon
 
-- **Updated Trust Metrics** (`components/travel/ReviewsSection.jsx`):
-  - Changed from "5,000+ Travelers" to "20+ Travelers"
+- **City Gallery Image Fixes** (`components/travel/CityGallery.jsx`):
+  - Xi'an: Now shows actual Terracotta Warriors images (verified Unsplash URLs)
+  - Guilin: Now shows actual karst landscape/Li River images
+  - Hangzhou: Now shows West Lake and pagoda images
+  - All cities have verified, working image URLs
+
+- **Updated Trust Metrics** (`components/travel/ReviewsSection.jsx`, `components/travel/ItineraryResult.jsx`):
+  - Changed from "5,000+ Travelers" to "20+ Happy Travelers"
   - Replaced "50+ Countries Served" with "24/7 Prompt Responses"
-  - More realistic and relevant metrics
+  - Updated testimonials section text to "Real experiences from travelers"
+
+### Earlier Updates:
+- **Pricing Section** (`components/travel/PricingSection.jsx`):
+  - Three tiers: Free, Pro ($19/mo), Lifetime ($99)
+  - Clicking "Pricing" in navbar scrolls to pricing section
 
 - **Image Loading Improvements** (`components/travel/CityGallery.jsx`):
   - Added ImageWithFallback component with loading shimmer
   - Error handling for broken images with fallback
-  - Updated image URLs with auto=format&fit=crop parameters
 
-### Earlier Updates:
 - **GROQ AI Chat Integration** (`pages/api/chat.js`, `components/travel/AskAIModal.jsx`):
   - AI-powered travel assistant for premium users only
   - Uses GROQ's llama-3.3-70b-versatile model
