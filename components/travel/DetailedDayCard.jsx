@@ -285,7 +285,7 @@ export default function DetailedDayCard({ day, isLast, isPremium, onUpgrade }) {
                 <div>
                   <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
                     <Camera className="w-5 h-5 text-[#E60012]" />
-                    Today's Activities
+                    Day {day.dayNumber} Activities
                   </h4>
                   <div className="space-y-4">
                     {visibleActivities.map((activity, idx) => (

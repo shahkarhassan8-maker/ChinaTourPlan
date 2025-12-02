@@ -5,7 +5,7 @@ import {
   Download, Sparkles, DollarSign, Lock, Crown,
   MessageCircle, Phone, FileText, CheckCircle,
   Star, Quote, Globe, Shield, Clock, Users,
-  Bookmark, BookmarkCheck, Mail
+  Bookmark, BookmarkCheck, Mail, Bot
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,7 @@ import DetailedDayCard from './DetailedDayCard';
 import PaywallModal from './PaywallModal';
 import ShareModal from './ShareModal';
 import EmailModal from './EmailModal';
+import AskAIModal from './AskAIModal';
 import { CITY_DATA, getFoodsForPreference } from './cityData';
 import { toast } from "sonner";
 
@@ -144,6 +145,7 @@ export default function ItineraryResult({ formData, onBack }) {
   const [showPaywall, setShowPaywall] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showAskAI, setShowAskAI] = useState(false);
   const [purchasedPlan, setPurchasedPlan] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
   
@@ -248,6 +250,16 @@ export default function ItineraryResult({ formData, onBack }) {
               <Mail className="w-4 h-4 mr-2" />
               Email
             </Button>
+            {isPremium && (
+              <Button 
+                size="sm" 
+                className="bg-gradient-to-r from-[#E60012] to-red-600 text-white"
+                onClick={() => setShowAskAI(true)}
+              >
+                <Bot className="w-4 h-4 mr-2" />
+                Ask AI
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -603,6 +615,27 @@ export default function ItineraryResult({ formData, onBack }) {
         itinerary={itinerary}
         formData={formData}
       />
+
+      {/* Ask AI Modal */}
+      <AskAIModal
+        isOpen={showAskAI}
+        onClose={() => setShowAskAI(false)}
+        itineraryContext={`Trip: ${formData.duration} days in China. Cities: ${cityNames.join(', ')}. Budget: ${formData.budget}. Pace: ${formData.pace}. Dietary preference: ${formData.food}.`}
+        isPremium={isPremium}
+      />
+
+      {/* Floating Ask AI Button for Premium Users */}
+      {isPremium && (
+        <motion.button
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          whileHover={{ scale: 1.1 }}
+          onClick={() => setShowAskAI(true)}
+          className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-[#E60012] to-red-600 rounded-full shadow-lg shadow-red-500/30 flex items-center justify-center text-white z-50"
+        >
+          <Bot className="w-6 h-6" />
+        </motion.button>
+      )}
     </div>
   );
 }

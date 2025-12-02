@@ -5,6 +5,7 @@ import ItineraryResult from '@/components/travel/ItineraryResult';
 import ReviewsSection from '@/components/travel/ReviewsSection';
 import Navbar from '@/components/travel/Navbar';
 import FeaturesSection from '@/components/travel/FeaturesSection';
+import CityGallery from '@/components/travel/CityGallery';
 import Footer from '@/components/travel/Footer';
 
 export default function Home() {
@@ -41,6 +42,7 @@ export default function Home() {
       <Navbar />
       <HeroSection onStartPlanning={() => setIsWizardOpen(true)} />
       <FeaturesSection />
+      <CityGallery />
       <ReviewsSection userReviews={userReviews} />
       <Footer />
       

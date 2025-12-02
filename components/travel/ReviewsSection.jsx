@@ -90,7 +90,7 @@ export default function ReviewsSection({ userReviews = [] }) {
   const visibleReviews = allReviews.slice(currentIndex, currentIndex + reviewsPerPage);
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-slate-50">
+    <section id="reviews" className="py-20 bg-gradient-to-b from-white to-slate-50">
       <div className="max-w-6xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

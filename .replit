@@ -37,11 +37,12 @@ externalPort = 80
 localPort = 43725
 externalPort = 3000
 
-[[ports]]
-localPort = 45183
-externalPort = 3001
-
 [deployment]
 deploymentTarget = "autoscale"
 run = ["npm", "start"]
 build = ["npm", "run", "build"]
+
+[userenv]
+
+[userenv.shared]
+GROQ_API_KEY = "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"

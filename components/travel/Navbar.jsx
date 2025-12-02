@@ -57,6 +57,14 @@ export default function Navbar() {
               Features
             </a>
             <a 
+              href="#gallery" 
+              className={`text-sm font-medium transition-colors ${
+                scrolled ? 'text-slate-600 hover:text-slate-900' : 'text-slate-700 hover:text-slate-900'
+              }`}
+            >
+              Gallery
+            </a>
+            <a 
               href="#reviews" 
               className={`text-sm font-medium transition-colors ${
                 scrolled ? 'text-slate-600 hover:text-slate-900' : 'text-slate-700 hover:text-slate-900'
@@ -128,9 +136,10 @@ export default function Navbar() {
             className="md:hidden mt-4 pb-4 border-t border-slate-200 pt-4"
           >
             <div className="flex flex-col gap-4">
-              <a href="#features" className="text-slate-700 font-medium">{t('nav.features')}</a>
-              <a href="#reviews" className="text-slate-700 font-medium">{t('nav.reviews')}</a>
-              <a href="#pricing" className="text-slate-700 font-medium">{t('nav.pricing')}</a>
+              <a href="#features" className="text-slate-700 font-medium" onClick={() => setMobileMenuOpen(false)}>{t('nav.features')}</a>
+              <a href="#gallery" className="text-slate-700 font-medium" onClick={() => setMobileMenuOpen(false)}>Gallery</a>
+              <a href="#reviews" className="text-slate-700 font-medium" onClick={() => setMobileMenuOpen(false)}>{t('nav.reviews')}</a>
+              <a href="#pricing" className="text-slate-700 font-medium" onClick={() => setMobileMenuOpen(false)}>{t('nav.pricing')}</a>
               <button
                 onClick={toggleLanguage}
                 className="flex items-center gap-2 text-slate-700 font-medium"
