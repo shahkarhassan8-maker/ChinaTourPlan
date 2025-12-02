@@ -1,7 +1,12 @@
-# China Tour Planning App
+# ChinaTourPlan
 
 ## Overview
-This is a Next.js application for planning travel itineraries to China. The app provides a custom itinerary builder, cost breakdown, and live assistance features for travelers.
+ChinaTourPlan is a Next.js application for planning travel itineraries to China. The app provides a custom itinerary builder, cost breakdown, and live assistance features for travelers.
+
+## Pricing Structure
+- **Free**: $0 - Up to 3 itineraries per month
+- **Pro**: $19/month - Unlimited itineraries, AI chat assistant, PDF downloads
+- **Lifetime**: $99 one-time - All Pro features forever
 
 ## Project Structure
 - `pages/` - Next.js pages directory
@@ -69,7 +74,25 @@ The app is configured for autoscale deployment on Replit:
 
 ## Recent Changes (Dec 2, 2025)
 
-### Latest Updates - Comprehensive City Data Enhancement:
+### Latest Updates - Branding & Access Control:
+- **Rebranding to ChinaTourPlan** (`components/travel/Navbar.jsx`, `components/travel/Footer.jsx`, `components/travel/ShareModal.jsx`, `package.json`):
+  - Changed all instances of "TourToChina" to "ChinaTourPlan"
+  - New logo design with 4-tier pagoda SVG icon
+  - Updated email contact to contact@chinatourplan.com
+
+- **New Pricing Structure** (`pages/signup.jsx`, `components/travel/PricingSection.jsx`):
+  - Free tier: $0 (3 itineraries/month)
+  - Pro tier: $19/month (unlimited + premium features)
+  - Lifetime tier: $99 one-time (all features forever)
+  - Free signup flow with plan selection
+
+- **Access Control System** (`lib/accessControl.js`, `components/travel/ItineraryResult.jsx`):
+  - Feature gating for AI assistant, PDF downloads, and detailed itineraries
+  - Monthly usage tracking for free users
+  - Upgrade prompts when limits are reached
+  - localStorage-based plan and usage tracking
+
+### Previous Updates - Comprehensive City Data Enhancement:
 - **Pace-Based Time Limits** (`components/travel/PlaceSelector.jsx`):
   - Relaxed pace: 4 hours/day maximum
   - Moderate pace: 7 hours/day maximum  
