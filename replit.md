@@ -12,32 +12,40 @@ ChinaTourPlan is a Next.js application for planning travel itineraries to China.
 - `pages/` - Next.js pages directory
   - `index.js` - Entry point that imports Home component
   - `Home.jsx` - Main home page with wizard and itinerary views
-  - `signup.jsx` - Membership signup/login page with plan selection
+  - `signup.jsx` - Membership signup/login page with plan selection (Supabase auth)
   - `dashboard.jsx` - User dashboard showing saved itineraries and review submission
   - `_app.js` - Next.js app wrapper
 - `pages/api/` - API routes
   - `chat.js` - GROQ AI chat endpoint for premium users
+  - `generate-itinerary.js` - AI-powered itinerary generation endpoint
 - `components/` - React components
   - `travel/` - Travel-specific components
     - `HeroSection.jsx` - Landing page hero with CTA
-    - `InputWizard.jsx` - Multi-step trip planning wizard
-    - `ItineraryResult.jsx` - Generated itinerary display
+    - `InputWizard.jsx` - 6-step trip planning wizard (duration, cities, days, places, pace, accommodation, food)
+    - `ItineraryResult.jsx` - Generated itinerary display with cost calculation
     - `ReviewsSection.jsx` - Customer reviews section with user-submitted reviews
-    - `Navbar.jsx` - Navigation bar with user authentication status
+    - `Navbar.jsx` - Navigation bar with professional logo and user auth status
     - `FeaturesSection.jsx` - Features showcase section
     - `CityGallery.jsx` - Interactive city photo gallery
     - `AskAIModal.jsx` - AI chat assistant modal (premium only)
     - `Footer.jsx` - Site footer with contact info
     - `cityData.jsx` - City information database (20 cities)
+    - `PlaceSelector.jsx` - Place selection with time tracking
+    - `AccommodationSelector.jsx` - Per-city accommodation selection
   - `ui/` - Reusable UI components (buttons, dialogs, inputs, sliders, etc.)
 - `styles/` - Global CSS styles
 - `lib/` - Utility functions
+  - `supabase.js` - Supabase client and auth/CRUD helper functions
+  - `supabase-schema.sql` - Database schema for Supabase tables
+  - `accessControl.js` - Feature gating and usage tracking
 
 ## Tech Stack
 - **Framework**: Next.js 14.0.0
 - **Language**: JavaScript/JSX
 - **Styling**: TailwindCSS
-- **AI Integration**: GROQ SDK (llama-3.3-70b-versatile model)
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth (with localStorage fallback)
+- **AI Integration**: GROQ SDK (llama-3.1-70b-versatile model)
 - **UI Libraries**: 
   - Radix UI (dialogs, sliders, radio groups)
   - Framer Motion (animations)
@@ -45,7 +53,9 @@ ChinaTourPlan is a Next.js application for planning travel itineraries to China.
   - Sonner (toast notifications)
 
 ## Environment Variables
-- `GROQ_API_KEY` - API key for GROQ AI chat integration (required for premium AI features)
+- `GROQ_API_KEY` - API key for GROQ AI chat/itinerary generation
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous/public key
 
 ## Development
 The dev server runs on port 5000 at 0.0.0.0 to work with Replit's proxy system.
@@ -74,25 +84,30 @@ The app is configured for autoscale deployment on Replit:
 
 ## Recent Changes (Dec 2, 2025)
 
-### Latest Updates - Branding & Access Control:
-- **Rebranding to ChinaTourPlan** (`components/travel/Navbar.jsx`, `components/travel/Footer.jsx`, `components/travel/ShareModal.jsx`, `package.json`):
-  - Changed all instances of "TourToChina" to "ChinaTourPlan"
-  - New logo design with 4-tier pagoda SVG icon
-  - Updated email contact to contact@chinatourplan.com
+### Latest Updates - Supabase Integration & Budget Removal:
+- **Supabase Authentication & Data Storage** (`lib/supabase.js`, `pages/signup.jsx`, `pages/dashboard.jsx`):
+  - Full Supabase integration for user authentication (signup/login/logout)
+  - Database tables for profiles, itineraries, reviews
+  - CRUD functions with localStorage fallback when Supabase unavailable
+  - Environment variables: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-- **New Pricing Structure** (`pages/signup.jsx`, `components/travel/PricingSection.jsx`):
-  - Free tier: $0 (3 itineraries/month)
-  - Pro tier: $19/month (unlimited + premium features)
-  - Lifetime tier: $99 one-time (all features forever)
-  - Free signup flow with plan selection
+- **Database Schema** (`lib/supabase-schema.sql`):
+  - `profiles` table: user info with plan type (free/pro/lifetime)
+  - `itineraries` table: saved trip itineraries with all details
+  - `reviews` table: user-submitted travel reviews
+  - Row-level security policies for user data protection
 
-- **Access Control System** (`lib/accessControl.js`, `components/travel/ItineraryResult.jsx`):
-  - Feature gating for AI assistant, PDF downloads, and detailed itineraries
-  - Monthly usage tracking for free users
-  - Upgrade prompts when limits are reached
-  - localStorage-based plan and usage tracking
+- **Budget Step Removed** (`components/travel/InputWizard.jsx`, `components/travel/ItineraryResult.jsx`):
+  - Removed redundant budget selection step from wizard (now 6 steps instead of 7)
+  - Budget tier now automatically derived from accommodation selections (budget/comfort/luxury)
+  - `getEffectiveBudgetTier()` helper function determines budget based on per-city accommodation choices
+  - Cost calculations use accommodation-derived budget tiers
 
-### Previous Updates - Comprehensive City Data Enhancement:
+- **Professional Logo** (`public/logo.png`, `components/travel/Navbar.jsx`):
+  - Custom-generated ChinaTourPlan logo image
+  - Logo displayed in navbar using image file instead of SVG
+
+### Previous Updates - Branding & Access Control:
 - **Pace-Based Time Limits** (`components/travel/PlaceSelector.jsx`):
   - Relaxed pace: 4 hours/day maximum
   - Moderate pace: 7 hours/day maximum  
