@@ -364,13 +364,13 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
 
         {/* Step Content */}
         <div className="px-8 py-4 min-h-[320px] overflow-y-auto">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={currentStep}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
             >
               {renderStepContent()}
             </motion.div>
