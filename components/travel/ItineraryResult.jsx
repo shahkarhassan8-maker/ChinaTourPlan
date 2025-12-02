@@ -500,7 +500,7 @@ export default function ItineraryResult({ formData, onBack }) {
         >
           <div className="text-center mb-8">
             <h3 className="text-2xl font-bold text-slate-900 mb-2">What Travelers Say</h3>
-            <p className="text-slate-600">Join thousands of happy travelers who explored China with us</p>
+            <p className="text-slate-600">Real experiences from travelers who explored China with us</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-6">
@@ -540,15 +540,15 @@ export default function ItineraryResult({ formData, onBack }) {
               <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Users className="w-6 h-6 text-green-600" />
               </div>
-              <p className="text-2xl font-bold text-slate-900">5,000+</p>
+              <p className="text-2xl font-bold text-slate-900">20+</p>
               <p className="text-sm text-slate-500">Happy Travelers</p>
             </div>
             <div>
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Globe className="w-6 h-6 text-blue-600" />
+                <Clock className="w-6 h-6 text-blue-600" />
               </div>
-              <p className="text-2xl font-bold text-slate-900">50+</p>
-              <p className="text-sm text-slate-500">Countries Served</p>
+              <p className="text-2xl font-bold text-slate-900">24/7</p>
+              <p className="text-sm text-slate-500">Prompt Responses</p>
             </div>
             <div>
               <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3">

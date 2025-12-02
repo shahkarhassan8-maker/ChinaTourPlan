@@ -7,59 +7,59 @@ const CITY_GALLERY_DATA = {
   beijing: {
     name: 'Beijing',
     nameChinese: '北京',
-    description: 'The ancient capital where imperial palaces meet modern skyscrapers',
-    specialties: ['Peking Duck', 'Great Wall', 'Forbidden City', 'Temple of Heaven'],
+    description: 'The ancient capital where imperial palaces meet modern skyscrapers. Home to the majestic Forbidden City and the iconic Great Wall.',
+    specialties: ['Peking Duck', 'Great Wall', 'Forbidden City', 'Temple of Heaven', 'Hutong Alleys'],
     images: [
       'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1529921879218-f99546d03a96?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1584114614576-49f6f4813ed7?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1599571234909-29ed5d1321d6?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=800&q=80&auto=format&fit=crop',
     ]
   },
   shanghai: {
     name: 'Shanghai',
     nameChinese: '上海',
-    description: 'A dazzling metropolis where East meets West in spectacular fashion',
-    specialties: ['The Bund', 'Yu Garden', 'Xiaolongbao', 'French Concession'],
+    description: 'A dazzling metropolis where East meets West. The Bund showcases colonial architecture while Pudong gleams with futuristic towers.',
+    specialties: ['The Bund', 'Yu Garden', 'Xiaolongbao', 'French Concession', 'Nanjing Road'],
     images: [
       'https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1538428494232-9c0d8a3ab403?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1548919973-5cef591cdbc9?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1545893835-abaa50cbe628?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1517309246141-d22814846ee0?w=800&q=80&auto=format&fit=crop',
     ]
   },
   chengdu: {
     name: 'Chengdu',
     nameChinese: '成都',
-    description: 'Home to giant pandas and the spiciest cuisine in China',
-    specialties: ['Giant Pandas', 'Hot Pot', 'Jinli Street', 'Tea Houses'],
+    description: 'Home to giant pandas and the spiciest cuisine in China. A laid-back city famous for tea houses and mahjong culture.',
+    specialties: ['Giant Pandas', 'Sichuan Hot Pot', 'Jinli Street', 'Tea Houses', 'Mapo Tofu'],
     images: [
       'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1587381420270-0e20f2e31dd1?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1527838832700-5059252407fa?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1566996533071-2c578080c06e?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80&auto=format&fit=crop',
     ]
   },
   xian: {
     name: "Xi'an",
     nameChinese: '西安',
-    description: 'Ancient Silk Road starting point with the famous Terracotta Warriors',
-    specialties: ['Terracotta Warriors', 'City Wall', 'Muslim Quarter', 'Biangbiang Noodles'],
+    description: 'Ancient Silk Road starting point with the world-famous Terracotta Warriors. The ancient city wall is one of the best preserved in China.',
+    specialties: ['Terracotta Warriors', 'City Wall Cycling', 'Muslim Quarter', 'Biangbiang Noodles', 'Roujiamo'],
     images: [
-      'https://images.unsplash.com/photo-1591104451049-5c4ddb3fb13c?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1568791772916-c97e3dd88ac2?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1523976105517-cffe0bcc0daa?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1576224939239-ee62a2ce4510?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1591177142854-7e0e9f14c30d?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1569254979014-1408605dcb11?w=800&q=80&auto=format&fit=crop',
     ]
   },
   guilin: {
     name: 'Guilin & Yangshuo',
     nameChinese: '桂林阳朔',
-    description: 'Stunning karst landscapes that inspired countless Chinese paintings',
-    specialties: ['Li River Cruise', 'Karst Mountains', 'Rice Terraces', 'Bamboo Rafting'],
+    description: 'Stunning karst landscapes that inspired countless Chinese paintings. The Li River cruise offers some of China\'s most iconic scenery.',
+    specialties: ['Li River Cruise', 'Karst Mountains', 'Longji Rice Terraces', 'Bamboo Rafting', 'Moon Hill'],
     images: [
-      'https://images.unsplash.com/photo-1533552337737-c97e3dec3f73?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1580650051573-a7e70b0a3508?w=800&q=80&auto=format&fit=crop',
     ]
@@ -67,20 +67,20 @@ const CITY_GALLERY_DATA = {
   hangzhou: {
     name: 'Hangzhou',
     nameChinese: '杭州',
-    description: 'Paradise on Earth with the legendary West Lake',
-    specialties: ['West Lake', 'Longjing Tea', 'Lingyin Temple', 'Silk Market'],
+    description: 'Paradise on Earth with the legendary West Lake. Famous for Longjing tea, silk, and the stunning Lingyin Temple.',
+    specialties: ['West Lake Boat Ride', 'Longjing Tea Plantation', 'Lingyin Temple', 'Hefang Street', 'Leifeng Pagoda'],
     images: [
-      'https://images.unsplash.com/photo-1591474200742-8e512e6f98f8?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1576016770956-debb63d92058?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1545893835-abaa50cbe628?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1598887142623-38433d3ed3e4?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1590559899731-a382839e5549?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1569254979014-1408605dcb11?w=800&q=80&auto=format&fit=crop',
     ]
   },
   zhangjiajie: {
     name: 'Zhangjiajie',
     nameChinese: '张家界',
-    description: "The inspiration for Avatar's floating mountains",
-    specialties: ['Avatar Mountains', 'Glass Bridge', 'Tianmen Mountain', 'Baofeng Lake'],
+    description: "The inspiration for Avatar's floating mountains. Home to the world's highest glass bridge and breathtaking pillar formations.",
+    specialties: ['Avatar Mountains', 'Glass Skywalk Bridge', 'Tianmen Mountain', 'Baofeng Lake', 'Golden Whip Stream'],
     images: [
       'https://images.unsplash.com/photo-1513415564515-763d91423bdd?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1564221710304-0b37c8b9d729?w=800&q=80&auto=format&fit=crop',
@@ -91,13 +91,13 @@ const CITY_GALLERY_DATA = {
   hongkong: {
     name: 'Hong Kong',
     nameChinese: '香港',
-    description: 'Where traditional temples meet towering skyscrapers',
-    specialties: ['Victoria Peak', 'Dim Sum', 'Star Ferry', 'Temple Street'],
+    description: 'Where traditional temples meet towering skyscrapers. A culinary paradise with world-class dim sum and street food.',
+    specialties: ['Victoria Peak', 'Dim Sum', 'Star Ferry', 'Temple Street Night Market', 'Big Buddha'],
     images: [
-      'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1536599018102-9f803c979b5d?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1518599807935-37015b9cefcb?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1532364158125-02d75a0f7fb0?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1507941097613-9f2157b69f48?w=800&q=80&auto=format&fit=crop',
     ]
   },
 };

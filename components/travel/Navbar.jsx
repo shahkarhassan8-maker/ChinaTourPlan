@@ -36,17 +36,22 @@ export default function Navbar() {
     >
       <div className="max-w-6xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#E60012] to-[#FF4444] rounded-xl flex items-center justify-center shadow-lg shadow-red-500/20">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L14.5 7H9.5L12 2Z" fill="#FFD700"/>
-                <path d="M4 10H20L18 20H6L4 10Z" fill="white"/>
-                <path d="M6 12H18V18H6V12Z" fill="#FFD700" fillOpacity="0.3"/>
-                <path d="M10 14H14V20H10V14Z" fill="white"/>
-                <path d="M7 10V8C7 8 9 6 12 6C15 6 17 8 17 8V10" stroke="white" strokeWidth="1.5"/>
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-14 h-14 bg-gradient-to-br from-[#E60012] to-[#CC0010] rounded-2xl flex items-center justify-center shadow-xl shadow-red-500/30 border border-red-400/20">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 2L19 8H13L16 2Z" fill="#FFD700"/>
+                <path d="M16 6L18 10H14L16 6Z" fill="#FFA500"/>
+                <path d="M5 12H27L24 28H8L5 12Z" fill="white"/>
+                <path d="M8 14H24V26H8V14Z" fill="#FFD700" fillOpacity="0.2"/>
+                <path d="M12 16H20V28H12V16Z" fill="white"/>
+                <path d="M14 18H18V28H14V18Z" fill="#FFD700" fillOpacity="0.3"/>
+                <path d="M15 20H17V28H15V20Z" fill="#E60012" fillOpacity="0.2"/>
+                <path d="M8 12V10C8 10 11 7 16 7C21 7 24 10 24 10V12" stroke="white" strokeWidth="2"/>
+                <circle cx="10" cy="22" r="1" fill="#E60012" fillOpacity="0.5"/>
+                <circle cx="22" cy="22" r="1" fill="#E60012" fillOpacity="0.5"/>
               </svg>
             </div>
-            <span className={`font-bold text-xl ${scrolled ? 'text-slate-900' : 'text-slate-900'}`}>
+            <span className={`font-bold text-2xl tracking-tight ${scrolled ? 'text-slate-900' : 'text-slate-900'}`}>
               TourToChina
             </span>
           </Link>

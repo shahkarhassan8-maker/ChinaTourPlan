@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
   ArrowLeft, Crown, MapPin, Calendar, Trash2, 
   Plus, Star, Settings, LogOut, Edit, Eye,
-  MessageCircle, Sparkles, Clock, User
+  MessageCircle, Sparkles, Clock, User, AlertTriangle, X
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -37,6 +37,8 @@ export default function DashboardPage() {
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [review, setReview] = useState({ rating: 5, text: '' });
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [viewItinerary, setViewItinerary] = useState(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -63,7 +65,12 @@ export default function DashboardPage() {
     const updated = itineraries.filter(i => i.id !== id);
     setItineraries(updated);
     localStorage.setItem('itineraries', JSON.stringify(updated));
+    setDeleteConfirm(null);
     toast.success('Itinerary deleted');
+  };
+
+  const handleViewItinerary = (itinerary) => {
+    setViewItinerary(itinerary);
   };
 
   const handleSubmitReview = () => {
@@ -248,14 +255,21 @@ export default function DashboardPage() {
                     <p className="text-sm text-slate-500">{itinerary.cities.join(' → ')}</p>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 text-blue-500 hover:text-blue-600 hover:bg-blue-50"
+                      onClick={() => handleViewItinerary(itinerary)}
+                      title="View Itinerary"
+                    >
                       <Eye className="w-4 h-4" />
                     </Button>
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="h-8 w-8 text-red-500 hover:text-red-600"
-                      onClick={() => handleDeleteItinerary(itinerary.id)}
+                      className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+                      onClick={() => setDeleteConfirm(itinerary)}
+                      title="Delete Itinerary"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -348,6 +362,166 @@ export default function DashboardPage() {
           </motion.div>
         </div>
       )}
+
+      <AnimatePresence>
+        {deleteConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+            onClick={() => setDeleteConfirm(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="w-6 h-6 text-red-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900">Delete Itinerary?</h3>
+                  <p className="text-slate-600 text-sm">This action cannot be undone</p>
+                </div>
+              </div>
+
+              <div className="mb-6 p-4 bg-slate-50 rounded-xl">
+                <p className="font-medium text-slate-900">{deleteConfirm.title}</p>
+                <p className="text-sm text-slate-500">{deleteConfirm.cities?.join(' → ')}</p>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setDeleteConfirm(null)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                  onClick={() => handleDeleteItinerary(deleteConfirm.id)}
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {viewItinerary && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+            onClick={() => setViewItinerary(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="sticky top-0 bg-gradient-to-r from-[#E60012] to-red-500 text-white p-6 rounded-t-2xl">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-2xl font-bold">{viewItinerary.title}</h3>
+                    <p className="text-white/80">{viewItinerary.cities?.join(' → ')}</p>
+                  </div>
+                  <button
+                    onClick={() => setViewItinerary(null)}
+                    className="p-2 hover:bg-white/20 rounded-full transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-6">
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="bg-slate-50 rounded-xl p-4">
+                    <div className="flex items-center gap-2 text-slate-600 mb-1">
+                      <Calendar className="w-4 h-4" />
+                      <span className="text-sm">Duration</span>
+                    </div>
+                    <p className="font-bold text-slate-900">{viewItinerary.duration} Days</p>
+                  </div>
+                  <div className="bg-slate-50 rounded-xl p-4">
+                    <div className="flex items-center gap-2 text-slate-600 mb-1">
+                      <MapPin className="w-4 h-4" />
+                      <span className="text-sm">Cities</span>
+                    </div>
+                    <p className="font-bold text-slate-900">{viewItinerary.cities?.length} Cities</p>
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <h4 className="font-semibold text-slate-900 mb-3">Trip Details</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between py-2 border-b border-slate-100">
+                      <span className="text-slate-600">Budget Level</span>
+                      <span className="font-medium text-slate-900 capitalize">{viewItinerary.budget}</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-slate-100">
+                      <span className="text-slate-600">Travel Pace</span>
+                      <span className="font-medium text-slate-900 capitalize">{viewItinerary.pace}</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-slate-100">
+                      <span className="text-slate-600">Created</span>
+                      <span className="font-medium text-slate-900">{new Date(viewItinerary.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    {viewItinerary.totalCost && (
+                      <div className="flex justify-between py-2">
+                        <span className="text-slate-600">Estimated Cost</span>
+                        <span className="font-bold text-[#E60012]">${viewItinerary.totalCost}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <h4 className="font-semibold text-slate-900 mb-3">Cities to Visit</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {viewItinerary.cities?.map((city, index) => (
+                      <span
+                        key={index}
+                        className="px-4 py-2 bg-gradient-to-r from-[#E60012]/10 to-red-100 text-[#E60012] rounded-full text-sm font-medium"
+                      >
+                        {city}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => setViewItinerary(null)}
+                  >
+                    Close
+                  </Button>
+                  <Link href="/" className="flex-1">
+                    <Button className="w-full bg-[#E60012] hover:bg-[#cc0010] text-white">
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Create Similar Trip
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
