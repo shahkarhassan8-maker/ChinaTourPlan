@@ -49,11 +49,18 @@ export default async function handler(req, res) {
       const places = selectedPlaces[cityId] || [];
       const cityPlaces = places.map(index => placesData[cityId]?.highlights?.[index]).filter(Boolean);
       const days = cityDays[cityId] || 2;
+      const selectedAccommodationType = accommodation?.[cityId] || budget;
+      const hotelInfo = placesData[cityId]?.hotels?.[selectedAccommodationType];
       
       return {
         cityId,
         cityName: placesData[cityId]?.name || cityId,
         days,
+        accommodation: {
+          type: selectedAccommodationType,
+          name: hotelInfo?.name || 'Local hotel',
+          pricePerNight: hotelInfo?.pricePerNight || { rmb: 300, usd: 42 }
+        },
         places: cityPlaces.map(p => ({
           name: p.name,
           nameChinese: p.nameChinese,
@@ -81,9 +88,11 @@ TRAVEL DETAILS:
 CITIES AND SELECTED PLACES:
 ${cityPlacesInfo.map(city => `
 ${city.cityName} (${city.days} days):
-${city.places.map((p, i) => `  ${i + 1}. ${p.name} (${p.nameChinese || ''}) - ${p.durationHours}h
-     Location: ${p.coordinates ? `${p.coordinates.lat}, ${p.coordinates.lng}` : 'N/A'}
-     Hours: ${p.openingHours || 'Check locally'}`).join('\n')}
+  Accommodation: ${city.accommodation.name} (${city.accommodation.type}) - ¥${city.accommodation.pricePerNight.rmb}/night
+  Places to visit:
+${city.places.map((p, i) => `    ${i + 1}. ${p.name} (${p.nameChinese || ''}) - ${p.durationHours}h
+       Location: ${p.coordinates ? `${p.coordinates.lat}, ${p.coordinates.lng}` : 'N/A'}
+       Hours: ${p.openingHours || 'Check locally'}`).join('\n')}
 `).join('\n')}
 
 REQUIREMENTS:

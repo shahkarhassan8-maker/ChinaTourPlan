@@ -54,7 +54,7 @@ const convertAIItinerary = (aiData, formData) => {
     comfort: { cost: 150, hotelKey: 'comfort' },
     luxury: { cost: 400, hotelKey: 'luxury' },
   };
-  const multiplier = budgetMultipliers[formData.budget] || budgetMultipliers.comfort;
+  const defaultMultiplier = budgetMultipliers[formData.budget] || budgetMultipliers.comfort;
   
   return aiData.itinerary.map((day, index) => {
     const cityId = formData.cities.find(c => 
@@ -76,7 +76,8 @@ const convertAIItinerary = (aiData, formData) => {
       };
     });
     
-    const hotel = cityData?.hotels?.[multiplier.hotelKey];
+    const selectedAccommodationType = formData.accommodation?.[cityId] || defaultMultiplier.hotelKey;
+    const hotel = cityData?.hotels?.[selectedAccommodationType];
     const foods = cityData?.foods?.[formData.food] || cityData?.foods?.anything || [];
     
     return {
@@ -144,8 +145,9 @@ const generateDetailedItinerary = (formData) => {
       const foodIndex = i % Math.max(1, foodOptions.length);
       const food = foodOptions[foodIndex] || null;
 
-      // Get hotel info
-      const hotel = cityData.hotels[multiplier.hotelKey];
+      // Get hotel info based on user's accommodation selection or default to budget level
+      const selectedAccommodationType = formData.accommodation?.[cityId] || multiplier.hotelKey;
+      const hotel = cityData.hotels[selectedAccommodationType];
 
       // Get transport info
       let transport = null;
