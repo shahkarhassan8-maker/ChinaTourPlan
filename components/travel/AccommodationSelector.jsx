@@ -18,8 +18,7 @@ const AMENITY_ICONS = {
 export default function AccommodationSelector({ 
   cityId, 
   selectedAccommodation, 
-  onAccommodationChange,
-  budget 
+  onAccommodationChange
 }) {
   const cityData = CITY_DATA[cityId];
   if (!cityData || !cityData.hotels) return null;
@@ -30,7 +29,7 @@ export default function AccommodationSelector({
     { type: 'luxury', label: 'Luxury', ...cityData.hotels.luxury },
   ].filter(a => a.name);
   
-  const selectedType = selectedAccommodation[cityId] || budget;
+  const selectedType = selectedAccommodation[cityId] || 'comfort';
   
   const handleSelect = (type) => {
     onAccommodationChange({
@@ -66,7 +65,7 @@ export default function AccommodationSelector({
       <div className="space-y-3">
         {accommodations.map((hotel) => {
           const isSelected = selectedType === hotel.type;
-          const isRecommended = hotel.type === budget;
+          const isRecommended = hotel.type === 'comfort';
           
           return (
             <motion.button

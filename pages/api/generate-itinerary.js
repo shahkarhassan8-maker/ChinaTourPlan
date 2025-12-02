@@ -39,7 +39,6 @@ export default async function handler(req, res) {
       cityDays, 
       selectedPlaces, 
       pace, 
-      budget, 
       food,
       accommodation,
       placesData 
@@ -49,7 +48,7 @@ export default async function handler(req, res) {
       const places = selectedPlaces[cityId] || [];
       const cityPlaces = places.map(index => placesData[cityId]?.highlights?.[index]).filter(Boolean);
       const days = cityDays[cityId] || 2;
-      const selectedAccommodationType = accommodation?.[cityId] || budget;
+      const selectedAccommodationType = accommodation?.[cityId] || 'comfort';
       const hotelInfo = placesData[cityId]?.hotels?.[selectedAccommodationType];
       
       return {
@@ -82,7 +81,6 @@ export default async function handler(req, res) {
 
 TRAVEL DETAILS:
 - Pace: ${pace} (${hoursPerDay} hours of activities per day)
-- Budget: ${budget}
 - Food preference: ${food}
 
 CITIES AND SELECTED PLACES:
@@ -169,7 +167,7 @@ Return a JSON object with this EXACT structure (no markdown, no code blocks, jus
       console.error('Failed to parse AI response:', parseError);
       console.error('Response was:', responseText);
       
-      itineraryData = generateFallbackItinerary(cityPlacesInfo, pace, budget, food, placesData);
+      itineraryData = generateFallbackItinerary(cityPlacesInfo, pace, food, placesData);
     }
 
     return res.status(200).json({
@@ -187,7 +185,7 @@ Return a JSON object with this EXACT structure (no markdown, no code blocks, jus
   }
 }
 
-function generateFallbackItinerary(cityPlacesInfo, pace, budget, food, placesData) {
+function generateFallbackItinerary(cityPlacesInfo, pace, food, placesData) {
   const hoursPerDay = pace === 'relaxed' ? 5 : pace === 'moderate' ? 7 : 10;
   const itinerary = [];
   let dayNumber = 1;
@@ -269,7 +267,7 @@ function generateFallbackItinerary(cityPlacesInfo, pace, budget, food, placesDat
         ],
         estimatedCost: {
           activities: dayPlaces.reduce((sum, p) => sum + (p.ticketPrice?.rmb || 50), 0),
-          meals: budget === 'luxury' ? 400 : budget === 'comfort' ? 200 : 100,
+          meals: city.accommodation?.type === 'luxury' ? 400 : city.accommodation?.type === 'budget' ? 100 : 200,
           transport: 50
         }
       });

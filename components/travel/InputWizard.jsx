@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowRight, ArrowLeft, Calendar, MapPin, Gauge, 
-  Wallet, Utensils, Sparkles, Check, Search, Camera, Bed
+  Utensils, Sparkles, Check, Search, Camera, Bed
 } from 'lucide-react';
 
 import CityDaysSelector from './CityDaysSelector';
@@ -21,7 +21,6 @@ const STEPS = [
   { id: 'cityDays', title: 'Days per City', icon: Calendar, description: 'See our recommendations and customize your stay' },
   { id: 'places', title: 'Places to Visit', icon: Camera, description: 'Select attractions you want to see' },
   { id: 'accommodation', title: 'Accommodation', icon: Bed, description: 'Where would you like to stay?' },
-  { id: 'budget', title: 'Budget Level', icon: Wallet, description: 'What\'s your comfort level?' },
   { id: 'food', title: 'Food Preferences', icon: Utensils, description: 'Any dietary preferences?' },
 ];
 
@@ -65,12 +64,6 @@ const PACES = [
   { id: 'intense', name: 'Intense', description: 'Pack it in! Maximum exploration' },
 ];
 
-const BUDGETS = [
-  { id: 'budget', name: 'Budget', description: 'Hostels & street food', price: '~$50/day' },
-  { id: 'comfort', name: 'Comfort', description: '3-4 star hotels & local restaurants', price: '~$150/day' },
-  { id: 'luxury', name: 'Luxury', description: '5-star hotels & fine dining', price: '~$400/day' },
-];
-
 const FOOD_PREFS = [
   { id: 'anything', name: 'Anything Goes', emoji: '🍜' },
   { id: 'spicy', name: 'Bring the Spice', emoji: '🌶️' },
@@ -90,7 +83,6 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
     selectedPlaces: {},
     pace: 'moderate',
     accommodation: {},
-    budget: 'comfort',
     food: 'anything',
   });
   
@@ -362,49 +354,12 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
                 cityId={activeAccommodationCity}
                 selectedAccommodation={formData.accommodation}
                 onAccommodationChange={(newAccommodation) => setFormData({ ...formData, accommodation: newAccommodation })}
-                budget={formData.budget}
               />
             )}
           </div>
         );
 
-      case 5: // Budget
-        return (
-          <RadioGroup
-            value={formData.budget}
-            onValueChange={(value) => setFormData({ ...formData, budget: value })}
-            className="space-y-4"
-          >
-            {BUDGETS.map((budget) => (
-              <label
-                key={budget.id}
-                className={`flex items-center justify-between p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 ${
-                  formData.budget === budget.id
-                    ? 'border-[#E60012] bg-red-50/50'
-                    : 'border-slate-200 hover:border-slate-300 bg-white'
-                }`}
-              >
-                <div className="flex items-center">
-                  <RadioGroupItem value={budget.id} className="sr-only" />
-                  <div className={`w-5 h-5 rounded-full border-2 mr-4 flex items-center justify-center ${
-                    formData.budget === budget.id ? 'border-[#E60012]' : 'border-slate-300'
-                  }`}>
-                    {formData.budget === budget.id && (
-                      <div className="w-3 h-3 rounded-full bg-[#E60012]" />
-                    )}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-slate-900">{budget.name}</div>
-                    <div className="text-sm text-slate-500">{budget.description}</div>
-                  </div>
-                </div>
-                <div className="text-sm font-semibold text-[#E60012]">{budget.price}</div>
-              </label>
-            ))}
-          </RadioGroup>
-        );
-
-      case 6: // Food
+      case 5: // Food
         return (
           <div className="grid grid-cols-2 gap-4">
             {FOOD_PREFS.map((pref) => (
