@@ -26,6 +26,7 @@ export const CITY_DATA = {
         coordinates: { lat: 39.9163, lng: 116.3972 },
         openingHours: '8:30 AM - 5:00 PM (Apr-Oct), 8:30 AM - 4:30 PM (Nov-Mar). Closed Mondays.',
         ticketPrice: { rmb: 60, usd: 8 },
+        image: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80',
         tips: 'Book tickets 7 days in advance on the official WeChat mini-program "故宫博物院". Walk the central axis for the main halls, then explore quieter western courtyards.',
         localSecrets: [
           "Enter via Meridian Gate, exit through Gate of Divine Prowess for the full experience",
@@ -52,6 +53,7 @@ export const CITY_DATA = {
         coordinates: { lat: 40.4319, lng: 116.5704 },
         openingHours: '7:30 AM - 6:00 PM (Apr-Oct), 8:00 AM - 5:00 PM (Nov-Mar)',
         ticketPrice: { rmb: 45, usd: 6 },
+        image: 'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=800&q=80',
         tips: 'Take cable car up (100 RMB), toboggan slide down (100 RMB) for a unique exit. Arrive before 8 AM to beat tour groups.',
         localSecrets: [
           "Book a private car via DiDi (200-300 RMB round trip) - much better than crowded tour buses",
@@ -78,6 +80,7 @@ export const CITY_DATA = {
         coordinates: { lat: 39.8822, lng: 116.4066 },
         openingHours: '6:00 AM - 9:00 PM (Park), 8:00 AM - 5:30 PM (Buildings)',
         ticketPrice: { rmb: 35, usd: 5 },
+        image: 'https://images.unsplash.com/photo-1599571234909-29ed5d1321d6?w=800&q=80',
         tips: 'Arrive at 6 AM to see hundreds of locals doing tai chi, dancing, and playing traditional instruments - truly magical',
         localSecrets: [
           "Stand at the center of the Echo Wall and whisper - your voice carries perfectly around the curved surface",
@@ -103,6 +106,7 @@ export const CITY_DATA = {
         coordinates: { lat: 39.9999, lng: 116.2755 },
         openingHours: '6:30 AM - 6:00 PM (Apr-Oct), 7:00 AM - 5:00 PM (Nov-Mar)',
         ticketPrice: { rmb: 30, usd: 4 },
+        image: 'https://images.unsplash.com/photo-1548919973-5cef591cdbc9?w=800&q=80',
         tips: 'Enter via the north gate (Beigongmen) and work your way to the main east gate - this route has fewer crowds',
         localSecrets: [
           "Take a dragon boat across Kunming Lake (70 RMB) - the views of the 17-Arch Bridge are spectacular",
@@ -128,6 +132,7 @@ export const CITY_DATA = {
         coordinates: { lat: 39.9379, lng: 116.4034 },
         openingHours: 'Open 24 hours (shops 10 AM - 10 PM)',
         ticketPrice: { rmb: 0, usd: 0 },
+        image: 'https://images.unsplash.com/photo-1573867639040-6dd25fa5f597?w=800&q=80',
         tips: 'Skip the touristy main street - duck into the 8 parallel side hutongs (labeled 帽儿, 雨儿, etc.) for the real experience',
         localSecrets: [
           "Mao'er Hutong (帽儿胡同) has Wan Rong's former residence - Empress of China's last emperor",
