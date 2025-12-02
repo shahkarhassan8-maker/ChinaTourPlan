@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { MapPin, Crown, User, Menu, X } from 'lucide-react';
+import { MapPin, Crown, User, Menu, X, Globe } from 'lucide-react';
 import Link from 'next/link';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { language, toggleLanguage, t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,6 +75,13 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors rounded-lg hover:bg-slate-100"
+            >
+              <Globe className="w-4 h-4" />
+              <span>{language === 'en' ? '中文' : 'EN'}</span>
+            </button>
             {user ? (
               <Link href="/dashboard">
                 <Button 
@@ -80,20 +89,20 @@ export default function Navbar() {
                   className="border-[#E60012] text-[#E60012] hover:bg-[#E60012] hover:text-white"
                 >
                   <User className="w-4 h-4 mr-2" />
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Button>
               </Link>
             ) : (
               <>
                 <Link href="/signup">
                   <Button variant="ghost" className="text-slate-700">
-                    Sign In
+                    {t('nav.signIn')}
                   </Button>
                 </Link>
                 <Link href="/signup">
                   <Button className="bg-[#E60012] hover:bg-[#cc0010] text-white">
                     <Crown className="w-4 h-4 mr-2" />
-                    Join Pro
+                    {t('nav.joinPro')}
                   </Button>
                 </Link>
               </>
@@ -119,26 +128,33 @@ export default function Navbar() {
             className="md:hidden mt-4 pb-4 border-t border-slate-200 pt-4"
           >
             <div className="flex flex-col gap-4">
-              <a href="#features" className="text-slate-700 font-medium">Features</a>
-              <a href="#reviews" className="text-slate-700 font-medium">Reviews</a>
-              <a href="#pricing" className="text-slate-700 font-medium">Pricing</a>
+              <a href="#features" className="text-slate-700 font-medium">{t('nav.features')}</a>
+              <a href="#reviews" className="text-slate-700 font-medium">{t('nav.reviews')}</a>
+              <a href="#pricing" className="text-slate-700 font-medium">{t('nav.pricing')}</a>
+              <button
+                onClick={toggleLanguage}
+                className="flex items-center gap-2 text-slate-700 font-medium"
+              >
+                <Globe className="w-4 h-4" />
+                <span>{language === 'en' ? '切换到中文' : 'Switch to English'}</span>
+              </button>
               <div className="border-t border-slate-200 pt-4 flex flex-col gap-3">
                 {user ? (
                   <Link href="/dashboard">
                     <Button className="w-full bg-[#E60012] hover:bg-[#cc0010] text-white">
                       <User className="w-4 h-4 mr-2" />
-                      Dashboard
+                      {t('nav.dashboard')}
                     </Button>
                   </Link>
                 ) : (
                   <>
                     <Link href="/signup">
-                      <Button variant="outline" className="w-full">Sign In</Button>
+                      <Button variant="outline" className="w-full">{t('nav.signIn')}</Button>
                     </Link>
                     <Link href="/signup">
                       <Button className="w-full bg-[#E60012] hover:bg-[#cc0010] text-white">
                         <Crown className="w-4 h-4 mr-2" />
-                        Join Pro
+                        {t('nav.joinPro')}
                       </Button>
                     </Link>
                   </>

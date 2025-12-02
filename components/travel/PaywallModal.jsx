@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
 import { 
@@ -7,6 +7,22 @@ import {
   FileText, Clock, Shield, Star, Sparkles,
   Zap, Crown, Gift
 } from 'lucide-react';
+
+const VisuallyHidden = ({ children }) => (
+  <span style={{
+    position: 'absolute',
+    width: '1px',
+    height: '1px',
+    padding: 0,
+    margin: '-1px',
+    overflow: 'hidden',
+    clip: 'rect(0, 0, 0, 0)',
+    whiteSpace: 'nowrap',
+    border: 0,
+  }}>
+    {children}
+  </span>
+);
 
 const PLANS = [
   {
@@ -84,7 +100,13 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl p-0 gap-0 overflow-hidden bg-slate-50 max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-2xl p-0 gap-0 overflow-hidden bg-slate-50 max-h-[90vh] overflow-y-auto" aria-describedby="paywall-description">
+        <VisuallyHidden>
+          <DialogTitle>Unlock Your Complete China Travel Guide</DialogTitle>
+          <DialogDescription id="paywall-description">
+            Choose a plan to get your detailed itinerary with Chinese addresses, phrases, and optional live support.
+          </DialogDescription>
+        </VisuallyHidden>
         {/* Header */}
         <div className="bg-gradient-to-br from-[#E60012] to-red-700 p-6 text-white text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-sm mb-4">

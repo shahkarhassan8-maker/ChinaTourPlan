@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Calendar, MapPin, Wallet, ArrowLeft, Share2, 
   Download, Sparkles, DollarSign, Lock, Crown,
   MessageCircle, Phone, FileText, CheckCircle,
-  Star, Quote, Globe, Shield, Clock, Users
+  Star, Quote, Globe, Shield, Clock, Users,
+  Bookmark, BookmarkCheck, Mail
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import DetailedDayCard from './DetailedDayCard';
 import PaywallModal from './PaywallModal';
+import ShareModal from './ShareModal';
+import EmailModal from './EmailModal';
 import { CITY_DATA, getFoodsForPreference } from './cityData';
 import { toast } from "sonner";
 
@@ -139,13 +142,51 @@ const generateDetailedItinerary = (formData) => {
 
 export default function ItineraryResult({ formData, onBack }) {
   const [showPaywall, setShowPaywall] = useState(false);
-  const [purchasedPlan, setPurchasedPlan] = useState(null); // null, 'basic', or 'premium'
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [purchasedPlan, setPurchasedPlan] = useState(null);
+  const [isSaved, setIsSaved] = useState(false);
   
   const itinerary = generateDetailedItinerary(formData);
   
   const totalCostUSD = itinerary.reduce((sum, day) => sum + day.cost.usd, 0);
   const totalCostRMB = itinerary.reduce((sum, day) => sum + day.cost.rmb, 0);
   const cityNames = [...new Set(itinerary.map(d => d.city))];
+
+  useEffect(() => {
+    const savedItineraries = JSON.parse(localStorage.getItem('itineraries') || '[]');
+    const isAlreadySaved = savedItineraries.some(
+      i => i.duration === formData.duration && 
+           JSON.stringify(i.cities) === JSON.stringify(formData.cities)
+    );
+    setIsSaved(isAlreadySaved);
+  }, [formData]);
+
+  const handleSaveItinerary = () => {
+    const savedItineraries = JSON.parse(localStorage.getItem('itineraries') || '[]');
+    
+    if (isSaved) {
+      toast.info('This itinerary is already saved!');
+      return;
+    }
+    
+    const newItinerary = {
+      id: Date.now(),
+      title: `${formData.duration} Days in China`,
+      cities: cityNames,
+      duration: formData.duration,
+      createdAt: new Date().toISOString().split('T')[0],
+      budget: formData.budget,
+      pace: formData.pace,
+      food: formData.food,
+      totalCost: totalCostUSD,
+    };
+    
+    savedItineraries.push(newItinerary);
+    localStorage.setItem('itineraries', JSON.stringify(savedItineraries));
+    setIsSaved(true);
+    toast.success('Itinerary saved to your dashboard!');
+  };
 
   const handlePurchase = (planId) => {
     setPurchasedPlan(planId);
@@ -171,13 +212,41 @@ export default function ItineraryResult({ formData, onBack }) {
                 {purchasedPlan === 'premium' ? 'Premium' : 'Basic'} Unlocked
               </Badge>
             )}
-            <Button variant="outline" size="sm" className="text-slate-600">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className={isSaved ? "text-green-600 border-green-600" : "text-slate-600"}
+              onClick={handleSaveItinerary}
+            >
+              {isSaved ? (
+                <>
+                  <BookmarkCheck className="w-4 h-4 mr-2" />
+                  Saved
+                </>
+              ) : (
+                <>
+                  <Bookmark className="w-4 h-4 mr-2" />
+                  Save
+                </>
+              )}
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="text-slate-600"
+              onClick={() => setShowShareModal(true)}
+            >
               <Share2 className="w-4 h-4 mr-2" />
               Share
             </Button>
-            <Button variant="outline" size="sm" className="text-slate-600">
-              <Download className="w-4 h-4 mr-2" />
-              Export PDF
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="text-slate-600"
+              onClick={() => setShowEmailModal(true)}
+            >
+              <Mail className="w-4 h-4 mr-2" />
+              Email
             </Button>
           </div>
         </div>
@@ -517,6 +586,22 @@ export default function ItineraryResult({ formData, onBack }) {
         onClose={() => setShowPaywall(false)}
         onPurchase={handlePurchase}
         tripDuration={formData.duration}
+      />
+
+      {/* Share Modal */}
+      <ShareModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        itinerary={itinerary}
+        formData={formData}
+      />
+
+      {/* Email Modal */}
+      <EmailModal
+        isOpen={showEmailModal}
+        onClose={() => setShowEmailModal(false)}
+        itinerary={itinerary}
+        formData={formData}
       />
     </div>
   );
