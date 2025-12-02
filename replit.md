@@ -70,6 +70,35 @@ The app is configured for autoscale deployment on Replit:
 ## Recent Changes (Dec 2, 2025)
 
 ### Latest Updates:
+- **New Place Selection Step** (`components/travel/PlaceSelector.jsx`):
+  - Interactive place selection UI with category filters (history, nature, temple, modern, culture)
+  - Time tracking showing hours remaining per city based on allocated days
+  - Visual cards with place details, images, duration, and ticket prices
+  - Search functionality to find specific attractions
+  - Validation warnings when exceeding time budget
+
+- **New Accommodation Selection Step** (`components/travel/AccommodationSelector.jsx`):
+  - Per-city hotel/hostel selection with budget/comfort/luxury options
+  - Contact info, amenities, and map links for each option
+  - Price display in both RMB and USD
+
+- **AI-Powered Itinerary Generation** (`pages/api/generate-itinerary.js`):
+  - Uses Groq LLM (llama-3.3-70b-versatile) for smart day-by-day planning
+  - Groups nearby places together to minimize travel time
+  - Considers opening hours when scheduling activities
+  - Includes selected accommodation info in AI prompt
+  - Fallback generation if AI fails
+
+- **Enhanced Input Wizard** (`components/travel/InputWizard.jsx`):
+  - Now 8-step flow: Duration → Cities → City Days → Places → Pace → Accommodation → Budget → Food
+  - Places selection step with city tabs and time validation
+  - Accommodation selection step with city tabs
+
+- **Accommodation Selection Bug Fix** (`components/travel/ItineraryResult.jsx`, `pages/api/generate-itinerary.js`):
+  - Fixed issue where user's accommodation selections weren't applied to itinerary
+  - Both AI and fallback generation now honor user's per-city accommodation choices
+
+### Earlier Updates:
 - **Professional Itinerary Enhancements** (`components/travel/cityData.jsx`, `components/travel/DetailedDayCard.jsx`):
   - Added `localInsights` field to each city with practical travel tips
   - Added `localSecrets` arrays to attractions with RedNote-researched hidden gems
