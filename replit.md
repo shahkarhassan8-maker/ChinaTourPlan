@@ -70,6 +70,31 @@ The app is configured for autoscale deployment on Replit:
 ## Recent Changes (Dec 2, 2025)
 
 ### Latest Updates:
+- **TourToChina Logo** (`components/travel/Navbar.jsx`):
+  - New pagoda-style SVG logo in the navbar
+  - Red gradient background with Chinese architectural design
+  - Professional branding visible on all pages
+
+- **Pricing Section** (`components/travel/PricingSection.jsx`):
+  - New pricing section with three tiers: Free, Pro ($19/mo), Lifetime ($99)
+  - Clicking "Pricing" in navbar now scrolls to pricing section
+  - Clear feature comparison and CTAs
+
+- **Language Toggle Removed**:
+  - Removed non-functional language switcher from navbar
+  - Cleaner navbar interface
+
+- **Updated Trust Metrics** (`components/travel/ReviewsSection.jsx`):
+  - Changed from "5,000+ Travelers" to "20+ Travelers"
+  - Replaced "50+ Countries Served" with "24/7 Prompt Responses"
+  - More realistic and relevant metrics
+
+- **Image Loading Improvements** (`components/travel/CityGallery.jsx`):
+  - Added ImageWithFallback component with loading shimmer
+  - Error handling for broken images with fallback
+  - Updated image URLs with auto=format&fit=crop parameters
+
+### Earlier Updates:
 - **GROQ AI Chat Integration** (`pages/api/chat.js`, `components/travel/AskAIModal.jsx`):
   - AI-powered travel assistant for premium users only
   - Uses GROQ's llama-3.3-70b-versatile model
@@ -110,7 +135,7 @@ The app is configured for autoscale deployment on Replit:
   - 6 pre-populated fake reviews from international travelers
   - Carousel navigation for viewing more reviews
   - Displays user-submitted reviews from members
-  - Trust indicators (5,000+ travelers, 50+ countries, 4.9/5 rating)
+  - Trust indicators (20+ travelers, 24/7 prompt responses, 4.9/5 rating)
   
 - **Navigation & Footer**:
   - Fixed navbar with scroll effect
