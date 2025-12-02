@@ -58,6 +58,22 @@ export default function SignupPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.email || !formData.email.includes('@')) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+    
+    if (!formData.password || formData.password.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+    
+    if (!isLogin && !formData.name.trim()) {
+      toast.error('Please enter your name');
+      return;
+    }
+    
     setLoading(true);
     
     setTimeout(() => {
