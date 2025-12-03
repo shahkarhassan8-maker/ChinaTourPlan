@@ -41,6 +41,7 @@ export default function DashboardPage() {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeFeature, setUpgradeFeature] = useState(null);
   const [supabaseAvailable, setSupabaseAvailable] = useState(false);
+  const [viewItinerary, setViewItinerary] = useState(null);
 
   useEffect(() => {
     setSupabaseAvailable(!!supabase);
@@ -114,7 +115,7 @@ export default function DashboardPage() {
   };
 
   const handleViewItinerary = (itinerary) => {
-    router.push(`/itinerary/${itinerary.id}`);
+    setViewItinerary(itinerary);
   };
 
   const handleFeatureAccess = (feature) => {
