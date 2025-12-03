@@ -30,6 +30,39 @@ import {
   submitReview as submitReviewToDb
 } from '@/lib/supabase';
 
+const PLANS = [
+  {
+    id: 'free',
+    name: 'Free',
+    price: 0,
+    period: 'forever',
+    description: 'Basic features to get started',
+    popular: false,
+    features: ['Basic itinerary details', 'Email support', '3 itineraries per month'],
+    lemonSqueezyUrl: null,
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    price: 19,
+    period: 'one-time',
+    description: 'Full access to all features',
+    popular: true,
+    features: ['Unlimited itineraries', 'Premium details', 'Local tips', 'AI BOT', 'Offline PDF downloads'],
+    lemonSqueezyUrl: 'https://chinatourplan.lemonsqueezy.com/buy/d5d05f0b-3fce-4ef9-8c83-5f162d6e1304?embed=1',
+  },
+  {
+    id: 'elite',
+    name: 'Elite',
+    price: 49,
+    period: 'one-time',
+    description: 'Best value forever',
+    popular: false,
+    features: ['Everything in Pro', 'Priority support', 'Fully funded Exhibition Alerts', 'Admin-suggested itineraries on WeChat', '24/7 live support', 'Flight ticket booking assistance'],
+    lemonSqueezyUrl: 'https://chinatourplan.lemonsqueezy.com/buy/72ccffc3-b57d-4b9c-aa22-52fe3e597389?embed=1',
+  },
+];
+
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
@@ -43,11 +76,41 @@ export default function DashboardPage() {
   const [upgradeFeature, setUpgradeFeature] = useState(null);
   const [supabaseAvailable, setSupabaseAvailable] = useState(false);
   const [viewItinerary, setViewItinerary] = useState(null);
+  const [selectedPlan, setSelectedPlan] = useState('pro');
 
   useEffect(() => {
     setSupabaseAvailable(!!supabase);
     loadUserData();
-  }, []);
+
+    // Initialize LemonSqueezy
+    if (typeof window !== 'undefined' && window.createLemonSqueezy) {
+      window.createLemonSqueezy();
+    }
+
+    // Listen for payment success
+    const handleMessageEvent = (event) => {
+      if (!event.origin.includes('lemonsqueezy.com')) return;
+
+      if (event.data && event.data.event === 'Checkout.Success') {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          userData.plan = selectedPlan;
+          localStorage.setItem('user', JSON.stringify(userData));
+          setUser(userData);
+          setShowUpgradeModal(false);
+          toast.success(`Upgraded to ${selectedPlan === 'elite' ? 'Elite' : 'Pro'}! Enjoy your premium features.`);
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessageEvent);
+    return () => window.removeEventListener('message', handleMessageEvent);
+  }, [selectedPlan]);
 
   const loadUserData = async () => {
     const storedUser = localStorage.getItem('user');
@@ -343,12 +406,14 @@ export default function DashboardPage() {
               <Zap className="w-8 h-8 mb-4" />
               <h3 className="text-lg font-semibold mb-1">Free Plan</h3>
               <p className="text-white/80 text-sm mb-3">{getRemainingItineraries()} itineraries left this month</p>
-              <Link href="/signup">
-                <Button size="sm" className="bg-white text-amber-600 hover:bg-amber-50">
-                  <Crown className="w-3 h-3 mr-1" />
-                  Upgrade to Pro
-                </Button>
-              </Link>
+              <Button
+                size="sm"
+                className="bg-white text-amber-600 hover:bg-amber-50"
+                onClick={() => setShowUpgradeModal(true)}
+              >
+                <Crown className="w-3 h-3 mr-1" />
+                Upgrade to Pro
+              </Button>
             </motion.div>
           ) : (
             <motion.div
@@ -742,6 +807,132 @@ export default function DashboardPage() {
                     </Button>
                   </Link>
                 </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showUpgradeModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+            onClick={() => setShowUpgradeModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="sticky top-0 bg-gradient-to-r from-amber-500 to-orange-500 text-white p-6 rounded-t-2xl">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-2xl font-bold">Upgrade to Premium</h3>
+                    <p className="text-white/80">Unlock all features and get unlimited access</p>
+                  </div>
+                  <button
+                    onClick={() => setShowUpgradeModal(false)}
+                    className="p-2 hover:bg-white/20 rounded-full transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-6">
+                <div className="grid md:grid-cols-3 gap-4 mb-6">
+                  {PLANS.map((plan) => {
+                    const isCurrentPlan = user?.plan === plan.id;
+
+                    return (
+                      <button
+                        key={plan.id}
+                        onClick={() => {
+                          if (!isCurrentPlan && plan.id !== 'free') {
+                            setSelectedPlan(plan.id);
+                          }
+                        }}
+                        disabled={isCurrentPlan}
+                        className={`relative p-5 rounded-2xl border-2 transition-all text-left ${isCurrentPlan
+                          ? 'border-green-500 bg-green-50/50 shadow-lg opacity-75 cursor-not-allowed'
+                          : selectedPlan === plan.id
+                            ? 'border-[#E60012] bg-red-50/50 shadow-lg cursor-pointer'
+                            : 'border-slate-200 hover:border-slate-300 cursor-pointer'
+                          }`}
+                      >
+                        {isCurrentPlan && (
+                          <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-green-600 text-white text-xs font-medium rounded-full">
+                            Current Plan
+                          </span>
+                        )}
+                        {plan.popular && !isCurrentPlan && (
+                          <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#E60012] text-white text-xs font-medium rounded-full">
+                            Most Popular
+                          </span>
+                        )}
+                        <div className="flex items-center gap-2 mb-3">
+                          <Crown className={`w-7 h-7 ${isCurrentPlan ? 'text-green-600' :
+                            selectedPlan === plan.id ? 'text-[#E60012]' : 'text-slate-400'
+                            }`} />
+                          <div>
+                            <h4 className="text-lg font-bold text-slate-900">{plan.name}</h4>
+                            <p className="text-xs text-slate-500">{plan.description}</p>
+                          </div>
+                        </div>
+                        <div className="mb-3">
+                          <span className="text-2xl font-bold text-[#E60012]">${plan.price}</span>
+                          <span className="text-slate-500 ml-1 text-xs">{plan.period}</span>
+                        </div>
+                        <ul className="space-y-1">
+                          {plan.features.map((feature, idx) => (
+                            <li key={idx} className="flex items-center gap-2 text-xs text-slate-700">
+                              <Star className="w-3 h-3 text-amber-500 fill-amber-500 flex-shrink-0" />
+                              {feature}
+                            </li>
+                          ))}
+                        </ul>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => setShowUpgradeModal(false)}
+                  >
+                    Maybe Later
+                  </Button>
+                  {selectedPlan !== 'free' && selectedPlan !== user?.plan ? (
+                    <a
+                      href={PLANS.find(p => p.id === selectedPlan)?.lemonSqueezyUrl + `&checkout[custom][plan]=${selectedPlan}`}
+                      className={`lemonsqueezy-button flex items-center justify-center flex-1 py-3 text-lg font-semibold rounded-lg cursor-pointer transition-colors ${selectedPlan === 'elite'
+                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
+                        : 'bg-[#E60012] hover:bg-[#cc0010] text-white'
+                        }`}
+                    >
+                      <Crown className="w-5 h-5 mr-2" />
+                      Upgrade to {selectedPlan === 'elite' ? 'Elite' : 'Pro'} - ${PLANS.find(p => p.id === selectedPlan)?.price}
+                    </a>
+                  ) : (
+                    <Button
+                      disabled
+                      className="flex-1 bg-slate-300 text-slate-500 cursor-not-allowed"
+                    >
+                      {selectedPlan === user?.plan ? 'Current Plan' : 'Select a paid plan'}
+                    </Button>
+                  )}
+                </div>
+
+                <p className="text-center text-sm text-slate-500 mt-4">
+                  Secure payment processed by LemonSqueezy • 30-day money-back guarantee
+                </p>
               </div>
             </motion.div>
           </motion.div>

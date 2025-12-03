@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   ArrowLeft, Crown, Check, Star, Shield,
-  Sparkles, Clock, MapPin, MessageCircle,
+  Sparkles, MapPin, MessageCircle,
   Eye, EyeOff, Mail, Lock, User
 } from 'lucide-react';
 import Link from 'next/link';
@@ -21,44 +21,12 @@ const MEMBERSHIP_BENEFITS = [
   { icon: Shield, title: 'Exclusive Deals', description: 'Special hotel & tour discounts' },
 ];
 
-const PLANS = [
-  {
-    id: 'free',
-    name: 'Free',
-    price: 0,
-    period: '',
-    description: 'Basic features to get started',
-    popular: false,
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    price: 19,
-    period: 'one-time',
-    description: 'Full access to all features',
-    popular: true,
-    savings: 'Most Popular',
-    lemonSqueezyUrl: 'https://chinatourplan.lemonsqueezy.com/buy/d5d05f0b-3fce-4ef9-8c83-5f162d6e1304?embed=1',
-  },
-  {
-    id: 'elite',
-    name: 'Elite',
-    price: 49,
-    period: 'one-time',
-    description: 'Best value forever',
-    popular: false,
-    savings: 'Best Value',
-    lemonSqueezyUrl: 'https://chinatourplan.lemonsqueezy.com/buy/72ccffc3-b57d-4b9c-aa22-52fe3e597389?embed=1',
-  },
-];
-
 export default function SignupPage() {
   const router = useRouter();
   const [redirectPath, setRedirectPath] = useState(null);
   const [isLogin, setIsLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState('pro');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -67,65 +35,11 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [supabaseAvailable, setSupabaseAvailable] = useState(false);
   const [hasPendingItinerary, setHasPendingItinerary] = useState(false);
-  const [paymentCompleted, setPaymentCompleted] = useState(null);
 
   useEffect(() => {
     setSupabaseAvailable(!!supabase);
     const pending = localStorage.getItem('pendingItinerary');
     setHasPendingItinerary(!!pending);
-
-    const completedPayment = localStorage.getItem('paymentCompleted');
-    if (completedPayment) {
-      try {
-        const paymentData = JSON.parse(completedPayment);
-        const oneHourAgo = Date.now() - (60 * 60 * 1000);
-        if (paymentData.timestamp > oneHourAgo) {
-          setPaymentCompleted(paymentData);
-          setSelectedPlan(paymentData.plan);
-          setFormData(prev => ({
-            ...prev,
-            email: paymentData.email || '',
-            name: paymentData.name || ''
-          }));
-        } else {
-          localStorage.removeItem('paymentCompleted');
-        }
-      } catch (e) {
-        localStorage.removeItem('paymentCompleted');
-      }
-    }
-
-    if (typeof window !== 'undefined' && window.createLemonSqueezy) {
-      window.createLemonSqueezy();
-    }
-
-    const handleMessageEvent = (event) => {
-      if (!event.origin.includes('lemonsqueezy.com')) return;
-
-      if (event.data && event.data.event === 'Checkout.Success') {
-        const pendingSignup = localStorage.getItem('pendingSignup');
-        if (pendingSignup) {
-          const signupData = JSON.parse(pendingSignup);
-          const paymentData = {
-            plan: signupData.plan,
-            email: signupData.email,
-            name: signupData.name,
-            timestamp: Date.now()
-          };
-          localStorage.setItem('paymentCompleted', JSON.stringify(paymentData));
-          localStorage.removeItem('pendingSignup');
-          setPaymentCompleted(paymentData);
-          setSelectedPlan(signupData.plan);
-          toast.success('Payment successful! Enter your password to complete signup.');
-        }
-      }
-    };
-
-    window.addEventListener('message', handleMessageEvent);
-
-    return () => {
-      window.removeEventListener('message', handleMessageEvent);
-    };
   }, []);
 
   useEffect(() => {
@@ -184,22 +98,14 @@ export default function SignupPage() {
     }
   };
 
-  const validateBasicInfo = () => {
+  const validateForm = () => {
     if (!formData.email || !formData.email.includes('@')) {
       toast.error('Please enter a valid email address');
       return false;
     }
 
-    if (!formData.name.trim()) {
+    if (!isLogin && !formData.name.trim()) {
       toast.error('Please enter your name');
-      return false;
-    }
-
-    return true;
-  };
-
-  const validateForm = () => {
-    if (!validateBasicInfo()) {
       return false;
     }
 
@@ -211,42 +117,10 @@ export default function SignupPage() {
     return true;
   };
 
-  const handlePaidPlanCheckout = (e) => {
-    if (!validateBasicInfo()) {
-      e.preventDefault();
-      return;
-    }
-
-    localStorage.setItem('pendingSignup', JSON.stringify({
-      name: formData.name,
-      email: formData.email,
-      plan: selectedPlan,
-    }));
-  };
-
-  const getCheckoutUrl = (planId) => {
-    const plan = PLANS.find(p => p.id === planId);
-    if (!plan?.lemonSqueezyUrl) return '#';
-
-    const baseUrl = plan.lemonSqueezyUrl;
-    const params = new URLSearchParams();
-    if (formData.email) {
-      params.set('checkout[email]', formData.email);
-    }
-    if (formData.name) {
-      params.set('checkout[name]', formData.name);
-    }
-    params.set('checkout[custom][plan]', planId);
-
-    return baseUrl + (baseUrl.includes('?') ? '&' : '?') + params.toString();
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) return;
-
-    const planToAssign = paymentCompleted ? paymentCompleted.plan : 'free';
 
     setLoading(true);
 
@@ -272,31 +146,19 @@ export default function SignupPage() {
             }
           }
         } else {
+          // Sign up new user
           const { user } = await signUp(formData.email, formData.password, formData.name);
-          toast.success(paymentCompleted
-            ? `Account created with ${planToAssign.charAt(0).toUpperCase() + planToAssign.slice(1)} access!`
-            : 'Account created! Please check your email to verify your account.'
-          );
-          localStorage.setItem('user', JSON.stringify({
-            id: user.id,
-            name: formData.name,
-            email: user.email,
-            plan: planToAssign,
-            memberSince: new Date().toISOString(),
-          }));
 
-          if (paymentCompleted) {
-            localStorage.removeItem('paymentCompleted');
-          }
+          // Don't auto-login - user must verify email first
+          setLoading(false);
+          toast.success('Account created! Please check your email to verify your account before signing in.', {
+            duration: 10000,
+          });
 
-          if (hasPendingItinerary) {
-            const savedItinerary = await savePendingItinerary(user.id);
-            setHasPendingItinerary(false);
-            if (savedItinerary && redirectPath === 'itinerary') {
-              window.location.href = `/itinerary/${savedItinerary.id}`;
-              return;
-            }
-          }
+          // Show success message and switch to login form
+          setFormData({ name: '', email: formData.email, password: '' });
+          setIsLogin(true);
+          return;
         }
         window.location.href = '/dashboard';
       } else {
@@ -304,21 +166,15 @@ export default function SignupPage() {
           if (isLogin) {
             toast.success('Welcome back! Redirecting to your dashboard...');
           } else {
-            toast.success(paymentCompleted
-              ? `Account created with ${planToAssign.charAt(0).toUpperCase() + planToAssign.slice(1)} access!`
-              : 'Account created! Welcome to China Travel Pro!'
-            );
+            toast.success('Account created! Welcome to China Travel Pro!');
           }
           localStorage.setItem('user', JSON.stringify({
             name: formData.name || 'Traveler',
             email: formData.email,
-            plan: planToAssign,
+            plan: 'free',
             memberSince: new Date().toISOString(),
           }));
           localStorage.removeItem('pendingItinerary');
-          if (paymentCompleted) {
-            localStorage.removeItem('paymentCompleted');
-          }
           window.location.href = '/dashboard';
         }, 1500);
       }
@@ -384,7 +240,7 @@ export default function SignupPage() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-full text-sm font-medium mb-6">
               <Sparkles className="w-4 h-4" />
-              Premium Membership
+              Premium Membership Available
             </div>
 
             <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
@@ -393,27 +249,9 @@ export default function SignupPage() {
             <p className="text-lg text-slate-600 mb-8">
               {isLogin
                 ? 'Sign in to access your saved itineraries and premium features.'
-                : 'Get unlimited access to detailed itineraries, live support, and exclusive travel perks.'
+                : 'Create a free account to start planning your China adventure. Upgrade to Pro anytime from your dashboard!'
               }
             </p>
-
-            {paymentCompleted && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
-                    <Check className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-green-800">Payment Successful!</p>
-                    <p className="text-sm text-green-600">Enter your password below to complete your {paymentCompleted.plan === 'elite' ? 'Elite' : 'Pro'} signup</p>
-                  </div>
-                </div>
-              </motion.div>
-            )}
 
             {hasPendingItinerary && (
               <motion.div
@@ -459,8 +297,8 @@ export default function SignupPage() {
                   <Shield className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="font-semibold text-green-800">30-Day Money Back Guarantee</p>
-                  <p className="text-sm text-green-600">Not satisfied? Get a full refund, no questions asked.</p>
+                  <p className="font-semibold text-green-800">Start Free, Upgrade Anytime</p>
+                  <p className="text-sm text-green-600">All accounts start free. Upgrade to Pro from your dashboard when ready!</p>
                 </div>
               </div>
             </div>
@@ -472,36 +310,6 @@ export default function SignupPage() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="bg-white rounded-2xl border border-slate-200 shadow-xl p-8"
           >
-            {!isLogin && (
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4">Choose Your Plan</h3>
-                <div className="grid grid-cols-3 gap-3">
-                  {PLANS.map((plan) => (
-                    <button
-                      key={plan.id}
-                      onClick={() => setSelectedPlan(plan.id)}
-                      className={`relative p-4 rounded-xl border-2 transition-all text-left ${selectedPlan === plan.id
-                        ? 'border-[#E60012] bg-red-50/50'
-                        : 'border-slate-200 hover:border-slate-300'
-                        }`}
-                    >
-                      {plan.popular && (
-                        <span className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-[#E60012] text-white text-xs font-medium rounded-full">
-                          Popular
-                        </span>
-                      )}
-                      <p className="font-semibold text-slate-900">{plan.name}</p>
-                      <p className="text-xl font-bold text-[#E60012]">${plan.price}</p>
-                      <p className="text-xs text-slate-500">{plan.period}</p>
-                      {plan.savings && (
-                        <p className="text-xs text-green-600 font-medium mt-1">{plan.savings}</p>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {showForgotPassword ? (
               <form onSubmit={handleForgotPassword} className="space-y-4">
                 <div className="text-center mb-6">
@@ -559,6 +367,15 @@ export default function SignupPage() {
               </form>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2">
+                    {isLogin ? 'Sign In' : 'Create Free Account'}
+                  </h3>
+                  <p className="text-slate-600 text-sm">
+                    {isLogin ? 'Access your saved itineraries' : 'Start planning your China adventure'}
+                  </p>
+                </div>
+
                 {!isLogin && (
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -620,50 +437,28 @@ export default function SignupPage() {
                   </div>
                 </div>
 
-                {isLogin || selectedPlan === 'free' || paymentCompleted ? (
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    className={`w-full py-6 text-lg font-semibold ${paymentCompleted && paymentCompleted.plan === 'elite'
-                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
-                      : 'bg-[#E60012] hover:bg-[#cc0010] text-white'
-                      }`}
-                  >
-                    {loading ? (
-                      <span className="flex items-center gap-2">
-                        <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                        </svg>
-                        Processing...
-                      </span>
-                    ) : isLogin ? (
-                      'Sign In'
-                    ) : paymentCompleted ? (
-                      <>
-                        <Crown className="w-5 h-5 mr-2" />
-                        Complete {paymentCompleted.plan === 'elite' ? 'Elite' : 'Pro'} Signup
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-5 h-5 mr-2" />
-                        Create Free Account
-                      </>
-                    )}
-                  </Button>
-                ) : (
-                  <a
-                    href={getCheckoutUrl(selectedPlan)}
-                    className={`lemonsqueezy-button flex items-center justify-center w-full py-4 text-lg font-semibold rounded-md cursor-pointer transition-colors ${selectedPlan === 'elite'
-                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
-                      : 'bg-[#E60012] hover:bg-[#cc0010] text-white'
-                      }`}
-                    onClick={handlePaidPlanCheckout}
-                  >
-                    <Crown className="w-5 h-5 mr-2" />
-                    {selectedPlan === 'elite' ? 'Get Elite Access' : 'Get Pro Access'} - ${PLANS.find(p => p.id === selectedPlan)?.price}
-                  </a>
-                )}
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-[#E60012] hover:bg-[#cc0010] text-white py-6 text-lg font-semibold"
+                >
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Processing...
+                    </span>
+                  ) : isLogin ? (
+                    'Sign In'
+                  ) : (
+                    <>
+                      <Sparkles className="w-5 h-5 mr-2" />
+                      Create Free Account
+                    </>
+                  )}
+                </Button>
               </form>
             )}
 
@@ -688,19 +483,6 @@ export default function SignupPage() {
                   </button>
                 </p>
               )}
-            </div>
-
-            <div className="mt-6 pt-6 border-t border-slate-200">
-              <div className="flex items-center justify-center gap-6 text-sm text-slate-500">
-                <span className="flex items-center gap-1">
-                  <Shield className="w-4 h-4" />
-                  Secure Payment
-                </span>
-                <span className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  Instant Access
-                </span>
-              </div>
             </div>
           </motion.div>
         </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Check, Sparkles, Star, Zap, MessageCircle, Bell, Plane, Users } from 'lucide-react';
+import { Check, Sparkles, Star, Zap } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 
@@ -8,15 +8,14 @@ const PRICING_PLANS = [
   {
     name: 'Free',
     price: '$0',
-    period: '',
-    description: 'Perfect for trying out TourToChina',
+    period: 'forever',
+    description: 'Basic features to get started',
     features: [
-      'Basic itinerary generation',
-      '3 itineraries per month',
-      'General travel tips',
+      'Basic itinerary details',
       'Email support',
+      '3 itineraries per month',
     ],
-    cta: 'Get Started',
+    cta: 'Get Started Free',
     popular: false,
     icon: Sparkles,
     planId: 'free',
@@ -25,44 +24,36 @@ const PRICING_PLANS = [
     name: 'Pro',
     price: '$19',
     period: 'one-time',
-    description: 'Everything you need for an amazing trip',
+    description: 'Full access to all features',
     features: [
       'Unlimited itineraries',
-      'Detailed Chinese addresses',
-      'Essential travel phrases',
+      'Premium details',
+      'Local tips',
+      'AI BOT',
       'Offline PDF downloads',
-      '24/7 live WeChat/WhatsApp support',
-      'Admin-suggested itineraries on WeChat',
-      'Free Exhibition Alerts',
-      'Discuss itinerary with admin before trip',
-      'Flight ticket booking assistance',
-      'Priority response times',
     ],
-    cta: 'Get Pro Access',
+    cta: 'Sign Up for Pro',
     popular: true,
     icon: Star,
     planId: 'pro',
-    lemonSqueezyUrl: 'https://chinatourplan.lemonsqueezy.com/buy/d5d05f0b-3fce-4ef9-8c83-5f162d6e1304?embed=1',
   },
   {
     name: 'Elite',
     price: '$49',
     period: 'one-time',
-    description: 'Best value for frequent travelers',
+    description: 'Best value forever',
     features: [
       'Everything in Pro',
-      'Lifetime access - pay once',
-      'VIP support channel',
-      'Early access to new features',
-      'Exclusive travel deals',
-      'Personalized trip consulting',
-      'Priority admin assistance',
+      'Priority support',
+      'Fully funded Exhibition Alerts',
+      'Admin-suggested itineraries on WeChat',
+      '24/7 live support',
+      'Flight ticket booking assistance',
     ],
-    cta: 'Get Elite Access',
+    cta: 'Sign Up for Elite',
     popular: false,
     icon: Zap,
     planId: 'elite',
-    lemonSqueezyUrl: 'https://chinatourplan.lemonsqueezy.com/buy/72ccffc3-b57d-4b9c-aa22-52fe3e597389?embed=1',
   },
 ];
 
@@ -85,7 +76,7 @@ export default function PricingSection() {
             Choose Your Plan
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Start for free and upgrade when you need more features
+            Sign up free and upgrade anytime from your dashboard
           </p>
         </motion.div>
 
@@ -97,11 +88,10 @@ export default function PricingSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
-              className={`relative bg-white rounded-2xl p-6 border-2 transition-all duration-300 hover:shadow-xl ${
-                plan.popular 
-                  ? 'border-[#E60012] shadow-lg shadow-red-500/10' 
+              className={`relative bg-white rounded-2xl p-6 border-2 transition-all duration-300 hover:shadow-xl ${plan.popular
+                  ? 'border-[#E60012] shadow-lg shadow-red-500/10'
                   : 'border-slate-200 hover:border-slate-300'
-              }`}
+                }`}
             >
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
@@ -111,9 +101,8 @@ export default function PricingSection() {
                 </div>
               )}
 
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${
-                plan.popular ? 'bg-[#E60012]/10 text-[#E60012]' : 'bg-slate-100 text-slate-600'
-              }`}>
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${plan.popular ? 'bg-[#E60012]/10 text-[#E60012]' : 'bg-slate-100 text-slate-600'
+                }`}>
                 <plan.icon className="w-6 h-6" />
               </div>
 
@@ -121,7 +110,7 @@ export default function PricingSection() {
               <div className="flex items-baseline gap-1 mb-2">
                 <span className="text-4xl font-bold text-slate-900">{plan.price}</span>
                 {plan.period && (
-                  <span className="text-slate-500">{plan.period}</span>
+                  <span className="text-slate-500">/{plan.period}</span>
                 )}
               </div>
               <p className="text-slate-600 text-sm mb-6">{plan.description}</p>
@@ -135,34 +124,18 @@ export default function PricingSection() {
                 ))}
               </ul>
 
-              {plan.lemonSqueezyUrl ? (
-                <a 
-                  href={plan.lemonSqueezyUrl} 
-                  className={`lemonsqueezy-button flex items-center justify-center w-full py-2.5 px-4 rounded-md font-medium text-sm cursor-pointer transition-colors ${
-                    plan.popular 
-                      ? 'bg-[#E60012] hover:bg-[#cc0010] text-white' 
+              <Link href="/signup">
+                <Button
+                  className={`w-full ${plan.popular
+                      ? 'bg-[#E60012] hover:bg-[#cc0010] text-white'
                       : plan.name === 'Elite'
-                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
-                      : 'bg-slate-900 hover:bg-slate-800 text-white'
-                  }`}
-                >
-                  {plan.cta}
-                </a>
-              ) : (
-                <Link href="/signup">
-                  <Button 
-                    className={`w-full ${
-                      plan.popular 
-                        ? 'bg-[#E60012] hover:bg-[#cc0010] text-white' 
-                        : plan.name === 'Elite'
                         ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
                         : 'bg-slate-900 hover:bg-slate-800 text-white'
                     }`}
-                  >
-                    {plan.cta}
-                  </Button>
-                </Link>
-              )}
+                >
+                  {plan.cta}
+                </Button>
+              </Link>
             </motion.div>
           ))}
         </div>
@@ -175,7 +148,7 @@ export default function PricingSection() {
           className="mt-12 text-center"
         >
           <p className="text-slate-500 text-sm">
-            All plans include a 30-day money-back guarantee. Prices may vary slightly based on promotions.
+            All paid plans can be purchased from your dashboard after signing up. 30-day money-back guarantee.
           </p>
         </motion.div>
       </div>
