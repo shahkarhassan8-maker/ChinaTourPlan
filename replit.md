@@ -11,7 +11,8 @@ The application is built with Next.js 14.0.0, utilizing JavaScript/JSX and style
 
 **Key Features and Implementations:**
 - **Itinerary Builder:** A 6-step input wizard guides users through trip planning (duration, cities, days, places, pace, accommodation, food). AI generates detailed day-by-day itineraries based on user selections, including hotel quality preferences and ensuring strict adherence to selected attractions.
-- **User Authentication & Profiles:** Supabase handles user signup, login, and manages user profiles, including plan types (Free, Pro, Lifetime) and saved itineraries.
+- **User Authentication & Profiles:** Supabase handles user signup, login, and manages user profiles, including plan types (Free, Pro, Elite) and saved itineraries.
+- **Payment Processing:** LemonSqueezy integration for one-time payments with checkout overlay. Pro ($19) and Elite ($49) tiers.
 - **Cost Breakdown:** Budget tiers are derived from accommodation selections, influencing cost calculations within itineraries.
 - **AI Chat Assistant:** A premium feature providing contextual travel assistance via a floating modal.
 - **Dynamic Content:** City-specific data, including attractions, local insights, photo spots, and transport information, is extensively detailed within `cityData.jsx`.
@@ -39,9 +40,17 @@ The application is built with Next.js 14.0.0, utilizing JavaScript/JSX and style
 
 ## External Dependencies
 - **Supabase:** PostgreSQL database, Authentication, and storage for user profiles, itineraries, and reviews.
+- **LemonSqueezy:** Payment processing with checkout overlay for Pro ($19) and Elite ($49) one-time purchases.
 - **GROQ SDK:** For AI chat and itinerary generation (using `llama-3.1-70b-versatile` model).
 - **Radix UI:** UI primitives for building accessible design systems.
 - **Framer Motion:** Animation library.
 - **Lucide React:** Icon library.
 - **Sonner:** Toast notification library.
 - **Unsplash:** Image hosting for various city and attraction visuals.
+
+## LemonSqueezy Integration
+- **Script:** Loaded via `pages/_app.js` from `https://assets.lemonsqueezy.com/lemon.js`
+- **Pro Plan URL:** `https://chinatourplan.lemonsqueezy.com/buy/d5d05f0b-3fce-4ef9-8c83-5f162d6e1304?embed=1`
+- **Elite Plan URL:** `https://chinatourplan.lemonsqueezy.com/buy/72ccffc3-b57d-4b9c-aa22-52fe3e597389?embed=1`
+- **Button Class:** Anchor tags with `lemonsqueezy-button` class trigger checkout overlay
+- **Note:** Access control maps legacy "lifetime" plan to "elite" for backward compatibility
