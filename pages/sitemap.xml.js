@@ -1,12 +1,6 @@
-import { DEFAULT_SEO } from '@/lib/seo';
-
-export default function Sitemap() {
-    // This component won't render - it's just for the API route
-    return null;
-}
-
-export async function getServerSideProps({ res }) {
-    const baseUrl = DEFAULT_SEO.siteUrl;
+// Sitemap API route
+export default function handler(req, res) {
+    const baseUrl = 'https://chinatourplan.com';
     const currentDate = new Date().toISOString();
 
     const staticPages = [
@@ -31,10 +25,5 @@ export async function getServerSideProps({ res }) {
 
     res.setHeader('Content-Type', 'text/xml');
     res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate');
-    res.write(sitemap);
-    res.end();
-
-    return {
-        props: {},
-    };
+    res.status(200).send(sitemap);
 }
