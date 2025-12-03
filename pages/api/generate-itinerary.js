@@ -44,14 +44,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { 
-      cities, 
-      cityDays, 
-      selectedPlaces, 
-      pace, 
+    const {
+      cities,
+      cityDays,
+      selectedPlaces,
+      pace,
       food,
       hotelQuality,
-      placesData 
+      placesData
     } = req.body;
 
     const hotelPriceRange = getHotelPriceRange(hotelQuality);
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
       const places = selectedPlaces[cityId] || [];
       const cityPlaces = places.map(index => placesData[cityId]?.highlights?.[index]).filter(Boolean);
       const days = cityDays[cityId] || 2;
-      
+
       return {
         cityId,
         cityName: placesData[cityId]?.name || cityId,
@@ -83,16 +83,15 @@ export default async function handler(req, res) {
     });
 
     const hoursPerDay = pace === 'relaxed' ? 4 : pace === 'moderate' ? 7 : 10;
-    
+
     const prompt = `You are a professional China travel planner. Create an EXACT day-by-day itinerary based on the SPECIFIC places the user selected.
 
 ABSOLUTELY CRITICAL RULES - MUST FOLLOW:
-1. ONLY include the EXACT cities and attractions listed below - DO NOT add ANY other cities or attractions not in this list
-2. If the user selected only 1 attraction (e.g., Forbidden City), the itinerary should ONLY include that 1 attraction - never add extra places
-3. Every attraction listed below MUST appear in the itinerary exactly once - do not skip any
-4. DO NOT invent or suggest additional attractions, neighborhoods, or sightseeing spots that are not explicitly listed
-5. Include hotel check-out in the morning (around 08:00-08:30) and check-in in the evening (around 18:00-19:00)
-6. Recommend a nearby ${hotelType} for each city based on central location to the selected attractions
+1. ONLY include the EXACT cities and attractions listed below - DO NOT add ANY other cities not in this list but if needed to fill ${hoursPerDay} , you may add some attractions yourself , add
+2. Every attraction listed below MUST appear in the itinerary exactly once - do not skip any
+3. DO NOT invent or suggest additional attractions, neighborhoods, or sightseeing spots that are not explicitly listed
+4. Include hotel check-out in the morning (around 08:00-08:30) and check-in in the evening (around 18:00-19:00) or night whatever is suitable for that city
+5. Recommend a nearby ${hotelType} for each city based on central location to the selected attractions
 
 TRAVEL DETAILS:
 - Pace: ${pace} (${hoursPerDay} hours of activities per day)
@@ -105,7 +104,7 @@ ${city.cityName} (${city.cityNameChinese}) - ${city.days} days:
   Selected attractions (MUST INCLUDE ALL):
 ${city.places.length > 0 ? city.places.map((p, i) => `    ${i + 1}. ${p.name} (${p.nameChinese || ''}) - Duration: ${p.durationHours}h
        Address: ${p.address || 'N/A'}
-       Hours: ${p.openingHours || 'Check locally'}`).join('\n') : '    No specific attractions selected - recommend general sightseeing'}
+       Hours: ${p.openingHours || 'Check locally'}`).join('\n') : '    No specific attractions selected - recommend general sightseeing or add some good place to visit yourself.'}
 `).join('\n')}
 
 DAILY SCHEDULE FORMAT:
@@ -115,6 +114,7 @@ DAILY SCHEDULE FORMAT:
 - Afternoon activities from selected places
 - 18:00-19:00: Check in to hotel (include hotel name and address)
 - Evening: Dinner and rest
+- Night: Night life activities like street walk or shopping
 
 Return a JSON object with this EXACT structure (no markdown, no code blocks, just pure JSON):
 {
@@ -193,7 +193,7 @@ Return a JSON object with this EXACT structure (no markdown, no code blocks, jus
     });
 
     const responseText = completion.choices[0]?.message?.content || '';
-    
+
     let itineraryData;
     try {
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);
@@ -202,10 +202,27 @@ Return a JSON object with this EXACT structure (no markdown, no code blocks, jus
       } else {
         throw new Error('No JSON found in response');
       }
+      // Validate that all user-selected places appear in the itinerary
+      const userSelectedPlaceNames = cityPlacesInfo.flatMap(city =>
+        city.places.map(p => p.name)
+      );
+      const itineraryPlaceNames = itineraryData.itinerary.flatMap(day =>
+        day.schedule
+          .filter(s => s.type === 'attraction')
+          .map(s => s.activity)
+      );
+      const missingPlaces = userSelectedPlaceNames.filter(
+        name => !itineraryPlaceNames.includes(name)
+      );
+      if (missingPlaces.length > 0) {
+        console.warn('AI missed user-selected places:', missingPlaces);
+        // Fall back to our own generation
+        itineraryData = generateFallbackItinerary(cityPlacesInfo, pace, food, hotelQuality, placesData);
+      }
     } catch (parseError) {
       console.error('Failed to parse AI response:', parseError);
       console.error('Response was:', responseText);
-      
+
       itineraryData = generateFallbackItinerary(cityPlacesInfo, pace, food, hotelQuality, placesData);
     }
 
@@ -294,9 +311,9 @@ function generateFallbackItinerary(cityPlacesInfo, pace, food, hotelQuality, pla
 
     const cityHotels = hotelsByCity[city.cityId] || defaultHotel;
     const hotel = cityHotels[hotelQuality] || cityHotels.moderate || defaultHotel.moderate;
-    const hotelPrice = hotelQuality === 'cheap' ? hotelPriceRange.rmb.min + 50 
-      : hotelQuality === 'expensive' ? hotelPriceRange.rmb.max - 200 
-      : Math.round((hotelPriceRange.rmb.min + hotelPriceRange.rmb.max) / 2);
+    const hotelPrice = hotelQuality === 'cheap' ? hotelPriceRange.rmb.min + 50
+      : hotelQuality === 'expensive' ? hotelPriceRange.rmb.max - 200
+        : Math.round((hotelPriceRange.rmb.min + hotelPriceRange.rmb.max) / 2);
 
     placesPerDay.slice(0, city.days).forEach((dayPlaces, idx) => {
       let currentTime = 9 * 60;
@@ -315,14 +332,14 @@ function generateFallbackItinerary(cityPlacesInfo, pace, food, hotelQuality, pla
           travelToNext: '20-30 min to first attraction'
         });
       }
-      
+
       dayPlaces.forEach((place, placeIdx) => {
         const hours = Math.floor(currentTime / 60);
         const mins = currentTime % 60;
         const timeStr = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-        
+
         currentTime += place.durationHours * 60 + 30;
-        
+
         schedule.push({
           time: timeStr,
           activity: place.name,
@@ -364,10 +381,10 @@ function generateFallbackItinerary(cityPlacesInfo, pace, food, hotelQuality, pla
         meals: {
           breakfast: { suggestion: 'Hotel breakfast or local street food', time: '07:30' },
           lunch: { suggestion: 'Local restaurant near attractions', time: '12:30', budget: '¥50-100' },
-          dinner: { 
-            suggestion: foodRec?.name || 'Local specialty restaurant', 
-            time: '19:00', 
-            budget: foodRec?.priceRange || '¥100-200' 
+          dinner: {
+            suggestion: foodRec?.name || 'Local specialty restaurant',
+            time: '19:00',
+            budget: foodRec?.priceRange || '¥100-200'
           }
         },
         tips: [
@@ -387,7 +404,7 @@ function generateFallbackItinerary(cityPlacesInfo, pace, food, hotelQuality, pla
     });
   });
 
-  const totalBudget = itinerary.reduce((sum, day) => 
+  const totalBudget = itinerary.reduce((sum, day) =>
     sum + day.estimatedCost.activities + day.estimatedCost.meals + day.estimatedCost.transport + day.estimatedCost.hotel, 0);
 
   return {

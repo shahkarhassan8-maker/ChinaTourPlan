@@ -148,11 +148,13 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
       if (allocatedDays === 0) return false;
     }
     // Step 3: Places - need at least one place selected
+    // Step 3: Places - need at least one place selected PER CITY
     if (currentStep === 3) {
-      const hasPlaces = formData.cities.some(cityId =>
+      // Check that EVERY selected city has at least one place
+      const allCitiesHavePlaces = formData.cities.every(cityId =>
         formData.selectedPlaces[cityId]?.length > 0
       );
-      if (!hasPlaces) return false;
+      if (!allCitiesHavePlaces) return false;
     }
     return true;
   };
