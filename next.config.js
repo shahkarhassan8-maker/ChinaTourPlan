@@ -4,6 +4,14 @@ const nextConfig = {
   images: {
     domains: ['images.unsplash.com'],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/sitemap.xml',
+        destination: '/api/sitemap.xml',
+      },
+    ];
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
