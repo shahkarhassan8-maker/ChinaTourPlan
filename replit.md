@@ -17,6 +17,16 @@ The application is built with Next.js 14.0.0, utilizing JavaScript/JSX and style
 - **Dynamic Content:** City-specific data, including attractions, local insights, photo spots, and transport information, is extensively detailed within `cityData.jsx`.
 - **UI/UX:** Incorporates Radix UI for interactive components, Framer Motion for animations, Lucide React for icons, and Sonner for toast notifications. The design includes a professional logo, interactive city galleries, and a responsive navigation bar.
 - **Access Control:** Features like the AI chat and full itinerary details are gated based on user membership tiers.
+- **Authentication-Gated Features:** Save, Share, and Email buttons require user authentication. Non-authenticated users are redirected to signup page with pending itinerary stored in localStorage. Pricing/upgrade CTAs also redirect to signup for non-authenticated users.
+- **Saved Itinerary Viewing:** Dedicated `/itinerary/[id]` page displays saved itineraries from database with share/email functionality.
+
+## Recent Changes (December 2024)
+- Added authentication gating for save/share/email buttons
+- Pricing and upgrade buttons now redirect to signup for non-authenticated users
+- Itineraries are only stored in database for authenticated users
+- Created `/itinerary/[id]` page to display saved itineraries
+- Share and Email modals now generate links to saved itinerary pages
+- Pending itinerary flow: stores itinerary when user signs up/in and redirects to saved itinerary
 
 ## External Dependencies
 - **Supabase:** PostgreSQL database, Authentication, and storage for user profiles, itineraries, and reviews.

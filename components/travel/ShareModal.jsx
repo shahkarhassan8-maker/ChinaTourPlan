@@ -4,14 +4,15 @@ import { X, Link2, Check, Twitter, Facebook, MessageCircle, Mail } from 'lucide-
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-export default function ShareModal({ isOpen, onClose, itinerary, formData }) {
+export default function ShareModal({ isOpen, onClose, itinerary, formData, savedItineraryId }) {
   const [copied, setCopied] = useState(false);
   
   const cityNames = itinerary ? [...new Set(itinerary.map(d => d.city))].join(', ') : '';
   const duration = formData?.duration || 7;
   
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://chinatourplan.com';
+  const shareUrl = savedItineraryId ? `${baseUrl}/itinerary/${savedItineraryId}` : baseUrl;
   const shareText = `Check out my ${duration}-day China trip to ${cityNames}! Planning made easy with China Travel Pro.`;
-  const shareUrl = typeof window !== 'undefined' ? window.location.origin : 'https://chinatourplan.com';
   
   const handleCopyLink = async () => {
     try {

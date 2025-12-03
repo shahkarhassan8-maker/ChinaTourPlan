@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { 
   Calendar, MapPin, Wallet, ArrowLeft, Share2, 
   Download, Sparkles, DollarSign, Lock, Crown,
   MessageCircle, Phone, FileText, CheckCircle,
   Star, Quote, Globe, Shield, Clock, Users,
-  Bookmark, BookmarkCheck, Mail, Bot, Loader2
+  Bookmark, BookmarkCheck, Mail, Bot, Loader2, LogIn
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +25,7 @@ import {
   FEATURES,
   getUpgradeMessage
 } from '@/lib/accessControl';
+import { getCurrentUser, saveItinerary } from '@/lib/supabase';
 
 const CONTACT_INFO = {
   wechat: 'Shahkarhassan',
@@ -221,24 +223,48 @@ const generateDetailedItinerary = (formData) => {
 };
 
 export default function ItineraryResult({ formData, onBack }) {
+  const router = useRouter();
   const [showPaywall, setShowPaywall] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [showAskAI, setShowAskAI] = useState(false);
   const [purchasedPlan, setPurchasedPlan] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
+  const [savedItineraryId, setSavedItineraryId] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [aiItinerary, setAiItinerary] = useState(null);
   const [generationError, setGenerationError] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   
   const hasSelectedPlaces = formData.selectedPlaces && 
     Object.values(formData.selectedPlaces).some(places => places?.length > 0);
+  
+  useEffect(() => {
+    checkAuth();
+  }, []);
   
   useEffect(() => {
     if (hasSelectedPlaces && !aiItinerary && !isGenerating) {
       generateAIItinerary();
     }
   }, [hasSelectedPlaces]);
+  
+  const checkAuth = async () => {
+    try {
+      const userData = await getCurrentUser();
+      setCurrentUser(userData);
+      if (userData?.profile?.plan) {
+        setPurchasedPlan(userData.profile.plan === 'free' ? null : userData.profile.plan);
+      }
+    } catch (error) {
+      console.error('Error checking auth:', error);
+    } finally {
+      setIsCheckingAuth(false);
+    }
+  };
+  
+  const isAuthenticated = currentUser?.user != null;
   
   const generateAIItinerary = async () => {
     setIsGenerating(true);
@@ -293,41 +319,111 @@ export default function ItineraryResult({ formData, onBack }) {
     setIsSaved(isAlreadySaved);
   }, [formData]);
 
-  const handleSaveItinerary = () => {
-    const savedItineraries = JSON.parse(localStorage.getItem('itineraries') || '[]');
-    
-    if (isSaved) {
-      toast.info('This itinerary is already saved!');
-      return;
+  const [isSaving, setIsSaving] = useState(false);
+  
+  const handleSaveItinerary = async (openModalAfter = null) => {
+    if (!isAuthenticated) {
+      toast.info('Please sign in to save your itinerary');
+      localStorage.setItem('pendingItinerary', JSON.stringify({
+        formData,
+        itinerary,
+        aiItinerary
+      }));
+      router.push('/signup?redirect=itinerary');
+      return null;
     }
     
-    const userPlan = JSON.parse(localStorage.getItem('user') || '{}')?.plan;
+    if (isSaved && savedItineraryId) {
+      if (openModalAfter === 'share') setShowShareModal(true);
+      if (openModalAfter === 'email') setShowEmailModal(true);
+      return savedItineraryId;
+    }
+    
+    const userPlan = currentUser?.profile?.plan || 'free';
     if (isFreeUser(userPlan)) {
       const remaining = getRemainingItineraries();
       if (remaining <= 0) {
         toast.error('You have reached your monthly limit. Upgrade to Pro for unlimited itineraries!');
         setShowPaywall(true);
-        return;
+        return null;
       }
     }
     
-    const newItinerary = {
-      id: Date.now(),
-      title: `${formData.duration} Days in China`,
-      cities: cityNames,
-      duration: formData.duration,
-      createdAt: new Date().toISOString().split('T')[0],
-      budget: formData.budget,
-      pace: formData.pace,
-      food: formData.food,
-      totalCost: totalCostUSD,
-    };
-    
-    savedItineraries.push(newItinerary);
-    localStorage.setItem('itineraries', JSON.stringify(savedItineraries));
-    incrementItineraryUsage();
-    setIsSaved(true);
-    toast.success('Itinerary saved to your dashboard!');
+    setIsSaving(true);
+    try {
+      const savedData = await saveItinerary(currentUser.user.id, {
+        title: `${formData.duration} Days in China`,
+        cities: cityNames,
+        duration: formData.duration,
+        pace: formData.pace,
+        food: formData.food,
+        accommodation: formData.accommodation,
+        itinerary: itinerary
+      });
+      
+      setSavedItineraryId(savedData.id);
+      incrementItineraryUsage();
+      setIsSaved(true);
+      toast.success('Itinerary saved to your dashboard!');
+      
+      if (openModalAfter === 'share') setShowShareModal(true);
+      if (openModalAfter === 'email') setShowEmailModal(true);
+      
+      return savedData.id;
+    } catch (error) {
+      console.error('Error saving itinerary:', error);
+      toast.error('Failed to save itinerary. Please try again.');
+      return null;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+  
+  const handleShareClick = async () => {
+    if (!isAuthenticated) {
+      toast.info('Please sign in to share your itinerary');
+      localStorage.setItem('pendingItinerary', JSON.stringify({
+        formData,
+        itinerary,
+        aiItinerary
+      }));
+      router.push('/signup?redirect=itinerary');
+      return;
+    }
+    if (!isSaved || !savedItineraryId) {
+      toast.info('Saving your itinerary first...');
+      await handleSaveItinerary('share');
+      return;
+    }
+    setShowShareModal(true);
+  };
+  
+  const handleEmailClick = async () => {
+    if (!isAuthenticated) {
+      toast.info('Please sign in to email your itinerary');
+      localStorage.setItem('pendingItinerary', JSON.stringify({
+        formData,
+        itinerary,
+        aiItinerary
+      }));
+      router.push('/signup?redirect=itinerary');
+      return;
+    }
+    if (!isSaved || !savedItineraryId) {
+      toast.info('Saving your itinerary first...');
+      await handleSaveItinerary('email');
+      return;
+    }
+    setShowEmailModal(true);
+  };
+  
+  const handleUpgradeClick = () => {
+    if (!isAuthenticated) {
+      toast.info('Please sign in first to purchase a membership');
+      router.push('/signup');
+      return;
+    }
+    setShowPaywall(true);
   };
 
   const handlePurchase = (planId) => {
@@ -412,9 +508,15 @@ export default function ItineraryResult({ formData, onBack }) {
               variant="outline" 
               size="sm" 
               className={isSaved ? "text-green-600 border-green-600" : "text-slate-600"}
-              onClick={handleSaveItinerary}
+              onClick={() => handleSaveItinerary()}
+              disabled={isSaving}
             >
-              {isSaved ? (
+              {isSaving ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : isSaved ? (
                 <>
                   <BookmarkCheck className="w-4 h-4 mr-2" />
                   Saved
@@ -430,7 +532,7 @@ export default function ItineraryResult({ formData, onBack }) {
               variant="outline" 
               size="sm" 
               className="text-slate-600"
-              onClick={() => setShowShareModal(true)}
+              onClick={handleShareClick}
             >
               <Share2 className="w-4 h-4 mr-2" />
               Share
@@ -439,7 +541,7 @@ export default function ItineraryResult({ formData, onBack }) {
               variant="outline" 
               size="sm" 
               className="text-slate-600"
-              onClick={() => setShowEmailModal(true)}
+              onClick={handleEmailClick}
             >
               <Mail className="w-4 h-4 mr-2" />
               Email
@@ -540,14 +642,14 @@ export default function ItineraryResult({ formData, onBack }) {
               <div className="flex gap-3">
                 <Button 
                   variant="outline"
-                  onClick={() => setShowPaywall(true)}
+                  onClick={handleUpgradeClick}
                   className="border-[#E60012] text-[#E60012]"
                 >
                   <FileText className="w-4 h-4 mr-2" />
                   From $5
                 </Button>
                 <Button 
-                  onClick={() => setShowPaywall(true)}
+                  onClick={handleUpgradeClick}
                   className="bg-[#E60012] hover:bg-[#cc0010] text-white"
                 >
                   <Crown className="w-4 h-4 mr-2" />
@@ -658,7 +760,7 @@ export default function ItineraryResult({ formData, onBack }) {
               day={day} 
               isLast={index === itinerary.length - 1}
               isPremium={hasFullAccess}
-              onUpgrade={() => setShowPaywall(true)}
+              onUpgrade={handleUpgradeClick}
             />
           ))}
         </div>
@@ -687,7 +789,7 @@ export default function ItineraryResult({ formData, onBack }) {
             className="mt-8 text-center"
           >
             <Button 
-              onClick={() => setShowPaywall(true)}
+              onClick={handleUpgradeClick}
               size="lg"
               className="bg-[#E60012] hover:bg-[#cc0010] text-white px-10 py-6 text-lg rounded-xl"
             >
@@ -816,6 +918,7 @@ export default function ItineraryResult({ formData, onBack }) {
         onClose={() => setShowShareModal(false)}
         itinerary={itinerary}
         formData={formData}
+        savedItineraryId={savedItineraryId}
       />
 
       {/* Email Modal */}
@@ -824,6 +927,7 @@ export default function ItineraryResult({ formData, onBack }) {
         onClose={() => setShowEmailModal(false)}
         itinerary={itinerary}
         formData={formData}
+        savedItineraryId={savedItineraryId}
       />
 
       {/* Ask AI Modal */}

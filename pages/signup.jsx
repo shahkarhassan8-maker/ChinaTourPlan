@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +10,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { supabase, signUp, signIn, resetPassword } from '@/lib/supabase';
+import { supabase, signUp, signIn, resetPassword, saveItinerary } from '@/lib/supabase';
 
 const MEMBERSHIP_BENEFITS = [
   { icon: MapPin, title: 'Unlimited Itineraries', description: 'Create and save unlimited trip plans' },
@@ -48,6 +49,8 @@ const PLANS = [
 ];
 
 export default function SignupPage() {
+  const router = useRouter();
+  const [redirectPath, setRedirectPath] = useState(null);
   const [isLogin, setIsLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -59,10 +62,47 @@ export default function SignupPage() {
   });
   const [loading, setLoading] = useState(false);
   const [supabaseAvailable, setSupabaseAvailable] = useState(false);
+  const [hasPendingItinerary, setHasPendingItinerary] = useState(false);
 
   useEffect(() => {
     setSupabaseAvailable(!!supabase);
+    const pending = localStorage.getItem('pendingItinerary');
+    setHasPendingItinerary(!!pending);
   }, []);
+  
+  useEffect(() => {
+    if (router.isReady && router.query.redirect) {
+      setRedirectPath(router.query.redirect);
+    }
+  }, [router.isReady, router.query.redirect]);
+  
+  const savePendingItinerary = async (userId) => {
+    const pendingData = localStorage.getItem('pendingItinerary');
+    if (!pendingData) return null;
+    
+    try {
+      const { formData: tripFormData, itinerary } = JSON.parse(pendingData);
+      const cityNames = [...new Set(itinerary.map(d => d.city))];
+      
+      const savedData = await saveItinerary(userId, {
+        title: `${tripFormData.duration} Days in China`,
+        cities: cityNames,
+        duration: tripFormData.duration,
+        pace: tripFormData.pace,
+        food: tripFormData.food,
+        accommodation: tripFormData.accommodation,
+        itinerary: itinerary
+      });
+      
+      localStorage.removeItem('pendingItinerary');
+      toast.success('Your itinerary has been saved!');
+      return savedData;
+    } catch (error) {
+      console.error('Error saving pending itinerary:', error);
+      toast.error('Failed to save your itinerary. You can save it from the dashboard.');
+      return null;
+    }
+  };
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
@@ -110,7 +150,7 @@ export default function SignupPage() {
       if (supabaseAvailable) {
         if (isLogin) {
           const { user, profile } = await signIn(formData.email, formData.password);
-          toast.success('Welcome back! Redirecting to your dashboard...');
+          toast.success('Welcome back! Redirecting...');
           localStorage.setItem('user', JSON.stringify({
             id: user.id,
             name: profile?.name || formData.name || 'Traveler',
@@ -118,6 +158,15 @@ export default function SignupPage() {
             plan: profile?.plan || 'free',
             memberSince: profile?.created_at || new Date().toISOString(),
           }));
+          
+          if (hasPendingItinerary) {
+            const savedItinerary = await savePendingItinerary(user.id);
+            setHasPendingItinerary(false);
+            if (savedItinerary && redirectPath === 'itinerary') {
+              window.location.href = `/itinerary/${savedItinerary.id}`;
+              return;
+            }
+          }
         } else {
           const { user } = await signUp(formData.email, formData.password, formData.name);
           toast.success('Account created! Please check your email to verify your account.');
@@ -128,6 +177,15 @@ export default function SignupPage() {
             plan: selectedPlan,
             memberSince: new Date().toISOString(),
           }));
+          
+          if (hasPendingItinerary) {
+            const savedItinerary = await savePendingItinerary(user.id);
+            setHasPendingItinerary(false);
+            if (savedItinerary && redirectPath === 'itinerary') {
+              window.location.href = `/itinerary/${savedItinerary.id}`;
+              return;
+            }
+          }
         }
         window.location.href = '/dashboard';
       } else {
@@ -143,6 +201,7 @@ export default function SignupPage() {
             plan: selectedPlan,
             memberSince: new Date().toISOString(),
           }));
+          localStorage.removeItem('pendingItinerary');
           window.location.href = '/dashboard';
         }, 1500);
       }
@@ -192,6 +251,24 @@ export default function SignupPage() {
                 : 'Get unlimited access to detailed itineraries, live support, and exclusive travel perks.'
               }
             </p>
+            
+            {hasPendingItinerary && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                    <MapPin className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-blue-800">You have an unsaved itinerary</p>
+                    <p className="text-sm text-blue-600">{isLogin ? 'Sign in' : 'Sign up'} to save it to your account</p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
 
             <div className="space-y-4 mb-8">
               {MEMBERSHIP_BENEFITS.map((benefit, index) => (

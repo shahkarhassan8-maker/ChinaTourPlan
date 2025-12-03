@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
-export default function EmailModal({ isOpen, onClose, itinerary, formData }) {
+export default function EmailModal({ isOpen, onClose, itinerary, formData, savedItineraryId }) {
   const [email, setEmail] = useState('');
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -13,6 +13,9 @@ export default function EmailModal({ isOpen, onClose, itinerary, formData }) {
   const cityNames = itinerary ? [...new Set(itinerary.map(d => d.city))].join(' → ') : '';
   const duration = formData?.duration || 7;
   const totalCost = itinerary?.reduce((sum, day) => sum + day.cost.usd, 0) || 0;
+  
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://chinatourplan.com';
+  const itineraryUrl = savedItineraryId ? `${baseUrl}/itinerary/${savedItineraryId}` : baseUrl;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,8 +27,24 @@ export default function EmailModal({ isOpen, onClose, itinerary, formData }) {
     
     setSending(true);
     
-    setTimeout(() => {
-      setSending(false);
+    try {
+      const response = await fetch('/api/send-itinerary-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          duration,
+          cities: cityNames,
+          estimatedCost: totalCost,
+          itineraryUrl,
+          itinerary
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
+      
       setSent(true);
       toast.success('Itinerary sent to your email!');
       
@@ -37,6 +56,7 @@ export default function EmailModal({ isOpen, onClose, itinerary, formData }) {
           duration,
           cities: cityNames,
           estimatedCost: totalCost,
+          itineraryUrl,
         },
       });
       localStorage.setItem('emailHistory', JSON.stringify(emailHistory));
@@ -46,7 +66,12 @@ export default function EmailModal({ isOpen, onClose, itinerary, formData }) {
         setSent(false);
         setEmail('');
       }, 2000);
-    }, 2000);
+    } catch (error) {
+      console.error('Email send error:', error);
+      toast.error('Failed to send email. Please try again.');
+    } finally {
+      setSending(false);
+    }
   };
 
   if (!isOpen) return null;
