@@ -31,7 +31,8 @@ export default function DashboardPage() {
   const [user, setUser] = useState(null);
   const [itineraries, setItineraries] = useState([]);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [review, setReview] = useState({ rating: 5, text: '' });
+  const [reviewItinerary, setReviewItinerary] = useState(null);
+  const [review, setReview] = useState({ rating: 5, text: '', attractionRatings: {} });
   const [isLoading, setIsLoading] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [viewItinerary, setViewItinerary] = useState(null);
@@ -132,6 +133,46 @@ export default function DashboardPage() {
     toast.success('Opening AI Assistant...');
   };
 
+  const getAttractionsFromItinerary = (itinerary) => {
+    const attractions = [];
+    let itineraryDays = [];
+    
+    if (itinerary?.itineraryData) {
+      if (Array.isArray(itinerary.itineraryData)) {
+        itineraryDays = itinerary.itineraryData;
+      } else if (itinerary.itineraryData.itinerary && Array.isArray(itinerary.itineraryData.itinerary)) {
+        itineraryDays = itinerary.itineraryData.itinerary;
+      }
+    }
+    
+    itineraryDays.forEach(day => {
+      if (day.schedule) {
+        day.schedule.forEach(item => {
+          if (item.activity && !attractions.find(a => a.name === item.activity)) {
+            attractions.push({
+              name: item.activity,
+              nameChinese: item.activityChinese || '',
+              city: day.city || ''
+            });
+          }
+        });
+      }
+    });
+    
+    return attractions;
+  };
+
+  const handleOpenReviewModal = (itinerary) => {
+    setReviewItinerary(itinerary);
+    const attractions = getAttractionsFromItinerary(itinerary);
+    const initialRatings = {};
+    attractions.forEach(a => {
+      initialRatings[a.name] = 5;
+    });
+    setReview({ rating: 5, text: '', attractionRatings: initialRatings });
+    setShowReviewModal(true);
+  };
+
   const handleSubmitReview = async () => {
     if (review.text.trim().length < 10) {
       toast.error('Please write at least 10 characters');
@@ -139,11 +180,18 @@ export default function DashboardPage() {
     }
     
     try {
+      const attractionRatingsArray = Object.entries(review.attractionRatings).map(([name, rating]) => ({
+        name,
+        rating
+      }));
+
       if (supabase && user?.id) {
         await submitReviewToDb(user.id, {
+          itineraryId: reviewItinerary?.id,
           rating: review.rating,
           text: review.text,
-          trip: 'China Travel Pro Member'
+          trip: reviewItinerary?.title || 'China Trip',
+          attractionRatings: attractionRatingsArray
         });
       }
       
@@ -154,8 +202,9 @@ export default function DashboardPage() {
         country: 'Member',
         rating: review.rating,
         date: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
-        trip: 'China Travel Pro Member',
+        trip: reviewItinerary?.title || 'China Trip',
         text: review.text,
+        attractionRatings: attractionRatingsArray,
         verified: true,
       };
       existingReviews.push(newReview);
@@ -163,10 +212,11 @@ export default function DashboardPage() {
       
       toast.success('Thank you for your review!');
       setShowReviewModal(false);
-      setReview({ rating: 5, text: '' });
+      setReviewItinerary(null);
+      setReview({ rating: 5, text: '', attractionRatings: {} });
     } catch (error) {
       console.error('Review error:', error);
-      toast.error('Failed to submit review');
+      toast.error('Failed to submit review. Please try again.');
     }
   };
 
@@ -307,21 +357,12 @@ export default function DashboardPage() {
 
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-slate-900">Your Itineraries</h2>
-          <div className="flex gap-3">
-            <Button
-              variant="outline"
-              onClick={() => setShowReviewModal(true)}
-            >
-              <Star className="w-4 h-4 mr-2" />
-              Write Review
+          <Link href="/">
+            <Button className="bg-[#E60012] hover:bg-[#cc0010] text-white">
+              <Plus className="w-4 h-4 mr-2" />
+              New Itinerary
             </Button>
-            <Link href="/">
-              <Button className="bg-[#E60012] hover:bg-[#cc0010] text-white">
-                <Plus className="w-4 h-4 mr-2" />
-                New Itinerary
-              </Button>
-            </Link>
-          </div>
+          </Link>
         </div>
 
         {itineraries.length === 0 ? (
@@ -393,6 +434,15 @@ export default function DashboardPage() {
                     Created {new Date(itinerary.createdAt).toLocaleDateString()}
                   </span>
                   <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                      onClick={() => handleOpenReviewModal(itinerary)}
+                    >
+                      <Star className="w-4 h-4 mr-1" />
+                      Review
+                    </Button>
                     <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full capitalize">
                       {itinerary.pace}
                     </span>
@@ -404,58 +454,102 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {showReviewModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      {showReviewModal && reviewItinerary && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-xl"
+            className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-xl"
           >
-            <h3 className="text-xl font-bold text-slate-900 mb-4">Write a Review</h3>
-            <p className="text-slate-600 mb-6">Share your experience with China Travel Pro</p>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-slate-700 mb-2">Rating</label>
-              <div className="flex gap-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    onClick={() => setReview({ ...review, rating: star })}
-                    className="focus:outline-none"
-                  >
-                    <Star 
-                      className={`w-8 h-8 ${star <= review.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`}
-                    />
-                  </button>
-                ))}
+            <div className="sticky top-0 bg-gradient-to-r from-amber-500 to-orange-500 text-white p-6 rounded-t-2xl">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold">Review Your Trip</h3>
+                  <p className="text-white/80 text-sm">{reviewItinerary.title}</p>
+                </div>
+                <button
+                  onClick={() => { setShowReviewModal(false); setReviewItinerary(null); }}
+                  className="p-2 hover:bg-white/20 rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
             </div>
 
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-slate-700 mb-2">Your Review</label>
-              <textarea
-                value={review.text}
-                onChange={(e) => setReview({ ...review, text: e.target.value })}
-                className="w-full p-4 border border-slate-200 rounded-xl resize-none focus:ring-2 focus:ring-[#E60012] focus:border-transparent"
-                rows={4}
-                placeholder="Tell us about your experience planning your China trip..."
-              />
-            </div>
+            <div className="p-6">
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-slate-700 mb-2">Overall Rating</label>
+                <div className="flex gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      onClick={() => setReview({ ...review, rating: star })}
+                      className="focus:outline-none"
+                    >
+                      <Star 
+                        className={`w-8 h-8 ${star <= review.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                className="flex-1"
-                onClick={() => setShowReviewModal(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="flex-1 bg-[#E60012] hover:bg-[#cc0010] text-white"
-                onClick={handleSubmitReview}
-              >
-                Submit Review
-              </Button>
+              {Object.keys(review.attractionRatings).length > 0 && (
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-slate-700 mb-3">Rate Attractions You Visited</label>
+                  <div className="space-y-3 max-h-48 overflow-y-auto">
+                    {Object.entries(review.attractionRatings).map(([attraction, rating]) => (
+                      <div key={attraction} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                        <span className="text-sm text-slate-700 flex-1 mr-3">{attraction}</span>
+                        <div className="flex gap-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              onClick={() => setReview({
+                                ...review,
+                                attractionRatings: { ...review.attractionRatings, [attraction]: star }
+                              })}
+                              className="focus:outline-none"
+                            >
+                              <Star 
+                                className={`w-5 h-5 ${star <= rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`}
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-slate-700 mb-2">Your Experience</label>
+                <textarea
+                  value={review.text}
+                  onChange={(e) => setReview({ ...review, text: e.target.value })}
+                  className="w-full p-4 border border-slate-200 rounded-xl resize-none focus:ring-2 focus:ring-[#E60012] focus:border-transparent"
+                  rows={4}
+                  placeholder="Tell us about your experience visiting these attractions..."
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => { setShowReviewModal(false); setReviewItinerary(null); }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="flex-1 bg-[#E60012] hover:bg-[#cc0010] text-white"
+                  onClick={handleSubmitReview}
+                >
+                  <Star className="w-4 h-4 mr-2" />
+                  Submit Review
+                </Button>
+              </div>
             </div>
           </motion.div>
         </div>

@@ -29,13 +29,15 @@ CREATE TABLE IF NOT EXISTS itineraries (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Reviews table
+-- Reviews table (linked to itineraries)
 CREATE TABLE IF NOT EXISTS reviews (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  itinerary_id UUID REFERENCES itineraries(id) ON DELETE CASCADE,
   rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
   text TEXT NOT NULL,
   trip_details TEXT,
+  attraction_ratings JSONB DEFAULT '[]',
   is_verified BOOLEAN DEFAULT true,
   is_public BOOLEAN DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -88,6 +90,9 @@ CREATE POLICY "Users can delete own itineraries" ON itineraries
 CREATE POLICY "Anyone can view public reviews" ON reviews
   FOR SELECT USING (is_public = true);
 
+CREATE POLICY "Users can view own reviews" ON reviews
+  FOR SELECT USING (auth.uid() = user_id);
+
 CREATE POLICY "Users can insert own reviews" ON reviews
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
@@ -96,6 +101,9 @@ CREATE POLICY "Users can update own reviews" ON reviews
 
 CREATE POLICY "Users can delete own reviews" ON reviews
   FOR DELETE USING (auth.uid() = user_id);
+
+CREATE POLICY "Authenticated users can insert reviews" ON reviews
+  FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
 
 -- Memberships policies
 CREATE POLICY "Users can view own membership" ON memberships

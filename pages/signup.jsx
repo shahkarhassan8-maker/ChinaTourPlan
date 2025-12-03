@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { supabase, signUp, signIn } from '@/lib/supabase';
+import { supabase, signUp, signIn, resetPassword } from '@/lib/supabase';
 
 const MEMBERSHIP_BENEFITS = [
   { icon: MapPin, title: 'Unlimited Itineraries', description: 'Create and save unlimited trip plans' },
@@ -50,6 +50,7 @@ const PLANS = [
 export default function SignupPage() {
   const [isLogin, setIsLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('pro');
   const [formData, setFormData] = useState({
     name: '',
@@ -62,6 +63,28 @@ export default function SignupPage() {
   useEffect(() => {
     setSupabaseAvailable(!!supabase);
   }, []);
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.email || !formData.email.includes('@')) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      await resetPassword(formData.email);
+      toast.success('Password reset link sent! Check your email.');
+      setShowForgotPassword(false);
+    } catch (error) {
+      console.error('Reset password error:', error);
+      toast.error(error.message || 'Failed to send reset link. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -240,107 +263,175 @@ export default function SignupPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && (
+            {showForgotPassword ? (
+              <form onSubmit={handleForgotPassword} className="space-y-4">
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">Reset Password</h3>
+                  <p className="text-slate-600 text-sm">Enter your email and we'll send you a reset link</p>
+                </div>
+                
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Full Name
+                    Email Address
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <Input
-                      type="text"
-                      placeholder="John Doe"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      type="email"
+                      placeholder="you@example.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="pl-11"
                       required
                     />
                   </div>
                 </div>
-              )}
-              
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  <Input
-                    type="email"
-                    placeholder="you@example.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="pl-11"
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  <Input
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Create a password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="pl-11 pr-11"
-                    required
-                    minLength={6}
-                  />
+
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-[#E60012] hover:bg-[#cc0010] text-white py-6 text-lg font-semibold"
+                >
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Sending...
+                    </span>
+                  ) : (
+                    <>
+                      <Mail className="w-5 h-5 mr-2" />
+                      Send Reset Link
+                    </>
+                  )}
+                </Button>
+
+                <div className="text-center">
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    onClick={() => setShowForgotPassword(false)}
+                    className="text-sm text-[#E60012] font-medium hover:underline"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    Back to Sign In
                   </button>
                 </div>
-              </div>
-
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-[#E60012] hover:bg-[#cc0010] text-white py-6 text-lg font-semibold"
-              >
-                {loading ? (
-                  <span className="flex items-center gap-2">
-                    <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    Processing...
-                  </span>
-                ) : isLogin ? (
-                  'Sign In'
-                ) : selectedPlan === 'free' ? (
-                  <>
-                    <Sparkles className="w-5 h-5 mr-2" />
-                    Create Free Account
-                  </>
-                ) : (
-                  <>
-                    <Crown className="w-5 h-5 mr-2" />
-                    {selectedPlan === 'lifetime' ? 'Get Lifetime Access' : 'Start Pro Membership'} - ${PLANS.find(p => p.id === selectedPlan)?.price}
-                  </>
+              </form>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {!isLogin && (
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Full Name
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                      <Input
+                        type="text"
+                        placeholder="John Doe"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="pl-11"
+                        required
+                      />
+                    </div>
+                  </div>
                 )}
-              </Button>
-            </form>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <Input
+                      type="email"
+                      placeholder="you@example.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="pl-11"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <Input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Create a password"
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      className="pl-11 pr-11"
+                      required
+                      minLength={6}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    >
+                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  </div>
+                </div>
 
-            <div className="mt-6 text-center">
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-[#E60012] hover:bg-[#cc0010] text-white py-6 text-lg font-semibold"
+                >
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Processing...
+                    </span>
+                  ) : isLogin ? (
+                    'Sign In'
+                  ) : selectedPlan === 'free' ? (
+                    <>
+                      <Sparkles className="w-5 h-5 mr-2" />
+                      Create Free Account
+                    </>
+                  ) : (
+                    <>
+                      <Crown className="w-5 h-5 mr-2" />
+                      {selectedPlan === 'lifetime' ? 'Get Lifetime Access' : 'Start Pro Membership'} - ${PLANS.find(p => p.id === selectedPlan)?.price}
+                    </>
+                  )}
+                </Button>
+              </form>
+            )}
+
+            <div className="mt-6 text-center space-y-2">
               <p className="text-sm text-slate-500">
                 {isLogin ? "Don't have an account?" : "Already have an account?"}
                 <button
-                  onClick={() => setIsLogin(!isLogin)}
+                  onClick={() => { setIsLogin(!isLogin); setShowForgotPassword(false); }}
                   className="ml-1 text-[#E60012] font-medium hover:underline"
                 >
                   {isLogin ? 'Sign Up' : 'Sign In'}
                 </button>
               </p>
+              {isLogin && !showForgotPassword && (
+                <p className="text-sm">
+                  <button
+                    type="button"
+                    onClick={() => setShowForgotPassword(true)}
+                    className="text-slate-500 hover:text-[#E60012] transition-colors"
+                  >
+                    Forgot your password?
+                  </button>
+                </p>
+              )}
             </div>
 
             <div className="mt-6 pt-6 border-t border-slate-200">
