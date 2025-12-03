@@ -8,7 +8,7 @@ import {
   ArrowLeft, Crown, MapPin, Calendar, Trash2,
   Plus, Star, Settings, LogOut, Edit, Eye,
   MessageCircle, Sparkles, Clock, User, AlertTriangle, X,
-  Lock, Zap, Download, Bot
+  Lock, Zap, Download, Bot, Check
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -27,7 +27,8 @@ import {
   signOut,
   getUserItineraries,
   deleteItinerary as deleteItineraryFromDb,
-  submitReview as submitReviewToDb
+  submitReview as submitReviewToDb,
+  updateUserPlan
 } from '@/lib/supabase';
 
 const PLANS = [
@@ -88,13 +89,27 @@ export default function DashboardPage() {
     }
 
     // Listen for payment success
-    const handleMessageEvent = (event) => {
+    const handleMessageEvent = async (event) => {
       if (!event.origin.includes('lemonsqueezy.com')) return;
 
       if (event.data && event.data.event === 'Checkout.Success') {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
           const userData = JSON.parse(storedUser);
+
+          // Update plan in Supabase database first
+          if (supabase && userData.id) {
+            try {
+              await updateUserPlan(userData.id, selectedPlan);
+              console.log('✅ Plan updated in Supabase:', selectedPlan);
+            } catch (error) {
+              console.error('❌ Error updating plan in Supabase:', error);
+              toast.error('Payment received but failed to update account. Please contact support.');
+              return;
+            }
+          }
+
+          // Then update localStorage
           userData.plan = selectedPlan;
           localStorage.setItem('user', JSON.stringify(userData));
           setUser(userData);
@@ -426,7 +441,9 @@ export default function DashboardPage() {
               <h3 className="text-lg font-semibold mb-1">
                 {getPlanDisplayName(user?.plan)} Member
               </h3>
-              <p className="text-white/80 text-sm">All premium features unlocked</p>
+              <p className="text-white/80 text-sm">
+                {user?.plan === 'elite' ? 'All premium features + VIP benefits' : 'All premium features unlocked'}
+              </p>
             </motion.div>
           )}
 
@@ -462,6 +479,115 @@ export default function DashboardPage() {
             )}
           </motion.div>
         </div>
+
+        {/* Pricing Plans Section - Always Visible */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mb-12"
+        >
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">Membership Plans</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {PLANS.map((plan) => {
+              const isCurrentPlan = user?.plan === plan.id;
+              const currentPlanTier = PLANS.findIndex(p => p.id === user?.plan);
+              const thisPlanTier = PLANS.findIndex(p => p.id === plan.id);
+              const isLowerTier = thisPlanTier < currentPlanTier;
+
+              return (
+                <motion.div
+                  key={plan.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`relative bg-white rounded-2xl p-6 border-2 transition-all ${isCurrentPlan
+                    ? 'border-green-500 bg-green-50/30 shadow-lg'
+                    : isLowerTier
+                      ? 'border-slate-200 bg-slate-50 opacity-50'
+                      : plan.popular
+                        ? 'border-[#E60012] shadow-lg shadow-red-500/10'
+                        : 'border-slate-200 hover:border-slate-300 hover:shadow-lg'
+                    }`}
+                >
+                  {isCurrentPlan && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <span className="bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                        Current Plan
+                      </span>
+                    </div>
+                  )}
+                  {plan.popular && !isCurrentPlan && !isLowerTier && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <span className="bg-[#E60012] text-white text-xs font-semibold px-3 py-1 rounded-full">
+                        Most Popular
+                      </span>
+                    </div>
+                  )}
+
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${isCurrentPlan
+                    ? 'bg-green-100 text-green-600'
+                    : isLowerTier
+                      ? 'bg-slate-200 text-slate-400'
+                      : plan.popular
+                        ? 'bg-[#E60012]/10 text-[#E60012]'
+                        : 'bg-slate-100 text-slate-600'
+                    }`}>
+                    <Crown className="w-6 h-6" />
+                  </div>
+
+                  <h3 className={`text-xl font-bold mb-2 ${isLowerTier ? 'text-slate-400' : 'text-slate-900'}`}>{plan.name}</h3>
+                  <div className="flex items-baseline gap-1 mb-2">
+                    <span className={`text-4xl font-bold ${isLowerTier ? 'text-slate-400' : 'text-slate-900'}`}>${plan.price}</span>
+                    <span className={isLowerTier ? 'text-slate-400' : 'text-slate-500'}>/{plan.period}</span>
+                  </div>
+                  <p className={`text-sm mb-6 ${isLowerTier ? 'text-slate-400' : 'text-slate-600'}`}>{plan.description}</p>
+
+                  <ul className="space-y-3 mb-6">
+                    {plan.features.map((feature, i) => (
+                      <li key={i} className="flex items-center gap-2 text-sm text-slate-700">
+                        <Star className={`w-4 h-4 flex-shrink-0 ${isCurrentPlan ? 'text-green-500 fill-green-500' : 'text-amber-500 fill-amber-500'
+                          }`} />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {isCurrentPlan ? (
+                    <Button
+                      disabled
+                      className="w-full bg-green-100 text-green-700 cursor-not-allowed"
+                    >
+                      <Check className="w-4 h-4 mr-2" />
+                      Active Plan
+                    </Button>
+                  ) : isLowerTier ? (
+                    <Button
+                      disabled
+                      className="w-full bg-slate-200 text-slate-400 cursor-not-allowed"
+                    >
+                      Lower Tier
+                    </Button>
+                  ) : plan.lemonSqueezyUrl ? (
+                    <a
+                      href={plan.lemonSqueezyUrl + `&checkout[custom][plan]=${plan.id}`}
+                      className={`lemonsqueezy-button flex items-center justify-center w-full py-3 rounded-lg font-semibold text-white transition-colors ${plan.popular
+                        ? 'bg-[#E60012] hover:bg-[#cc0010]'
+                        : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700'
+                        }`}
+                    >
+                      <Crown className="w-4 h-4 mr-2" />
+                      Upgrade to {plan.name}
+                    </a>
+                  ) : (
+                    <Button disabled className="w-full" variant="outline">
+                      Not Available
+                    </Button>
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
 
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-slate-900">Your Itineraries</h2>
