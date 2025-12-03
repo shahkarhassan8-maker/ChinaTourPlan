@@ -20,8 +20,14 @@ const STEPS = [
   { id: 'cities', title: 'Destinations', icon: MapPin, description: 'Select your dream destinations (pick multiple!)' },
   { id: 'cityDays', title: 'Days per City', icon: Calendar, description: 'See our recommendations and customize your stay' },
   { id: 'places', title: 'Places to Visit', icon: Camera, description: 'Select attractions you want to see' },
-  { id: 'accommodation', title: 'Accommodation', icon: Bed, description: 'Where would you like to stay?' },
+  { id: 'hotelQuality', title: 'Hotel Quality', icon: Bed, description: 'What type of accommodation do you prefer?' },
   { id: 'food', title: 'Food Preferences', icon: Utensils, description: 'Any dietary preferences?' },
+];
+
+const HOTEL_QUALITY = [
+  { id: 'cheap', name: 'Budget', emoji: '🏨', description: 'Hostels & Budget Hotels', priceRange: '$20-50/night' },
+  { id: 'moderate', name: 'Moderate', emoji: '🏢', description: '3-Star Hotels, Clean & Comfortable', priceRange: '$50-120/night' },
+  { id: 'expensive', name: 'Luxury', emoji: '🏰', description: '4-5 Star Hotels, Premium Experience', priceRange: '$120-300+/night' },
 ];
 
 const CITIES = [
@@ -76,13 +82,12 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRegion, setSelectedRegion] = useState('All');
   const [activePlacesCity, setActivePlacesCity] = useState(null);
-  const [activeAccommodationCity, setActiveAccommodationCity] = useState(null);
   const [formData, setFormData] = useState({
     cities: [],
     cityDays: {},
     selectedPlaces: {},
     pace: 'moderate',
-    accommodation: {},
+    hotelQuality: 'moderate',
     food: 'anything',
   });
   
@@ -156,10 +161,6 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
     // Places step is now step 3
     if (currentStep === 3 && formData.cities.length > 0 && !activePlacesCity) {
       setActivePlacesCity(formData.cities[0]);
-    }
-    // Accommodation step is now step 4
-    if (currentStep === 4 && formData.cities.length > 0 && !activeAccommodationCity) {
-      setActiveAccommodationCity(formData.cities[0]);
     }
   }, [currentStep, formData.cities]);
 
@@ -321,41 +322,32 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
           </div>
         );
 
-      case 4: // Accommodation
+      case 4: // Hotel Quality
         return (
           <div className="space-y-4">
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              {formData.cities.map((cityId) => {
-                const city = CITY_DATA[cityId];
-                const hasAccommodation = formData.accommodation[cityId];
-                return (
-                  <button
-                    key={cityId}
-                    onClick={() => setActiveAccommodationCity(cityId)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all ${
-                      activeAccommodationCity === cityId
-                        ? 'bg-[#E60012] text-white'
-                        : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'
-                    }`}
-                  >
-                    <span className="font-medium">{city?.name || cityId}</span>
-                    {hasAccommodation && (
-                      <Check className={`w-4 h-4 ${
-                        activeAccommodationCity === cityId ? 'text-white' : 'text-green-600'
-                      }`} />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-            
-            {activeAccommodationCity && (
-              <AccommodationSelector
-                cityId={activeAccommodationCity}
-                selectedAccommodation={formData.accommodation}
-                onAccommodationChange={(newAccommodation) => setFormData({ ...formData, accommodation: newAccommodation })}
-              />
-            )}
+            {HOTEL_QUALITY.map((quality) => (
+              <button
+                key={quality.id}
+                onClick={() => setFormData({ ...formData, hotelQuality: quality.id })}
+                className={`w-full p-5 rounded-2xl border-2 transition-all duration-300 text-left flex items-center gap-4 ${
+                  formData.hotelQuality === quality.id
+                    ? 'border-[#E60012] bg-red-50/50'
+                    : 'border-slate-200 hover:border-slate-300 bg-white'
+                }`}
+              >
+                <div className="text-4xl">{quality.emoji}</div>
+                <div className="flex-1">
+                  <div className="font-semibold text-slate-900 text-lg">{quality.name}</div>
+                  <div className="text-sm text-slate-500">{quality.description}</div>
+                  <div className="text-sm text-[#E60012] font-medium mt-1">{quality.priceRange}</div>
+                </div>
+                {formData.hotelQuality === quality.id && (
+                  <div className="w-6 h-6 bg-[#E60012] rounded-full flex items-center justify-center">
+                    <Check className="w-4 h-4 text-white" />
+                  </div>
+                )}
+              </button>
+            ))}
           </div>
         );
 
