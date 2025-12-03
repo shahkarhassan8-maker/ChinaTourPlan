@@ -38,6 +38,16 @@ The application is built with Next.js 14.0.0, utilizing JavaScript/JSX and style
 - Admin emails configured in `lib/accessControl.js` (shahkarhassan8@gmail.com, admin@chinatourplan.com)
 - Note: Production should add site URL to Supabase dashboard's allowed redirect URLs
 
+### Payment-First Signup Flow
+- **Free plan:** Signs up directly without payment, creates account immediately
+- **Pro/Elite plans:** Payment-first flow - user enters name/email, clicks checkout button which opens LemonSqueezy overlay, after successful payment user enters password to complete signup
+- Form validation split: `validateBasicInfo()` for pre-checkout (name/email only), `validateForm()` for final signup (includes password)
+- Stores `pendingSignup` (name, email, plan - no password) during checkout
+- After payment success, stores `paymentCompleted` with 1-hour expiration
+- User's email is prefilled in LemonSqueezy checkout
+- Green success banner shows when payment is completed
+- Security: No passwords stored in localStorage, postMessage origin validation for LemonSqueezy events
+
 ## External Dependencies
 - **Supabase:** PostgreSQL database, Authentication, and storage for user profiles, itineraries, and reviews.
 - **LemonSqueezy:** Payment processing with checkout overlay for Pro ($19) and Elite ($49) one-time purchases.
