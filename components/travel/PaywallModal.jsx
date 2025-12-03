@@ -53,8 +53,8 @@ const PLANS = [
     id: 'pro',
     name: 'Pro',
     price: 19,
-    originalPrice: 39,
-    period: '/month',
+    originalPrice: null,
+    period: 'one-time',
     popular: true,
     color: 'red',
     icon: Star,
@@ -71,13 +71,14 @@ const PLANS = [
       'Priority response times',
     ],
     notIncluded: [],
-    cta: 'Start Pro Trial',
+    cta: 'Get Pro Access',
+    lemonSqueezyUrl: 'https://chinatourplan.lemonsqueezy.com/buy/d5d05f0b-3fce-4ef9-8c83-5f162d6e1304?embed=1',
   },
   {
-    id: 'lifetime',
-    name: 'Lifetime',
-    price: 99,
-    originalPrice: 199,
+    id: 'elite',
+    name: 'Elite',
+    price: 49,
+    originalPrice: null,
     period: 'one-time',
     popular: false,
     color: 'amber',
@@ -92,7 +93,8 @@ const PLANS = [
       'Priority admin assistance',
     ],
     notIncluded: [],
-    cta: 'Get Lifetime Access',
+    cta: 'Get Elite Access',
+    lemonSqueezyUrl: 'https://chinatourplan.lemonsqueezy.com/buy/72ccffc3-b57d-4b9c-aa22-52fe3e597389?embed=1',
   },
 ];
 
@@ -135,7 +137,7 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
         <div className="bg-gradient-to-br from-[#E60012] to-red-700 p-6 text-white text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-sm mb-4">
             <Gift className="w-4 h-4" />
-            Limited Time: 50% Off Pro & Lifetime
+            One-Time Payment - Lifetime Access
           </div>
           <h2 className="text-2xl font-bold mb-2">Unlock Your Complete China Travel Guide</h2>
           <p className="text-white/80">Everything you need for a stress-free trip</p>
@@ -153,7 +155,7 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
                   selectedPlan === plan.id
                     ? plan.id === 'pro' 
                       ? 'border-[#E60012] bg-red-50'
-                      : plan.id === 'lifetime'
+                      : plan.id === 'elite'
                       ? 'border-amber-500 bg-amber-50'
                       : 'border-slate-400 bg-slate-50'
                     : 'border-slate-200 bg-white hover:border-slate-300'
@@ -168,10 +170,10 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
 
                 <div className="flex items-center gap-2 mb-3">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                    plan.id === 'pro' ? 'bg-red-100' : plan.id === 'lifetime' ? 'bg-amber-100' : 'bg-slate-100'
+                    plan.id === 'pro' ? 'bg-red-100' : plan.id === 'elite' ? 'bg-amber-100' : 'bg-slate-100'
                   }`}>
                     <plan.icon className={`w-4 h-4 ${
-                      plan.id === 'pro' ? 'text-[#E60012]' : plan.id === 'lifetime' ? 'text-amber-600' : 'text-slate-600'
+                      plan.id === 'pro' ? 'text-[#E60012]' : plan.id === 'elite' ? 'text-amber-600' : 'text-slate-600'
                     }`} />
                   </div>
                   <h3 className="font-bold text-slate-900">{plan.name}</h3>
@@ -203,7 +205,7 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
 
                 {selectedPlan === plan.id && (
                   <div className={`absolute top-3 right-3 w-5 h-5 rounded-full flex items-center justify-center ${
-                    plan.id === 'pro' ? 'bg-[#E60012]' : plan.id === 'lifetime' ? 'bg-amber-500' : 'bg-slate-500'
+                    plan.id === 'pro' ? 'bg-[#E60012]' : plan.id === 'elite' ? 'bg-amber-500' : 'bg-slate-500'
                   }`}>
                     <Check className="w-3 h-3 text-white" />
                   </div>
@@ -283,34 +285,37 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
             </div>
           </div>
 
-          <Button 
-            onClick={handlePurchase}
-            disabled={isProcessing}
-            className={`w-full mt-4 py-6 text-lg font-semibold rounded-xl ${
-              selectedPlan === 'lifetime' 
-                ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
-                : selectedPlan === 'pro'
-                ? 'bg-[#E60012] hover:bg-[#cc0010] text-white'
-                : 'bg-slate-800 hover:bg-slate-700 text-white'
-            }`}
-          >
-            {isProcessing ? (
-              <>Processing...</>
-            ) : selectedPlan === 'basic' ? (
-              <>Continue with Free Preview</>
-            ) : (
-              <>
-                {selectedPlanData?.cta} - ${selectedPlanData?.price}
-                <Sparkles className="w-5 h-5 ml-2" />
-              </>
-            )}
-          </Button>
+          {selectedPlanData?.lemonSqueezyUrl ? (
+            <a 
+              href={selectedPlanData.lemonSqueezyUrl} 
+              className={`lemonsqueezy-button flex items-center justify-center w-full mt-4 py-4 text-lg font-semibold rounded-xl cursor-pointer ${
+                selectedPlan === 'elite' 
+                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
+                  : 'bg-[#E60012] hover:bg-[#cc0010] text-white'
+              }`}
+            >
+              {selectedPlanData?.cta} - ${selectedPlanData?.price}
+              <Sparkles className="w-5 h-5 ml-2" />
+            </a>
+          ) : (
+            <Button 
+              onClick={handlePurchase}
+              disabled={isProcessing}
+              className="w-full mt-4 py-6 text-lg font-semibold rounded-xl bg-slate-800 hover:bg-slate-700 text-white"
+            >
+              {isProcessing ? (
+                <>Processing...</>
+              ) : (
+                <>Continue with Free Preview</>
+              )}
+            </Button>
+          )}
 
           <p className="text-center text-xs text-slate-500 mt-3">
-            {selectedPlan === 'lifetime' 
+            {selectedPlan === 'elite' 
               ? 'One-time payment • Lifetime access • No subscription'
               : selectedPlan === 'pro'
-              ? 'Cancel anytime • 30-day money-back guarantee'
+              ? 'One-time payment • 30-day money-back guarantee'
               : 'Limited features • Upgrade anytime'}
           </p>
         </div>

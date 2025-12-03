@@ -19,11 +19,12 @@ const PRICING_PLANS = [
     cta: 'Get Started',
     popular: false,
     icon: Sparkles,
+    planId: 'free',
   },
   {
     name: 'Pro',
     price: '$19',
-    period: '/month',
+    period: 'one-time',
     description: 'Everything you need for an amazing trip',
     features: [
       'Unlimited itineraries',
@@ -37,13 +38,15 @@ const PRICING_PLANS = [
       'Flight ticket booking assistance',
       'Priority response times',
     ],
-    cta: 'Start Pro Trial',
+    cta: 'Get Pro Access',
     popular: true,
     icon: Star,
+    planId: 'pro',
+    lemonSqueezyUrl: 'https://chinatourplan.lemonsqueezy.com/buy/d5d05f0b-3fce-4ef9-8c83-5f162d6e1304?embed=1',
   },
   {
-    name: 'Lifetime',
-    price: '$99',
+    name: 'Elite',
+    price: '$49',
     period: 'one-time',
     description: 'Best value for frequent travelers',
     features: [
@@ -55,9 +58,11 @@ const PRICING_PLANS = [
       'Personalized trip consulting',
       'Priority admin assistance',
     ],
-    cta: 'Get Lifetime Access',
+    cta: 'Get Elite Access',
     popular: false,
     icon: Zap,
+    planId: 'elite',
+    lemonSqueezyUrl: 'https://chinatourplan.lemonsqueezy.com/buy/72ccffc3-b57d-4b9c-aa22-52fe3e597389?embed=1',
   },
 ];
 
@@ -130,19 +135,34 @@ export default function PricingSection() {
                 ))}
               </ul>
 
-              <Link href="/signup">
-                <Button 
-                  className={`w-full ${
+              {plan.lemonSqueezyUrl ? (
+                <a 
+                  href={plan.lemonSqueezyUrl} 
+                  className={`lemonsqueezy-button flex items-center justify-center w-full py-2.5 px-4 rounded-md font-medium text-sm cursor-pointer transition-colors ${
                     plan.popular 
                       ? 'bg-[#E60012] hover:bg-[#cc0010] text-white' 
-                      : plan.name === 'Lifetime'
+                      : plan.name === 'Elite'
                       ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
                       : 'bg-slate-900 hover:bg-slate-800 text-white'
                   }`}
                 >
                   {plan.cta}
-                </Button>
-              </Link>
+                </a>
+              ) : (
+                <Link href="/signup">
+                  <Button 
+                    className={`w-full ${
+                      plan.popular 
+                        ? 'bg-[#E60012] hover:bg-[#cc0010] text-white' 
+                        : plan.name === 'Elite'
+                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
+                        : 'bg-slate-900 hover:bg-slate-800 text-white'
+                    }`}
+                  >
+                    {plan.cta}
+                  </Button>
+                </Link>
+              )}
             </motion.div>
           ))}
         </div>

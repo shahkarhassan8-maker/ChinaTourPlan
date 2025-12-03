@@ -32,19 +32,21 @@ const PLANS = [
     id: 'pro',
     name: 'Pro',
     price: 19,
-    period: '/month',
+    period: 'one-time',
     description: 'Full access to all features',
     popular: true,
     savings: 'Most Popular',
+    lemonSqueezyUrl: 'https://chinatourplan.lemonsqueezy.com/buy/d5d05f0b-3fce-4ef9-8c83-5f162d6e1304?embed=1',
   },
   {
-    id: 'lifetime',
-    name: 'Lifetime',
-    price: 99,
+    id: 'elite',
+    name: 'Elite',
+    price: 49,
     period: 'one-time',
     description: 'Best value forever',
     popular: false,
     savings: 'Best Value',
+    lemonSqueezyUrl: 'https://chinatourplan.lemonsqueezy.com/buy/72ccffc3-b57d-4b9c-aa22-52fe3e597389?embed=1',
   },
 ];
 
@@ -481,7 +483,7 @@ export default function SignupPage() {
                   ) : (
                     <>
                       <Crown className="w-5 h-5 mr-2" />
-                      {selectedPlan === 'lifetime' ? 'Get Lifetime Access' : 'Start Pro Membership'} - ${PLANS.find(p => p.id === selectedPlan)?.price}
+                      {selectedPlan === 'elite' ? 'Get Elite Access' : 'Get Pro Access'} - ${PLANS.find(p => p.id === selectedPlan)?.price}
                     </>
                   )}
                 </Button>
