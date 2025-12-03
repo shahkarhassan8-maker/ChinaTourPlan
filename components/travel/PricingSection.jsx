@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Sparkles, Star, Zap } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 
 const PRICING_PLANS = [
   {
@@ -58,6 +59,31 @@ const PRICING_PLANS = [
 ];
 
 export default function PricingSection() {
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      // Fast check with local storage
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setIsVisible(false);
+        return;
+      }
+
+      // Verify with Supabase session
+      if (supabase) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          setIsVisible(false);
+        }
+      }
+    };
+
+    checkUser();
+  }, []);
+
+  if (!isVisible) return null;
+
   return (
     <section id="pricing" className="py-20 bg-gradient-to-b from-white to-slate-50">
       <div className="max-w-6xl mx-auto px-6">
@@ -88,9 +114,9 @@ export default function PricingSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
-              className={`relative bg-white rounded-2xl p-6 border-2 transition-all duration-300 hover:shadow-xl ${plan.popular
-                  ? 'border-[#E60012] shadow-lg shadow-red-500/10'
-                  : 'border-slate-200 hover:border-slate-300'
+              className={`relative bg-white rounded-2xl p-6 border-2 transition-all duration-300 hover:shadow-xl flex flex-col h-full ${plan.popular
+                ? 'border-[#E60012] shadow-lg shadow-red-500/10'
+                : 'border-slate-200 hover:border-slate-300'
                 }`}
             >
               {plan.popular && (
@@ -115,7 +141,7 @@ export default function PricingSection() {
               </div>
               <p className="text-slate-600 text-sm mb-6">{plan.description}</p>
 
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-3 mb-8 flex-grow">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm text-slate-700">
                     <Check className={`w-4 h-4 flex-shrink-0 ${plan.popular ? 'text-[#E60012]' : 'text-green-500'}`} />
@@ -127,10 +153,10 @@ export default function PricingSection() {
               <Link href="/signup">
                 <Button
                   className={`w-full ${plan.popular
-                      ? 'bg-[#E60012] hover:bg-[#cc0010] text-white'
-                      : plan.name === 'Elite'
-                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
-                        : 'bg-slate-900 hover:bg-slate-800 text-white'
+                    ? 'bg-[#E60012] hover:bg-[#cc0010] text-white'
+                    : plan.name === 'Elite'
+                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
+                      : 'bg-slate-900 hover:bg-slate-800 text-white'
                     }`}
                 >
                   {plan.cta}

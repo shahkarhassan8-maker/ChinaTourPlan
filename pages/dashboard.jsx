@@ -500,7 +500,7 @@ export default function DashboardPage() {
                   key={plan.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`relative bg-white rounded-2xl p-6 border-2 transition-all ${isCurrentPlan
+                  className={`relative bg-white rounded-2xl p-6 border-2 transition-all flex flex-col h-full ${isCurrentPlan
                     ? 'border-green-500 bg-green-50/30 shadow-lg'
                     : isLowerTier
                       ? 'border-slate-200 bg-slate-50 opacity-50'
@@ -542,7 +542,7 @@ export default function DashboardPage() {
                   </div>
                   <p className={`text-sm mb-6 ${isLowerTier ? 'text-slate-400' : 'text-slate-600'}`}>{plan.description}</p>
 
-                  <ul className="space-y-3 mb-6">
+                  <ul className="space-y-3 mb-6 flex-grow">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-center gap-2 text-sm text-slate-700">
                         <Star className={`w-4 h-4 flex-shrink-0 ${isCurrentPlan ? 'text-green-500 fill-green-500' : 'text-amber-500 fill-amber-500'
