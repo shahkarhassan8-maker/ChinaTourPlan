@@ -65,11 +65,65 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [supabaseAvailable, setSupabaseAvailable] = useState(false);
   const [hasPendingItinerary, setHasPendingItinerary] = useState(false);
+  const [paymentCompleted, setPaymentCompleted] = useState(null);
 
   useEffect(() => {
     setSupabaseAvailable(!!supabase);
     const pending = localStorage.getItem('pendingItinerary');
     setHasPendingItinerary(!!pending);
+    
+    const completedPayment = localStorage.getItem('paymentCompleted');
+    if (completedPayment) {
+      try {
+        const paymentData = JSON.parse(completedPayment);
+        const oneHourAgo = Date.now() - (60 * 60 * 1000);
+        if (paymentData.timestamp > oneHourAgo) {
+          setPaymentCompleted(paymentData);
+          setSelectedPlan(paymentData.plan);
+          setFormData(prev => ({
+            ...prev,
+            email: paymentData.email || '',
+            name: paymentData.name || ''
+          }));
+        } else {
+          localStorage.removeItem('paymentCompleted');
+        }
+      } catch (e) {
+        localStorage.removeItem('paymentCompleted');
+      }
+    }
+    
+    if (typeof window !== 'undefined' && window.createLemonSqueezy) {
+      window.createLemonSqueezy();
+    }
+    
+    const handleMessageEvent = (event) => {
+      if (!event.origin.includes('lemonsqueezy.com')) return;
+      
+      if (event.data && event.data.event === 'Checkout.Success') {
+        const pendingSignup = localStorage.getItem('pendingSignup');
+        if (pendingSignup) {
+          const signupData = JSON.parse(pendingSignup);
+          const paymentData = {
+            plan: signupData.plan,
+            email: signupData.email,
+            name: signupData.name,
+            timestamp: Date.now()
+          };
+          localStorage.setItem('paymentCompleted', JSON.stringify(paymentData));
+          localStorage.removeItem('pendingSignup');
+          setPaymentCompleted(paymentData);
+          setSelectedPlan(signupData.plan);
+          toast.success('Payment successful! Enter your password to complete signup.');
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessageEvent);
+    
+    return () => {
+      window.removeEventListener('message', handleMessageEvent);
+    };
   }, []);
   
   useEffect(() => {
@@ -128,23 +182,69 @@ export default function SignupPage() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+  const validateBasicInfo = () => {
     if (!formData.email || !formData.email.includes('@')) {
       toast.error('Please enter a valid email address');
-      return;
+      return false;
+    }
+    
+    if (!formData.name.trim()) {
+      toast.error('Please enter your name');
+      return false;
+    }
+    
+    return true;
+  };
+
+  const validateForm = () => {
+    if (!validateBasicInfo()) {
+      return false;
     }
     
     if (!formData.password || formData.password.length < 6) {
       toast.error('Password must be at least 6 characters');
+      return false;
+    }
+    
+    return true;
+  };
+
+  const handlePaidPlanCheckout = (e) => {
+    if (!validateBasicInfo()) {
+      e.preventDefault();
       return;
     }
     
-    if (!isLogin && !formData.name.trim()) {
-      toast.error('Please enter your name');
-      return;
+    localStorage.setItem('pendingSignup', JSON.stringify({
+      name: formData.name,
+      email: formData.email,
+      plan: selectedPlan,
+    }));
+  };
+  
+  const getCheckoutUrl = (planId) => {
+    const plan = PLANS.find(p => p.id === planId);
+    if (!plan?.lemonSqueezyUrl) return '#';
+    
+    const baseUrl = plan.lemonSqueezyUrl;
+    const params = new URLSearchParams();
+    if (formData.email) {
+      params.set('checkout[email]', formData.email);
     }
+    if (formData.name) {
+      params.set('checkout[name]', formData.name);
+    }
+    params.set('checkout[custom][plan]', planId);
+    
+    return baseUrl + (baseUrl.includes('?') ? '&' : '?') + params.toString();
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+    
+    const planToAssign = paymentCompleted ? paymentCompleted.plan : 'free';
     
     setLoading(true);
     
@@ -171,14 +271,21 @@ export default function SignupPage() {
           }
         } else {
           const { user } = await signUp(formData.email, formData.password, formData.name);
-          toast.success('Account created! Please check your email to verify your account.');
+          toast.success(paymentCompleted 
+            ? `Account created with ${planToAssign.charAt(0).toUpperCase() + planToAssign.slice(1)} access!` 
+            : 'Account created! Please check your email to verify your account.'
+          );
           localStorage.setItem('user', JSON.stringify({
             id: user.id,
             name: formData.name,
             email: user.email,
-            plan: selectedPlan,
+            plan: planToAssign,
             memberSince: new Date().toISOString(),
           }));
+          
+          if (paymentCompleted) {
+            localStorage.removeItem('paymentCompleted');
+          }
           
           if (hasPendingItinerary) {
             const savedItinerary = await savePendingItinerary(user.id);
@@ -195,15 +302,21 @@ export default function SignupPage() {
           if (isLogin) {
             toast.success('Welcome back! Redirecting to your dashboard...');
           } else {
-            toast.success('Account created! Welcome to China Travel Pro!');
+            toast.success(paymentCompleted 
+              ? `Account created with ${planToAssign.charAt(0).toUpperCase() + planToAssign.slice(1)} access!`
+              : 'Account created! Welcome to China Travel Pro!'
+            );
           }
           localStorage.setItem('user', JSON.stringify({
             name: formData.name || 'Traveler',
             email: formData.email,
-            plan: selectedPlan,
+            plan: planToAssign,
             memberSince: new Date().toISOString(),
           }));
           localStorage.removeItem('pendingItinerary');
+          if (paymentCompleted) {
+            localStorage.removeItem('paymentCompleted');
+          }
           window.location.href = '/dashboard';
         }, 1500);
       }
@@ -253,6 +366,24 @@ export default function SignupPage() {
                 : 'Get unlimited access to detailed itineraries, live support, and exclusive travel perks.'
               }
             </p>
+            
+            {paymentCompleted && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                    <Check className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-green-800">Payment Successful!</p>
+                    <p className="text-sm text-green-600">Enter your password below to complete your {paymentCompleted.plan === 'elite' ? 'Elite' : 'Pro'} signup</p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
             
             {hasPendingItinerary && (
               <motion.div
@@ -460,33 +591,52 @@ export default function SignupPage() {
                   </div>
                 </div>
 
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-[#E60012] hover:bg-[#cc0010] text-white py-6 text-lg font-semibold"
-                >
-                  {loading ? (
-                    <span className="flex items-center gap-2">
-                      <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                      </svg>
-                      Processing...
-                    </span>
-                  ) : isLogin ? (
-                    'Sign In'
-                  ) : selectedPlan === 'free' ? (
-                    <>
-                      <Sparkles className="w-5 h-5 mr-2" />
-                      Create Free Account
-                    </>
-                  ) : (
-                    <>
-                      <Crown className="w-5 h-5 mr-2" />
-                      {selectedPlan === 'elite' ? 'Get Elite Access' : 'Get Pro Access'} - ${PLANS.find(p => p.id === selectedPlan)?.price}
-                    </>
-                  )}
-                </Button>
+                {isLogin || selectedPlan === 'free' || paymentCompleted ? (
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className={`w-full py-6 text-lg font-semibold ${
+                      paymentCompleted && paymentCompleted.plan === 'elite'
+                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
+                        : 'bg-[#E60012] hover:bg-[#cc0010] text-white'
+                    }`}
+                  >
+                    {loading ? (
+                      <span className="flex items-center gap-2">
+                        <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        Processing...
+                      </span>
+                    ) : isLogin ? (
+                      'Sign In'
+                    ) : paymentCompleted ? (
+                      <>
+                        <Crown className="w-5 h-5 mr-2" />
+                        Complete {paymentCompleted.plan === 'elite' ? 'Elite' : 'Pro'} Signup
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-5 h-5 mr-2" />
+                        Create Free Account
+                      </>
+                    )}
+                  </Button>
+                ) : (
+                  <a
+                    href={getCheckoutUrl(selectedPlan)}
+                    className={`lemonsqueezy-button flex items-center justify-center w-full py-4 text-lg font-semibold rounded-md cursor-pointer transition-colors ${
+                      selectedPlan === 'elite'
+                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
+                        : 'bg-[#E60012] hover:bg-[#cc0010] text-white'
+                    }`}
+                    onClick={handlePaidPlanCheckout}
+                  >
+                    <Crown className="w-5 h-5 mr-2" />
+                    {selectedPlan === 'elite' ? 'Get Elite Access' : 'Get Pro Access'} - ${PLANS.find(p => p.id === selectedPlan)?.price}
+                  </a>
+                )}
               </form>
             )}
 
