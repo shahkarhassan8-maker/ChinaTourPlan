@@ -1,6 +1,11 @@
 import { DEFAULT_SEO } from '@/lib/seo';
 
-export default function handler(req, res) {
+export default function Sitemap() {
+    // This component won't render - it's just for the API route
+    return null;
+}
+
+export async function getServerSideProps({ res }) {
     const baseUrl = DEFAULT_SEO.siteUrl;
     const currentDate = new Date().toISOString();
 
@@ -26,5 +31,10 @@ export default function handler(req, res) {
 
     res.setHeader('Content-Type', 'text/xml');
     res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate');
-    res.status(200).send(sitemap);
+    res.write(sitemap);
+    res.end();
+
+    return {
+        props: {},
+    };
 }
