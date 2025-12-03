@@ -5,8 +5,8 @@ import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ArrowRight, ArrowLeft, Calendar, MapPin, Gauge, 
+import {
+  ArrowRight, ArrowLeft, Calendar, MapPin, Gauge,
   Utensils, Sparkles, Check, Search, Camera, Bed
 } from 'lucide-react';
 
@@ -36,25 +36,25 @@ const CITIES = [
   { id: 'shanghai', name: 'Shanghai', tag: 'Modern Skyline & Culture', emoji: '🌃', region: 'East' },
   { id: 'xian', name: "Xi'an", tag: 'Terracotta Warriors', emoji: '⚔️', region: 'Central' },
   { id: 'guilin', name: 'Guilin & Yangshuo', tag: 'Karst Mountains & Rivers', emoji: '🏞️', region: 'South' },
-  
+
   // Tier 2 - Popular
   { id: 'chengdu', name: 'Chengdu', tag: 'Giant Pandas & Spicy Food', emoji: '🐼', region: 'Southwest' },
   { id: 'hangzhou', name: 'Hangzhou', tag: 'West Lake Paradise', emoji: '🌸', region: 'East' },
   { id: 'suzhou', name: 'Suzhou', tag: 'Classical Gardens', emoji: '🏡', region: 'East' },
   { id: 'huangshan', name: 'Huangshan', tag: 'Yellow Mountains', emoji: '⛰️', region: 'East' },
-  
+
   // Tier 3 - Adventure & Nature
   { id: 'zhangjiajie', name: 'Zhangjiajie', tag: 'Avatar Mountains', emoji: '🗻', region: 'Central' },
   { id: 'jiuzhaigou', name: 'Jiuzhaigou', tag: 'Colorful Lakes & Waterfalls', emoji: '💧', region: 'Southwest' },
   { id: 'lijiang', name: 'Lijiang', tag: 'Ancient Town & Snow Mountain', emoji: '🏔️', region: 'Southwest' },
   { id: 'yunnan', name: 'Dali & Yunnan', tag: 'Ethnic Culture & Nature', emoji: '🌺', region: 'Southwest' },
-  
+
   // Tier 4 - Cultural & Unique
   { id: 'hongkong', name: 'Hong Kong', tag: 'East Meets West', emoji: '🎆', region: 'South' },
   { id: 'macau', name: 'Macau', tag: 'Casinos & Portuguese Heritage', emoji: '🎰', region: 'South' },
   { id: 'tibet', name: 'Lhasa & Tibet', tag: 'Roof of the World', emoji: '🙏', region: 'West' },
   { id: 'harbin', name: 'Harbin', tag: 'Ice City & Russian Influence', emoji: '❄️', region: 'Northeast' },
-  
+
   // Tier 5 - Hidden Gems
   { id: 'pingyao', name: 'Pingyao', tag: 'Ancient Walled City', emoji: '🏰', region: 'North' },
   { id: 'fenghuang', name: 'Fenghuang', tag: 'Phoenix Ancient Town', emoji: '🦅', region: 'Central' },
@@ -90,7 +90,7 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
     hotelQuality: 'moderate',
     food: 'anything',
   });
-  
+
   // Calculate total duration from city days
   const totalDuration = Object.values(formData.cityDays).reduce((sum, d) => sum + d, 0);
 
@@ -149,14 +149,14 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
     }
     // Step 3: Places - need at least one place selected
     if (currentStep === 3) {
-      const hasPlaces = formData.cities.some(cityId => 
+      const hasPlaces = formData.cities.some(cityId =>
         formData.selectedPlaces[cityId]?.length > 0
       );
       if (!hasPlaces) return false;
     }
     return true;
   };
-  
+
   React.useEffect(() => {
     // Places step is now step 3
     if (currentStep === 3 && formData.cities.length > 0 && !activePlacesCity) {
@@ -166,7 +166,7 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
 
   const filteredCities = CITIES.filter(city => {
     const matchesSearch = city.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         city.tag.toLowerCase().includes(searchQuery.toLowerCase());
+      city.tag.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesRegion = selectedRegion === 'All' || city.region === selectedRegion;
     return matchesSearch && matchesRegion;
   });
@@ -183,16 +183,14 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
             {PACES.map((pace) => (
               <label
                 key={pace.id}
-                className={`flex items-center p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 ${
-                  formData.pace === pace.id
-                    ? 'border-[#E60012] bg-red-50/50'
-                    : 'border-slate-200 hover:border-slate-300 bg-white'
-                }`}
+                className={`flex items-center p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 ${formData.pace === pace.id
+                  ? 'border-[#E60012] bg-red-50/50'
+                  : 'border-slate-200 hover:border-slate-300 bg-white'
+                  }`}
               >
                 <RadioGroupItem value={pace.id} className="sr-only" />
-                <div className={`w-5 h-5 rounded-full border-2 mr-4 flex items-center justify-center ${
-                  formData.pace === pace.id ? 'border-[#E60012]' : 'border-slate-300'
-                }`}>
+                <div className={`w-5 h-5 rounded-full border-2 mr-4 flex items-center justify-center ${formData.pace === pace.id ? 'border-[#E60012]' : 'border-slate-300'
+                  }`}>
                   {formData.pace === pace.id && (
                     <div className="w-3 h-3 rounded-full bg-[#E60012]" />
                   )}
@@ -220,24 +218,23 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
                   className="pl-10"
                 />
               </div>
-              
+
               {/* Region Filter */}
               <div className="flex flex-wrap gap-2">
                 {REGIONS.map((region) => (
                   <button
                     key={region}
                     onClick={() => setSelectedRegion(region)}
-                    className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${
-                      selectedRegion === region
-                        ? 'bg-[#E60012] text-white'
-                        : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
-                    }`}
+                    className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${selectedRegion === region
+                      ? 'bg-[#E60012] text-white'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
+                      }`}
                   >
                     {region}
                   </button>
                 ))}
               </div>
-              
+
               {/* Selection count */}
               <div className="mt-3 text-sm text-slate-500">
                 {formData.cities.length} destination{formData.cities.length !== 1 ? 's' : ''} selected
@@ -250,11 +247,10 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
                 <button
                   key={city.id}
                   onClick={() => toggleCity(city.id)}
-                  className={`relative p-4 rounded-xl border-2 transition-all duration-300 text-left ${
-                    formData.cities.includes(city.id)
-                      ? 'border-[#E60012] bg-red-50/50'
-                      : 'border-slate-200 hover:border-slate-300 bg-white'
-                  }`}
+                  className={`relative p-4 rounded-xl border-2 transition-all duration-300 text-left ${formData.cities.includes(city.id)
+                    ? 'border-[#E60012] bg-red-50/50'
+                    : 'border-slate-200 hover:border-slate-300 bg-white'
+                    }`}
                 >
                   {formData.cities.includes(city.id) && (
                     <div className="absolute top-2 right-2 w-5 h-5 bg-[#E60012] rounded-full flex items-center justify-center">
@@ -291,17 +287,15 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
                   <button
                     key={cityId}
                     onClick={() => setActivePlacesCity(cityId)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all ${
-                      activePlacesCity === cityId
-                        ? 'bg-[#E60012] text-white'
-                        : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'
-                    }`}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all ${activePlacesCity === cityId
+                      ? 'bg-[#E60012] text-white'
+                      : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'
+                      }`}
                   >
                     <span className="font-medium">{city?.name || cityId}</span>
                     {placesCount > 0 && (
-                      <span className={`w-5 h-5 rounded-full text-xs flex items-center justify-center ${
-                        activePlacesCity === cityId ? 'bg-white text-[#E60012]' : 'bg-[#E60012] text-white'
-                      }`}>
+                      <span className={`w-5 h-5 rounded-full text-xs flex items-center justify-center ${activePlacesCity === cityId ? 'bg-white text-[#E60012]' : 'bg-[#E60012] text-white'
+                        }`}>
                         {placesCount}
                       </span>
                     )}
@@ -309,7 +303,7 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
                 );
               })}
             </div>
-            
+
             {activePlacesCity && (
               <PlaceSelector
                 cityId={activePlacesCity}
@@ -329,11 +323,10 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
               <button
                 key={quality.id}
                 onClick={() => setFormData({ ...formData, hotelQuality: quality.id })}
-                className={`w-full p-5 rounded-2xl border-2 transition-all duration-300 text-left flex items-center gap-4 ${
-                  formData.hotelQuality === quality.id
-                    ? 'border-[#E60012] bg-red-50/50'
-                    : 'border-slate-200 hover:border-slate-300 bg-white'
-                }`}
+                className={`w-full p-5 rounded-2xl border-2 transition-all duration-300 text-left flex items-center gap-4 ${formData.hotelQuality === quality.id
+                  ? 'border-[#E60012] bg-red-50/50'
+                  : 'border-slate-200 hover:border-slate-300 bg-white'
+                  }`}
               >
                 <div className="text-4xl">{quality.emoji}</div>
                 <div className="flex-1">
@@ -358,11 +351,10 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
               <button
                 key={pref.id}
                 onClick={() => setFormData({ ...formData, food: pref.id })}
-                className={`p-5 rounded-2xl border-2 transition-all duration-300 text-center ${
-                  formData.food === pref.id
-                    ? 'border-[#E60012] bg-red-50/50'
-                    : 'border-slate-200 hover:border-slate-300 bg-white'
-                }`}
+                className={`p-5 rounded-2xl border-2 transition-all duration-300 text-center ${formData.food === pref.id
+                  ? 'border-[#E60012] bg-red-50/50'
+                  : 'border-slate-200 hover:border-slate-300 bg-white'
+                  }`}
               >
                 <div className="text-4xl mb-3">{pref.emoji}</div>
                 <div className="font-semibold text-slate-900">{pref.name}</div>
@@ -378,27 +370,27 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-xl p-0 gap-0 overflow-hidden bg-slate-50 max-h-[90vh]">
+      <DialogContent className="sm:max-w-xl p-0 gap-0 overflow-hidden bg-slate-50 max-h-[90vh] md:max-h-[85vh] flex flex-col">
         {/* Progress Bar */}
-        <div className="h-1 bg-slate-200">
-          <div 
+        <div className="h-1 bg-slate-200 flex-shrink-0">
+          <div
             className="h-full bg-[#E60012] transition-all duration-500"
             style={{ width: `${((currentStep + 1) / STEPS.length) * 100}%` }}
           />
         </div>
 
         {/* Step Indicator */}
-        <div className="px-8 pt-6 pb-2">
+        <div className="px-4 sm:px-8 pt-4 sm:pt-6 pb-2 flex-shrink-0">
           <div className="flex items-center gap-3 text-sm text-slate-500 mb-2">
             {React.createElement(STEPS[currentStep].icon, { className: "w-4 h-4" })}
             <span>Step {currentStep + 1} of {STEPS.length}</span>
           </div>
-          <h2 className="text-2xl font-bold text-slate-900">{STEPS[currentStep].title}</h2>
-          <p className="text-slate-500 mt-1">{STEPS[currentStep].description}</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900">{STEPS[currentStep].title}</h2>
+          <p className="text-sm sm:text-base text-slate-500 mt-1">{STEPS[currentStep].description}</p>
         </div>
 
         {/* Step Content */}
-        <div className="px-8 py-4 min-h-[320px] overflow-y-auto">
+        <div className="px-4 sm:px-8 py-4 flex-1 overflow-y-auto">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={currentStep}
@@ -413,7 +405,7 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
         </div>
 
         {/* Navigation */}
-        <div className="px-8 py-4 bg-white border-t border-slate-200 flex justify-between">
+        <div className="px-4 sm:px-8 py-3 sm:py-4 bg-white border-t border-slate-200 flex justify-between items-center flex-shrink-0">
           <Button
             variant="ghost"
             onClick={handleBack}
@@ -426,11 +418,12 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
           <Button
             onClick={handleNext}
             disabled={!canProceed()}
-            className="bg-[#E60012] hover:bg-[#cc0010] text-white px-8"
+            className="bg-[#E60012] hover:bg-[#cc0010] text-white px-6 sm:px-8"
           >
             {currentStep === STEPS.length - 1 ? (
               <>
-                Generate Itinerary
+                <span className="hidden sm:inline">Generate Itinerary</span>
+                <span className="sm:hidden">Generate</span>
                 <Sparkles className="w-4 h-4 ml-2" />
               </>
             ) : (

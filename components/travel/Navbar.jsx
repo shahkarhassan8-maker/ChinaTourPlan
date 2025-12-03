@@ -28,18 +28,17 @@ export default function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-slate-200' 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+          ? 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-slate-200'
           : 'bg-transparent'
-      }`}
+        }`}
     >
       <div className="max-w-6xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <img 
-              src="/logo.png" 
-              alt="ChinaTourPlan Logo" 
+            <img
+              src="/logo.jpg"
+              alt="ChinaTourPlan Logo"
               className="w-16 h-16 rounded-xl object-contain"
             />
             <span className={`font-bold text-2xl tracking-tight ${scrolled ? 'text-slate-900' : 'text-slate-900'}`}>
@@ -48,35 +47,31 @@ export default function Navbar() {
           </Link>
 
           <div className="hidden md:flex items-center gap-6">
-            <a 
-              href="#features" 
-              className={`text-sm font-medium transition-colors ${
-                scrolled ? 'text-slate-600 hover:text-slate-900' : 'text-slate-700 hover:text-slate-900'
-              }`}
+            <a
+              href="#features"
+              className={`text-sm font-medium transition-colors ${scrolled ? 'text-slate-600 hover:text-slate-900' : 'text-slate-700 hover:text-slate-900'
+                }`}
             >
               Features
             </a>
-            <a 
-              href="#gallery" 
-              className={`text-sm font-medium transition-colors ${
-                scrolled ? 'text-slate-600 hover:text-slate-900' : 'text-slate-700 hover:text-slate-900'
-              }`}
+            <a
+              href="#gallery"
+              className={`text-sm font-medium transition-colors ${scrolled ? 'text-slate-600 hover:text-slate-900' : 'text-slate-700 hover:text-slate-900'
+                }`}
             >
               Gallery
             </a>
-            <a 
-              href="#reviews" 
-              className={`text-sm font-medium transition-colors ${
-                scrolled ? 'text-slate-600 hover:text-slate-900' : 'text-slate-700 hover:text-slate-900'
-              }`}
+            <a
+              href="#reviews"
+              className={`text-sm font-medium transition-colors ${scrolled ? 'text-slate-600 hover:text-slate-900' : 'text-slate-700 hover:text-slate-900'
+                }`}
             >
               Reviews
             </a>
-            <a 
-              href="#pricing" 
-              className={`text-sm font-medium transition-colors ${
-                scrolled ? 'text-slate-600 hover:text-slate-900' : 'text-slate-700 hover:text-slate-900'
-              }`}
+            <a
+              href="#pricing"
+              className={`text-sm font-medium transition-colors ${scrolled ? 'text-slate-600 hover:text-slate-900' : 'text-slate-700 hover:text-slate-900'
+                }`}
             >
               Pricing
             </a>
@@ -85,8 +80,8 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <Link href="/dashboard">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="border-[#E60012] text-[#E60012] hover:bg-[#E60012] hover:text-white"
                 >
                   <User className="w-4 h-4 mr-2" />
