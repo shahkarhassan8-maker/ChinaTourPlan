@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { CITY_DATA } from '@/components/travel/cityData';
 import { 
   hasAccess, 
   isFreeUser, 
@@ -28,6 +30,7 @@ import {
 } from '@/lib/supabase';
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [itineraries, setItineraries] = useState([]);
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -35,7 +38,6 @@ export default function DashboardPage() {
   const [review, setReview] = useState({ rating: 5, text: '', attractionRatings: {} });
   const [isLoading, setIsLoading] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
-  const [viewItinerary, setViewItinerary] = useState(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeFeature, setUpgradeFeature] = useState(null);
   const [supabaseAvailable, setSupabaseAvailable] = useState(false);
@@ -62,7 +64,8 @@ export default function DashboardPage() {
               duration: it.duration,
               createdAt: it.created_at,
               pace: it.pace,
-              itineraryData: it.itinerary_data
+              itineraryData: it.itinerary_data,
+              selectedPlaces: it.selected_places
             }));
             setItineraries(formattedItineraries);
             setIsLoading(false);
@@ -111,7 +114,7 @@ export default function DashboardPage() {
   };
 
   const handleViewItinerary = (itinerary) => {
-    setViewItinerary(itinerary);
+    router.push(`/itinerary/${itinerary.id}`);
   };
 
   const handleFeatureAccess = (feature) => {
@@ -135,29 +138,61 @@ export default function DashboardPage() {
 
   const getAttractionsFromItinerary = (itinerary) => {
     const attractions = [];
-    let itineraryDays = [];
     
-    if (itinerary?.itineraryData) {
-      if (Array.isArray(itinerary.itineraryData)) {
-        itineraryDays = itinerary.itineraryData;
-      } else if (itinerary.itineraryData.itinerary && Array.isArray(itinerary.itineraryData.itinerary)) {
-        itineraryDays = itinerary.itineraryData.itinerary;
-      }
+    if (itinerary?.selectedPlaces && typeof itinerary.selectedPlaces === 'object') {
+      Object.entries(itinerary.selectedPlaces).forEach(([cityId, placeIndices]) => {
+        const cityData = CITY_DATA[cityId];
+        if (cityData && cityData.highlights && Array.isArray(placeIndices)) {
+          placeIndices.forEach(index => {
+            const place = cityData.highlights[index];
+            if (place && !attractions.find(a => a.name === place.name)) {
+              attractions.push({
+                name: place.name,
+                nameChinese: place.nameChinese || '',
+                city: cityData.name || cityId
+              });
+            }
+          });
+        }
+      });
     }
     
-    itineraryDays.forEach(day => {
-      if (day.schedule) {
-        day.schedule.forEach(item => {
-          if (item.activity && !attractions.find(a => a.name === item.activity)) {
-            attractions.push({
-              name: item.activity,
-              nameChinese: item.activityChinese || '',
-              city: day.city || ''
-            });
-          }
-        });
+    if (attractions.length === 0) {
+      let itineraryDays = [];
+      
+      if (itinerary?.itineraryData) {
+        if (Array.isArray(itinerary.itineraryData)) {
+          itineraryDays = itinerary.itineraryData;
+        } else if (itinerary.itineraryData.itinerary && Array.isArray(itinerary.itineraryData.itinerary)) {
+          itineraryDays = itinerary.itineraryData.itinerary;
+        }
       }
-    });
+      
+      itineraryDays.forEach(day => {
+        if (day.activities && Array.isArray(day.activities)) {
+          day.activities.forEach(activity => {
+            if (activity.name && !attractions.find(a => a.name === activity.name)) {
+              attractions.push({
+                name: activity.name,
+                nameChinese: activity.nameChinese || '',
+                city: day.city || ''
+              });
+            }
+          });
+        }
+        if (day.schedule && Array.isArray(day.schedule)) {
+          day.schedule.forEach(item => {
+            if (item.activity && !attractions.find(a => a.name === item.activity)) {
+              attractions.push({
+                name: item.activity,
+                nameChinese: item.activityChinese || '',
+                city: day.city || ''
+              });
+            }
+          });
+        }
+      });
+    }
     
     return attractions;
   };

@@ -28,6 +28,15 @@ The application is built with Next.js 14.0.0, utilizing JavaScript/JSX and style
 - Share and Email modals now generate links to saved itinerary pages
 - Pending itinerary flow: stores itinerary when user signs up/in and redirects to saved itinerary
 
+### December 3, 2024
+- Fixed review system to display ALL user-selected attractions from CITY_DATA (not just scheduled activities)
+- Fixed "See" button in saved itineraries to correctly navigate to `/itinerary/[id]` pages
+- Created `/auth/callback` page to handle password reset and email confirmation redirects from Supabase
+- Updated signUp and resetPassword functions with proper redirect URLs using `emailRedirectTo`
+- Added admin user functionality with bypass access for all features (dev/testing purposes)
+- Admin emails configured in `lib/accessControl.js` (shahkarhassan8@gmail.com, admin@chinatourplan.com)
+- Note: Production should add site URL to Supabase dashboard's allowed redirect URLs
+
 ## External Dependencies
 - **Supabase:** PostgreSQL database, Authentication, and storage for user profiles, itineraries, and reviews.
 - **GROQ SDK:** For AI chat and itinerary generation (using `llama-3.1-70b-versatile` model).

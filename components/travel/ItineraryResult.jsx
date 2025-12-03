@@ -358,7 +358,8 @@ export default function ItineraryResult({ formData, onBack }) {
         pace: formData.pace,
         food: formData.food,
         accommodation: formData.accommodation,
-        itinerary: itinerary
+        itinerary: itinerary,
+        selectedPlaces: formData.selectedPlaces
       });
       
       setSavedItineraryId(savedData.id);
