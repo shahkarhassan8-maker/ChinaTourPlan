@@ -86,11 +86,13 @@ export default async function handler(req, res) {
     
     const prompt = `You are a professional China travel planner. Create an EXACT day-by-day itinerary based on the SPECIFIC places the user selected.
 
-CRITICAL RULES:
-1. ONLY include the cities and attractions listed below - DO NOT add any other cities or attractions
-2. Every attraction listed MUST appear in the itinerary - do not skip any
-3. Include hotel check-out in the morning (around 08:00-08:30) and check-in in the evening (around 18:00-19:00)
-4. Recommend a nearby ${hotelType} for each city based on central location
+ABSOLUTELY CRITICAL RULES - MUST FOLLOW:
+1. ONLY include the EXACT cities and attractions listed below - DO NOT add ANY other cities or attractions not in this list
+2. If the user selected only 1 attraction (e.g., Forbidden City), the itinerary should ONLY include that 1 attraction - never add extra places
+3. Every attraction listed below MUST appear in the itinerary exactly once - do not skip any
+4. DO NOT invent or suggest additional attractions, neighborhoods, or sightseeing spots that are not explicitly listed
+5. Include hotel check-out in the morning (around 08:00-08:30) and check-in in the evening (around 18:00-19:00)
+6. Recommend a nearby ${hotelType} for each city based on central location to the selected attractions
 
 TRAVEL DETAILS:
 - Pace: ${pace} (${hoursPerDay} hours of activities per day)
@@ -179,14 +181,14 @@ Return a JSON object with this EXACT structure (no markdown, no code blocks, jus
       messages: [
         {
           role: 'system',
-          content: 'You are a professional China travel planner. CRITICAL: Only use the exact cities and attractions provided by the user. Do not add any additional cities or attractions. Always respond with valid JSON only, no markdown formatting or code blocks.'
+          content: 'You are a professional China travel planner. ABSOLUTE RULE: You must ONLY use the EXACT cities and attractions provided by the user. If only one attraction is selected, you must create an itinerary with ONLY that one attraction - do not add any other sightseeing, neighborhoods, or places. Never invent or add attractions not explicitly listed. Include hotel recommendations based on the specified quality (cheap/moderate/expensive). Always respond with valid JSON only, no markdown formatting or code blocks.'
         },
         {
           role: 'user',
           content: prompt
         }
       ],
-      temperature: 0.5,
+      temperature: 0.2,
       max_tokens: 6000,
     });
 

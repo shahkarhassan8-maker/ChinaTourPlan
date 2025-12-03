@@ -316,11 +316,67 @@ export default function DetailedDayCard({ day, isLast, isPremium, onUpgrade }) {
                   </div>
                 )}
 
-                {/* Activities Section */}
+                {/* AI Schedule with Times (if available) - Shows hotel check-in/out and timed activities */}
+                {day.aiSchedule && day.aiSchedule.length > 0 && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                      <Clock className="w-5 h-5 text-[#E60012]" />
+                      Day {day.dayNumber} Schedule
+                    </h4>
+                    <div className="space-y-3">
+                      {day.aiSchedule.map((item, idx) => {
+                        const isHotelActivity = item.type === 'hotel_checkout' || item.type === 'hotel_checkin';
+                        const isMeal = item.type === 'meal' || item.activity?.toLowerCase().includes('lunch') || item.activity?.toLowerCase().includes('dinner') || item.activity?.toLowerCase().includes('breakfast');
+                        
+                        return (
+                          <div 
+                            key={idx} 
+                            className={`flex gap-4 p-3 rounded-xl border ${
+                              isHotelActivity 
+                                ? 'bg-purple-50 border-purple-200' 
+                                : isMeal 
+                                ? 'bg-amber-50 border-amber-200'
+                                : 'bg-white border-slate-200'
+                            }`}
+                          >
+                            <div className="flex-shrink-0 w-16 text-center">
+                              <div className={`font-bold ${isHotelActivity ? 'text-purple-700' : 'text-[#E60012]'}`}>
+                                {item.time}
+                              </div>
+                              <div className="text-xs text-slate-500">{item.duration}</div>
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                {isHotelActivity && <Hotel className="w-4 h-4 text-purple-600" />}
+                                {isMeal && <Utensils className="w-4 h-4 text-amber-600" />}
+                                {!isHotelActivity && !isMeal && <MapPin className="w-4 h-4 text-[#E60012]" />}
+                                <span className="font-medium text-slate-900">{item.activity}</span>
+                              </div>
+                              {item.activityChinese && (
+                                <p className="text-sm text-[#E60012] font-medium">{item.activityChinese}</p>
+                              )}
+                              {item.notes && (
+                                <p className="text-sm text-slate-600 mt-1">{item.notes}</p>
+                              )}
+                              {item.travelToNext && (
+                                <div className="flex items-center gap-1 text-xs text-blue-600 mt-1">
+                                  <Navigation className="w-3 h-3" />
+                                  {item.travelToNext}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Activities Section - Always shows with premium gating */}
                 <div>
                   <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
                     <Camera className="w-5 h-5 text-[#E60012]" />
-                    Day {day.dayNumber} Activities
+                    {day.aiSchedule && day.aiSchedule.length > 0 ? 'Attraction Details' : `Day ${day.dayNumber} Activities`}
                   </h4>
                   <div className="space-y-4">
                     {visibleActivities.map((activity, idx) => (

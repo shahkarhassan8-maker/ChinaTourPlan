@@ -254,6 +254,7 @@ export default function ItineraryResult({ formData, onBack }) {
           selectedPlaces: formData.selectedPlaces,
           pace: formData.pace,
           food: formData.food,
+          hotelQuality: formData.hotelQuality || 'moderate',
           accommodation: formData.accommodation,
           placesData: CITY_DATA,
           duration: formData.duration || Object.values(formData.cityDays || {}).reduce((a, b) => a + b, 0)
