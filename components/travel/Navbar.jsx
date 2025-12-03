@@ -40,7 +40,7 @@ export default function Navbar() {
             <img 
               src="/logo.png" 
               alt="ChinaTourPlan Logo" 
-              className="w-12 h-12 rounded-xl object-contain"
+              className="w-16 h-16 rounded-xl object-contain"
             />
             <span className={`font-bold text-2xl tracking-tight ${scrolled ? 'text-slate-900' : 'text-slate-900'}`}>
               ChinaTourPlan
