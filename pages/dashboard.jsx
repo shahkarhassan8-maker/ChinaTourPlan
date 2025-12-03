@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  ArrowLeft, Crown, MapPin, Calendar, Trash2, 
+import {
+  ArrowLeft, Crown, MapPin, Calendar, Trash2,
   Plus, Star, Settings, LogOut, Edit, Eye,
   MessageCircle, Sparkles, Clock, User, AlertTriangle, X,
   Lock, Zap, Download, Bot
@@ -12,19 +13,19 @@ import {
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { CITY_DATA } from '@/components/travel/cityData';
-import { 
-  hasAccess, 
-  isFreeUser, 
-  isPaidUser, 
-  FEATURES, 
+import {
+  hasAccess,
+  isFreeUser,
+  isPaidUser,
+  FEATURES,
   getRemainingItineraries,
   getUpgradeMessage,
-  getPlanDisplayName 
+  getPlanDisplayName
 } from '@/lib/accessControl';
-import { 
-  supabase, 
-  signOut, 
-  getUserItineraries, 
+import {
+  supabase,
+  signOut,
+  getUserItineraries,
   deleteItinerary as deleteItineraryFromDb,
   submitReview as submitReviewToDb
 } from '@/lib/supabase';
@@ -53,7 +54,7 @@ export default function DashboardPage() {
     if (storedUser) {
       const userData = JSON.parse(storedUser);
       setUser(userData);
-      
+
       if (supabase && userData.id) {
         try {
           const dbItineraries = await getUserItineraries(userData.id);
@@ -76,7 +77,7 @@ export default function DashboardPage() {
           console.log('Supabase not configured, using local storage');
         }
       }
-      
+
       const storedItineraries = localStorage.getItem('itineraries');
       if (storedItineraries) {
         setItineraries(JSON.parse(storedItineraries));
@@ -139,7 +140,7 @@ export default function DashboardPage() {
 
   const getAttractionsFromItinerary = (itinerary) => {
     const attractions = [];
-    
+
     if (itinerary?.selectedPlaces && typeof itinerary.selectedPlaces === 'object') {
       Object.entries(itinerary.selectedPlaces).forEach(([cityId, placeIndices]) => {
         const cityData = CITY_DATA[cityId];
@@ -157,10 +158,10 @@ export default function DashboardPage() {
         }
       });
     }
-    
+
     if (attractions.length === 0) {
       let itineraryDays = [];
-      
+
       if (itinerary?.itineraryData) {
         if (Array.isArray(itinerary.itineraryData)) {
           itineraryDays = itinerary.itineraryData;
@@ -168,7 +169,7 @@ export default function DashboardPage() {
           itineraryDays = itinerary.itineraryData.itinerary;
         }
       }
-      
+
       itineraryDays.forEach(day => {
         if (day.activities && Array.isArray(day.activities)) {
           day.activities.forEach(activity => {
@@ -194,7 +195,7 @@ export default function DashboardPage() {
         }
       });
     }
-    
+
     return attractions;
   };
 
@@ -214,7 +215,7 @@ export default function DashboardPage() {
       toast.error('Please write at least 10 characters');
       return;
     }
-    
+
     try {
       const attractionRatingsArray = Object.entries(review.attractionRatings).map(([name, rating]) => ({
         name,
@@ -230,7 +231,7 @@ export default function DashboardPage() {
           attractionRatings: attractionRatingsArray
         });
       }
-      
+
       const existingReviews = JSON.parse(localStorage.getItem('userReviews') || '[]');
       const newReview = {
         id: Date.now(),
@@ -245,7 +246,7 @@ export default function DashboardPage() {
       };
       existingReviews.push(newReview);
       localStorage.setItem('userReviews', JSON.stringify(existingReviews));
-      
+
       toast.success('Thank you for your review!');
       setShowReviewModal(false);
       setReviewItinerary(null);
@@ -291,6 +292,12 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+      <Head>
+        <title>Dashboard | ChinaTourPlan</title>
+        <meta name="description" content="Manage your China travel itineraries and account" />
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
+
       <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/">
@@ -433,18 +440,18 @@ export default function DashboardPage() {
                     <p className="text-sm text-slate-500">{itinerary.cities?.join(' → ')}</p>
                   </div>
                   <div className="flex gap-2">
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       className="h-8 w-8 text-blue-500 hover:text-blue-600 hover:bg-blue-50"
                       onClick={() => handleViewItinerary(itinerary)}
                       title="View Itinerary"
                     >
                       <Eye className="w-4 h-4" />
                     </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
                       onClick={() => setDeleteConfirm(itinerary)}
                       title="Delete Itinerary"
@@ -522,7 +529,7 @@ export default function DashboardPage() {
                       onClick={() => setReview({ ...review, rating: star })}
                       className="focus:outline-none"
                     >
-                      <Star 
+                      <Star
                         className={`w-8 h-8 ${star <= review.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`}
                       />
                     </button>
@@ -547,7 +554,7 @@ export default function DashboardPage() {
                               })}
                               className="focus:outline-none"
                             >
-                              <Star 
+                              <Star
                                 className={`w-5 h-5 ${star <= rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`}
                               />
                             </button>

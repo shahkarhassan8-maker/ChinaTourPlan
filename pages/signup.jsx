@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  ArrowLeft, Crown, Check, Star, Shield, 
+import {
+  ArrowLeft, Crown, Check, Star, Shield,
   Sparkles, Clock, MapPin, MessageCircle,
   Eye, EyeOff, Mail, Lock, User
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { supabase, signUp, signIn, resetPassword, saveItinerary } from '@/lib/supabase';
+import { generateMetaTags } from '@/lib/seo';
 
 const MEMBERSHIP_BENEFITS = [
   { icon: MapPin, title: 'Unlimited Itineraries', description: 'Create and save unlimited trip plans' },
@@ -71,7 +73,7 @@ export default function SignupPage() {
     setSupabaseAvailable(!!supabase);
     const pending = localStorage.getItem('pendingItinerary');
     setHasPendingItinerary(!!pending);
-    
+
     const completedPayment = localStorage.getItem('paymentCompleted');
     if (completedPayment) {
       try {
@@ -92,14 +94,14 @@ export default function SignupPage() {
         localStorage.removeItem('paymentCompleted');
       }
     }
-    
+
     if (typeof window !== 'undefined' && window.createLemonSqueezy) {
       window.createLemonSqueezy();
     }
-    
+
     const handleMessageEvent = (event) => {
       if (!event.origin.includes('lemonsqueezy.com')) return;
-      
+
       if (event.data && event.data.event === 'Checkout.Success') {
         const pendingSignup = localStorage.getItem('pendingSignup');
         if (pendingSignup) {
@@ -120,26 +122,26 @@ export default function SignupPage() {
     };
 
     window.addEventListener('message', handleMessageEvent);
-    
+
     return () => {
       window.removeEventListener('message', handleMessageEvent);
     };
   }, []);
-  
+
   useEffect(() => {
     if (router.isReady && router.query.redirect) {
       setRedirectPath(router.query.redirect);
     }
   }, [router.isReady, router.query.redirect]);
-  
+
   const savePendingItinerary = async (userId) => {
     const pendingData = localStorage.getItem('pendingItinerary');
     if (!pendingData) return null;
-    
+
     try {
       const { formData: tripFormData, itinerary } = JSON.parse(pendingData);
       const cityNames = [...new Set(itinerary.map(d => d.city))];
-      
+
       const savedData = await saveItinerary(userId, {
         title: `${tripFormData.duration} Days in China`,
         cities: cityNames,
@@ -149,7 +151,7 @@ export default function SignupPage() {
         accommodation: tripFormData.accommodation,
         itinerary: itinerary
       });
-      
+
       localStorage.removeItem('pendingItinerary');
       toast.success('Your itinerary has been saved!');
       return savedData;
@@ -162,14 +164,14 @@ export default function SignupPage() {
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.email || !formData.email.includes('@')) {
       toast.error('Please enter a valid email address');
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       await resetPassword(formData.email);
       toast.success('Password reset link sent! Check your email.');
@@ -187,12 +189,12 @@ export default function SignupPage() {
       toast.error('Please enter a valid email address');
       return false;
     }
-    
+
     if (!formData.name.trim()) {
       toast.error('Please enter your name');
       return false;
     }
-    
+
     return true;
   };
 
@@ -200,12 +202,12 @@ export default function SignupPage() {
     if (!validateBasicInfo()) {
       return false;
     }
-    
+
     if (!formData.password || formData.password.length < 6) {
       toast.error('Password must be at least 6 characters');
       return false;
     }
-    
+
     return true;
   };
 
@@ -214,18 +216,18 @@ export default function SignupPage() {
       e.preventDefault();
       return;
     }
-    
+
     localStorage.setItem('pendingSignup', JSON.stringify({
       name: formData.name,
       email: formData.email,
       plan: selectedPlan,
     }));
   };
-  
+
   const getCheckoutUrl = (planId) => {
     const plan = PLANS.find(p => p.id === planId);
     if (!plan?.lemonSqueezyUrl) return '#';
-    
+
     const baseUrl = plan.lemonSqueezyUrl;
     const params = new URLSearchParams();
     if (formData.email) {
@@ -235,19 +237,19 @@ export default function SignupPage() {
       params.set('checkout[name]', formData.name);
     }
     params.set('checkout[custom][plan]', planId);
-    
+
     return baseUrl + (baseUrl.includes('?') ? '&' : '?') + params.toString();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     const planToAssign = paymentCompleted ? paymentCompleted.plan : 'free';
-    
+
     setLoading(true);
-    
+
     try {
       if (supabaseAvailable) {
         if (isLogin) {
@@ -260,7 +262,7 @@ export default function SignupPage() {
             plan: profile?.plan || 'free',
             memberSince: profile?.created_at || new Date().toISOString(),
           }));
-          
+
           if (hasPendingItinerary) {
             const savedItinerary = await savePendingItinerary(user.id);
             setHasPendingItinerary(false);
@@ -271,8 +273,8 @@ export default function SignupPage() {
           }
         } else {
           const { user } = await signUp(formData.email, formData.password, formData.name);
-          toast.success(paymentCompleted 
-            ? `Account created with ${planToAssign.charAt(0).toUpperCase() + planToAssign.slice(1)} access!` 
+          toast.success(paymentCompleted
+            ? `Account created with ${planToAssign.charAt(0).toUpperCase() + planToAssign.slice(1)} access!`
             : 'Account created! Please check your email to verify your account.'
           );
           localStorage.setItem('user', JSON.stringify({
@@ -282,11 +284,11 @@ export default function SignupPage() {
             plan: planToAssign,
             memberSince: new Date().toISOString(),
           }));
-          
+
           if (paymentCompleted) {
             localStorage.removeItem('paymentCompleted');
           }
-          
+
           if (hasPendingItinerary) {
             const savedItinerary = await savePendingItinerary(user.id);
             setHasPendingItinerary(false);
@@ -302,7 +304,7 @@ export default function SignupPage() {
           if (isLogin) {
             toast.success('Welcome back! Redirecting to your dashboard...');
           } else {
-            toast.success(paymentCompleted 
+            toast.success(paymentCompleted
               ? `Account created with ${planToAssign.charAt(0).toUpperCase() + planToAssign.slice(1)} access!`
               : 'Account created! Welcome to China Travel Pro!'
             );
@@ -328,8 +330,36 @@ export default function SignupPage() {
     }
   };
 
+  const seoData = generateMetaTags({
+    title: isLogin ? 'Sign In to ChinaTourPlan' : 'Sign Up for ChinaTourPlan',
+    description: isLogin
+      ? 'Sign in to access your saved China travel itineraries and premium features.'
+      : 'Create a free account to save unlimited China travel itineraries with AI-powered planning.',
+    url: '/signup',
+    type: 'website',
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+      <Head>
+        <title>{seoData.title}</title>
+        <meta name="description" content={seoData.description} />
+        <link rel="canonical" href={seoData.canonical} />
+
+        {/* Open Graph */}
+        <meta property="og:type" content={seoData.openGraph.type} />
+        <meta property="og:url" content={seoData.openGraph.url} />
+        <meta property="og:title" content={seoData.openGraph.title} />
+        <meta property="og:description" content={seoData.openGraph.description} />
+        <meta property="og:image" content={seoData.openGraph.image} />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content={seoData.twitter.card} />
+        <meta name="twitter:title" content={seoData.twitter.title} />
+        <meta name="twitter:description" content={seoData.twitter.description} />
+        <meta name="twitter:image" content={seoData.twitter.image} />
+      </Head>
+
       <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/">
@@ -356,17 +386,17 @@ export default function SignupPage() {
               <Sparkles className="w-4 h-4" />
               Premium Membership
             </div>
-            
+
             <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
               {isLogin ? 'Welcome Back!' : 'Join China Travel Pro'}
             </h1>
             <p className="text-lg text-slate-600 mb-8">
-              {isLogin 
+              {isLogin
                 ? 'Sign in to access your saved itineraries and premium features.'
                 : 'Get unlimited access to detailed itineraries, live support, and exclusive travel perks.'
               }
             </p>
-            
+
             {paymentCompleted && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -384,7 +414,7 @@ export default function SignupPage() {
                 </div>
               </motion.div>
             )}
-            
+
             {hasPendingItinerary && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -450,11 +480,10 @@ export default function SignupPage() {
                     <button
                       key={plan.id}
                       onClick={() => setSelectedPlan(plan.id)}
-                      className={`relative p-4 rounded-xl border-2 transition-all text-left ${
-                        selectedPlan === plan.id
-                          ? 'border-[#E60012] bg-red-50/50'
-                          : 'border-slate-200 hover:border-slate-300'
-                      }`}
+                      className={`relative p-4 rounded-xl border-2 transition-all text-left ${selectedPlan === plan.id
+                        ? 'border-[#E60012] bg-red-50/50'
+                        : 'border-slate-200 hover:border-slate-300'
+                        }`}
                     >
                       {plan.popular && (
                         <span className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-[#E60012] text-white text-xs font-medium rounded-full">
@@ -479,7 +508,7 @@ export default function SignupPage() {
                   <h3 className="text-xl font-bold text-slate-900 mb-2">Reset Password</h3>
                   <p className="text-slate-600 text-sm">Enter your email and we'll send you a reset link</p>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     Email Address
@@ -548,7 +577,7 @@ export default function SignupPage() {
                     </div>
                   </div>
                 )}
-                
+
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     Email Address
@@ -565,7 +594,7 @@ export default function SignupPage() {
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     Password
@@ -595,11 +624,10 @@ export default function SignupPage() {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className={`w-full py-6 text-lg font-semibold ${
-                      paymentCompleted && paymentCompleted.plan === 'elite'
-                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
-                        : 'bg-[#E60012] hover:bg-[#cc0010] text-white'
-                    }`}
+                    className={`w-full py-6 text-lg font-semibold ${paymentCompleted && paymentCompleted.plan === 'elite'
+                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
+                      : 'bg-[#E60012] hover:bg-[#cc0010] text-white'
+                      }`}
                   >
                     {loading ? (
                       <span className="flex items-center gap-2">
@@ -626,11 +654,10 @@ export default function SignupPage() {
                 ) : (
                   <a
                     href={getCheckoutUrl(selectedPlan)}
-                    className={`lemonsqueezy-button flex items-center justify-center w-full py-4 text-lg font-semibold rounded-md cursor-pointer transition-colors ${
-                      selectedPlan === 'elite'
-                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
-                        : 'bg-[#E60012] hover:bg-[#cc0010] text-white'
-                    }`}
+                    className={`lemonsqueezy-button flex items-center justify-center w-full py-4 text-lg font-semibold rounded-md cursor-pointer transition-colors ${selectedPlan === 'elite'
+                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
+                      : 'bg-[#E60012] hover:bg-[#cc0010] text-white'
+                      }`}
                     onClick={handlePaidPlanCheckout}
                   >
                     <Crown className="w-5 h-5 mr-2" />

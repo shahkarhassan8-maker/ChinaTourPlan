@@ -1,0 +1,11 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow private areas
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /auth/
+
+# Sitemap location
+Sitemap: https://chinatourplan.com/sitemap.xml
