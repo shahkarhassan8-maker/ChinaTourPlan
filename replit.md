@@ -29,6 +29,20 @@ The application is built with Next.js 14.0.0, utilizing JavaScript/JSX and style
 - Share and Email modals now generate links to saved itinerary pages
 - Pending itinerary flow: stores itinerary when user signs up/in and redirects to saved itinerary
 
+### December 4, 2024
+**Performance Optimizations:**
+- Optimized HeroSection LCP by removing animation delays on critical text elements
+- Reduced hero image from 1200px to 800px with better quality settings
+- Added Next.js Image component to HeroSection with priority loading
+- Optimized CityGallery images from 800px to 400px with lazy loading and proper fallback behavior
+- Updated next.config.js with modern image formats (AVIF, WebP), optimized device sizes, and caching
+- Reduced Navbar logo from 64x64 to 48x48 using Next.js Image
+
+**New Travel Information Sections (added to ItineraryResult):**
+- TravelAppsSection: Essential apps for travelers (WeChat, Alipay, Didi, VPN, maps, translation)
+- WhatToBringSection: Seasonal packing guide with interactive season selector
+- FAQSection: Comprehensive FAQ with categories (Before You Go, Money, Transport, Communication, Food, Safety)
+
 ### December 3, 2024
 - Fixed review system to display ALL user-selected attractions from CITY_DATA (not just scheduled activities)
 - Fixed "See" button in saved itineraries to correctly navigate to `/itinerary/[id]` pages
