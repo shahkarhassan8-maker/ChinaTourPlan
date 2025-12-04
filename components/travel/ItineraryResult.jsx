@@ -423,8 +423,7 @@ export default function ItineraryResult({ formData, onBack }) {
 
   const handleUpgradeClick = () => {
     if (!isAuthenticated) {
-      toast.info('Please sign in first to purchase a membership');
-      router.push('/signup');
+      toast.info('Buy a Pro/Elite membership to access this');
       return;
     }
     setShowPaywall(true);
@@ -949,8 +948,8 @@ export default function ItineraryResult({ formData, onBack }) {
         whileHover={{ scale: 1.1 }}
         onClick={() => isPremium ? setShowAskAI(true) : handleUpgradeClick()}
         className={`fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg flex items-center justify-center z-50 ${isPremium
-            ? 'bg-gradient-to-r from-[#E60012] to-red-600 shadow-red-500/30 text-white'
-            : 'bg-slate-700 shadow-slate-500/30 text-white'
+          ? 'bg-gradient-to-r from-[#E60012] to-red-600 shadow-red-500/30 text-white'
+          : 'bg-slate-700 shadow-slate-500/30 text-white'
           }`}
       >
         {!isPremium && <Lock className="w-3 h-3 absolute top-2 right-2" />}
