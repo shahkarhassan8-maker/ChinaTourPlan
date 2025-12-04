@@ -71,9 +71,18 @@ export default function Footer() {
 
         <div className="border-t border-slate-800 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-            <p className="text-slate-400 text-sm">
-              © {new Date().getFullYear()} ChinaTourPlan. All rights reserved.
-            </p>
+            <div>
+              <p className="text-slate-400 text-sm">
+                © {new Date().getFullYear()} ChinaTourPlan. All rights reserved.
+              </p>
+              <a
+                href="mailto:contact@chinatourplan.com"
+                className="text-slate-500 text-sm hover:text-white transition-colors flex items-center gap-1 mt-1"
+              >
+                <Mail className="w-4 h-4" />
+                contact@chinatourplan.com
+              </a>
+            </div>
             <div className="flex items-center gap-4">
               <a
                 href={CONTACT_INFO.instagram}
@@ -98,9 +107,6 @@ export default function Footer() {
                 </svg>
               </a>
             </div>
-            <p className="text-slate-400 text-sm flex items-center gap-1">
-              Made with <Heart className="w-4 h-4 text-[#E60012] fill-[#E60012]" /> for travelers
-            </p>
           </div>
         </div>
       </div>
