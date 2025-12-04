@@ -9,24 +9,24 @@ export default function EmailModal({ isOpen, onClose, itinerary, formData, saved
   const [email, setEmail] = useState('');
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
-  
+
   const cityNames = itinerary ? [...new Set(itinerary.map(d => d.city))].join(' → ') : '';
   const duration = formData?.duration || 7;
   const totalCost = itinerary?.reduce((sum, day) => sum + day.cost.usd, 0) || 0;
-  
+
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://chinatourplan.com';
   const itineraryUrl = savedItineraryId ? `${baseUrl}/itinerary/${savedItineraryId}` : baseUrl;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!email || !email.includes('@')) {
       toast.error('Please enter a valid email address');
       return;
     }
-    
+
     setSending(true);
-    
+
     try {
       const response = await fetch('/api/send-itinerary-email', {
         method: 'POST',
@@ -40,14 +40,16 @@ export default function EmailModal({ isOpen, onClose, itinerary, formData, saved
           itinerary
         })
       });
-      
+
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to send email');
+        throw new Error(data.error || data.details || 'Failed to send email');
       }
-      
+
       setSent(true);
       toast.success('Itinerary sent to your email!');
-      
+
       const emailHistory = JSON.parse(localStorage.getItem('emailHistory') || '[]');
       emailHistory.push({
         email,
@@ -60,7 +62,7 @@ export default function EmailModal({ isOpen, onClose, itinerary, formData, saved
         },
       });
       localStorage.setItem('emailHistory', JSON.stringify(emailHistory));
-      
+
       setTimeout(() => {
         onClose();
         setSent(false);
@@ -68,7 +70,7 @@ export default function EmailModal({ isOpen, onClose, itinerary, formData, saved
       }, 2000);
     } catch (error) {
       console.error('Email send error:', error);
-      toast.error('Failed to send email. Please try again.');
+      toast.error(error.message || 'Failed to send email. Please try again.');
     } finally {
       setSending(false);
     }
@@ -90,7 +92,7 @@ export default function EmailModal({ isOpen, onClose, itinerary, formData, saved
               <h3 className="text-xl font-bold text-slate-900">Email My Itinerary</h3>
               <p className="text-sm text-slate-500">Get your complete trip plan delivered to your inbox</p>
             </div>
-            <button 
+            <button
               onClick={onClose}
               className="p-2 hover:bg-slate-100 rounded-full transition-colors"
             >
@@ -159,7 +161,7 @@ export default function EmailModal({ isOpen, onClose, itinerary, formData, saved
                   </>
                 )}
               </Button>
-              
+
               <p className="text-xs text-slate-500 text-center mt-4">
                 We'll send you a detailed PDF with your complete itinerary, maps, and travel tips.
               </p>

@@ -4,16 +4,26 @@ import Head from 'next/head';
 import { motion } from 'framer-motion';
 import {
   Calendar, MapPin, DollarSign, ArrowLeft, Share2,
-  Mail, Clock, Sparkles, Loader2, AlertCircle
+  Mail, Clock, Sparkles, Loader2, AlertCircle, Download,
+  MessageCircle, Bot
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import DetailedDayCard from '@/components/travel/DetailedDayCard';
 import ShareModal from '@/components/travel/ShareModal';
 import EmailModal from '@/components/travel/EmailModal';
+import TravelAppsSection from '@/components/travel/TravelAppsSection';
+import WhatToBringSection from '@/components/travel/WhatToBringSection';
+import FAQSection from '@/components/travel/FAQSection';
 import { getItineraryById, getCurrentUser } from '@/lib/supabase';
+import { downloadItineraryPDF } from '@/lib/pdfGenerator';
 import { toast } from "sonner";
 import { generateMetaTags, generateTripSchema } from '@/lib/seo';
+
+const CONTACT_INFO = {
+  wechat: 'Shahkarhassan',
+  whatsapp: 'Coming Soon',
+};
 
 export default function ItineraryViewPage() {
   const router = useRouter();
@@ -128,6 +138,15 @@ export default function ItineraryViewPage() {
     duration,
   });
 
+  const handleDownloadPDF = () => {
+    downloadItineraryPDF({
+      itinerary,
+      formData,
+      title: pageTitle
+    });
+    toast.success('PDF downloaded successfully!');
+  };
+
   return (
     <>
       <Head>
@@ -157,6 +176,7 @@ export default function ItineraryViewPage() {
       </Head>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+        {/* Header */}
         <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200">
           <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
             <Button variant="ghost" onClick={() => router.push('/')} className="text-slate-600">
@@ -182,11 +202,21 @@ export default function ItineraryViewPage() {
                 <Mail className="w-4 h-4 mr-2" />
                 Email
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-green-600 border-green-200 hover:bg-green-50"
+                onClick={handleDownloadPDF}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                PDF
+              </Button>
             </div>
           </div>
         </div>
 
         <div className="max-w-4xl mx-auto px-6 py-12">
+          {/* Summary Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -222,6 +252,7 @@ export default function ItineraryViewPage() {
             </div>
           </motion.div>
 
+          {/* Badges */}
           <div className="flex justify-center gap-3 mb-8">
             {itineraryData?.pace && (
               <Badge className="px-4 py-2 text-sm bg-purple-100 text-purple-800">
@@ -235,6 +266,37 @@ export default function ItineraryViewPage() {
             )}
           </div>
 
+          {/* Contact Support Banner */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 p-6 bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl text-white"
+          >
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center">
+                  <MessageCircle className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-lg">Need Help With Your Trip?</h4>
+                  <p className="text-sm text-white/80">Get personalized travel advice from our China experts</p>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-lg">
+                  <svg className="w-5 h-5 text-green-400" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c4.8 0 8.691-3.288 8.691-7.343 0-4.053-3.891-7.34-8.691-7.34" />
+                  </svg>
+                  <div>
+                    <p className="text-xs text-green-400">WeChat</p>
+                    <p className="font-semibold text-white">{CONTACT_INFO.wechat}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Price Notice */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -245,6 +307,7 @@ export default function ItineraryViewPage() {
             </p>
           </motion.div>
 
+          {/* Day Cards */}
           <div className="relative">
             {itinerary.map((day, index) => (
               <DetailedDayCard
@@ -257,6 +320,7 @@ export default function ItineraryViewPage() {
             ))}
           </div>
 
+          {/* Total Cost Summary */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -271,6 +335,20 @@ export default function ItineraryViewPage() {
             </p>
           </motion.div>
 
+          {/* Essential Apps Section */}
+          <TravelAppsSection onUpgrade={() => { }} />
+
+          {/* What to Bring Section */}
+          <WhatToBringSection
+            cities={cities}
+            duration={duration}
+            onUpgrade={() => { }}
+          />
+
+          {/* FAQ Section */}
+          <FAQSection onUpgrade={() => { }} />
+
+          {/* CTA */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -286,6 +364,7 @@ export default function ItineraryViewPage() {
             </Button>
           </motion.div>
 
+          {/* Footer Contact */}
           <div className="mt-8 text-center text-sm text-slate-500 pb-8">
             <p>Questions? Reach out anytime</p>
             <div className="flex items-center justify-center gap-6 mt-2 flex-wrap">

@@ -194,7 +194,8 @@ export default function DashboardPage() {
   };
 
   const handleViewItinerary = (itinerary) => {
-    setViewItinerary(itinerary);
+    // Navigate to the permanent itinerary URL
+    router.push(`/itinerary/${itinerary.id}`);
   };
 
   const handleFeatureAccess = (feature) => {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import HeroSection from '@/components/travel/HeroSection';
 import InputWizard from '@/components/travel/InputWizard';
@@ -10,18 +11,47 @@ import CityGallery from '@/components/travel/CityGallery';
 import PricingSection from '@/components/travel/PricingSection';
 import Footer from '@/components/travel/Footer';
 import { generateMetaTags, generateOrganizationSchema } from '@/lib/seo';
+import { getCurrentUser } from '@/lib/supabase';
+import { toast } from 'sonner';
 
 export default function Home() {
+  const router = useRouter();
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [itineraryData, setItineraryData] = useState(null);
   const [userReviews, setUserReviews] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
+    checkAuth();
     const storedReviews = localStorage.getItem('userReviews');
     if (storedReviews) {
       setUserReviews(JSON.parse(storedReviews));
     }
   }, []);
+
+  const checkAuth = async () => {
+    try {
+      const userData = await getCurrentUser();
+      console.log('Auth check result:', userData);
+      setCurrentUser(userData);
+    } catch (error) {
+      console.error('Error checking auth:', error);
+    } finally {
+      setIsCheckingAuth(false);
+    }
+  };
+
+  const handleStartPlanning = () => {
+    // getCurrentUser returns { user, profile } or null
+    // We need to check if user object exists
+    if (!currentUser || !currentUser.user) {
+      toast.info('Please sign in to start planning your trip');
+      router.push('/signup?redirect=/');
+      return;
+    }
+    setIsWizardOpen(true);
+  };
 
   const handleWizardSubmit = (formData) => {
     setItineraryData(formData);
@@ -82,7 +112,7 @@ export default function Home() {
       </Head>
 
       <Navbar />
-      <HeroSection onStartPlanning={() => setIsWizardOpen(true)} />
+      <HeroSection onStartPlanning={handleStartPlanning} />
       <FeaturesSection />
       <CityGallery />
       <PricingSection />

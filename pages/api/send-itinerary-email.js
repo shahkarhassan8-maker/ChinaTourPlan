@@ -1,17 +1,29 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  // Check if API key is configured
+  if (!process.env.RESEND_API_KEY) {
+    console.error('RESEND_API_KEY is not configured');
+    return res.status(500).json({
+      error: 'Email service not configured',
+      details: 'Please add RESEND_API_KEY to your .env file'
+    });
+  }
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   const { email, duration, cities, estimatedCost, itineraryUrl, itinerary } = req.body;
 
   if (!email || !email.includes('@')) {
     return res.status(400).json({ error: 'Valid email is required' });
   }
+
+  console.log('Sending email to:', email);
+  console.log('API Key starts with:', process.env.RESEND_API_KEY?.substring(0, 10));
 
   try {
     // Generate itinerary HTML for email
@@ -56,61 +68,51 @@ export default async function handler(req, res) {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
-      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: #f1f5f9; padding: 40px 20px; margin: 0;">
-        <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; background-color: #f1f5f9;">
+        <div style="max-width: 600px; margin: 0 auto; background: white;">
           
           <!-- Header -->
-          <div style="background: linear-gradient(135deg, #E60012 0%, #cc0010 100%); padding: 32px; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">🇨🇳 Your China Trip</h1>
-            <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 16px;">
-              ${duration} Days • ${cities}
-            </p>
+          <div style="background: linear-gradient(135deg, #E60012 0%, #cc0010 100%); padding: 32px 24px; text-align: center;">
+            <h1 style="color: white; margin: 0; font-size: 28px;">Your China Trip Itinerary</h1>
+            <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 16px;">${duration} Days • ${cities}</p>
           </div>
           
           <!-- Summary -->
-          <div style="padding: 24px; border-bottom: 1px solid #e2e8f0;">
-            <table style="width: 100%; border-collapse: collapse;">
-              <tr>
-                <td style="text-align: center; padding: 16px;">
-                  <div style="font-size: 32px; font-weight: bold; color: #1e293b;">${duration}</div>
-                  <div style="color: #64748b; font-size: 14px;">Days</div>
-                </td>
-                <td style="text-align: center; padding: 16px;">
-                  <div style="font-size: 32px; font-weight: bold; color: #1e293b;">${cities.split('→').length || cities.split(',').length}</div>
-                  <div style="color: #64748b; font-size: 14px;">Cities</div>
-                </td>
-                <td style="text-align: center; padding: 16px;">
-                  <div style="font-size: 32px; font-weight: bold; color: #16a34a;">$${estimatedCost}</div>
-                  <div style="color: #64748b; font-size: 14px;">Est. Total</div>
-                </td>
-              </tr>
-            </table>
+          <div style="padding: 24px; background: #fef3c7; border-bottom: 1px solid #fcd34d;">
+            <div style="display: flex; justify-content: space-between; text-align: center;">
+              <div style="flex: 1;">
+                <div style="font-size: 24px; font-weight: bold; color: #1e293b;">${duration}</div>
+                <div style="font-size: 12px; color: #64748b;">Days</div>
+              </div>
+              <div style="flex: 1;">
+                <div style="font-size: 24px; font-weight: bold; color: #16a34a;">$${estimatedCost}</div>
+                <div style="font-size: 12px; color: #64748b;">Est. Cost</div>
+              </div>
+            </div>
           </div>
           
-          <!-- Itinerary Days -->
+          <!-- View Button -->
+          <div style="padding: 24px; text-align: center; background: #f8fafc;">
+            <a href="${itineraryUrl}" style="display: inline-block; background: #E60012; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px;">
+              View Full Itinerary Online
+            </a>
+            <p style="color: #64748b; font-size: 12px; margin: 12px 0 0 0;">Click above to see your complete day-by-day plan</p>
+          </div>
+          
+          <!-- Itinerary Preview -->
           <div style="padding: 24px;">
-            <h2 style="color: #1e293b; margin: 0 0 16px 0; font-size: 20px;">Your Day-by-Day Itinerary</h2>
+            <h2 style="color: #1e293b; margin: 0 0 16px 0; font-size: 20px;">Your Daily Itinerary</h2>
             ${itineraryHtml}
           </div>
           
-          <!-- CTA Button -->
-          <div style="padding: 24px; text-align: center; background: #f8fafc;">
-            <a href="${itineraryUrl}" style="display: inline-block; background: #E60012; color: white; text-decoration: none; padding: 16px 32px; border-radius: 12px; font-weight: 600; font-size: 16px;">
-              View Full Itinerary Online
-            </a>
-            <p style="color: #64748b; margin: 16px 0 0 0; font-size: 14px;">
-              Access your complete itinerary with maps, addresses, and more
-            </p>
-          </div>
-          
           <!-- Footer -->
-          <div style="padding: 24px; background: #1e293b; color: white; text-align: center;">
-            <p style="margin: 0 0 8px 0; font-size: 14px;">Need help planning your trip?</p>
-            <p style="margin: 0; font-size: 14px;">
-              WeChat: <strong>Shahkarhassan</strong> • Available 24/7
+          <div style="padding: 24px; background: #1e293b; text-align: center;">
+            <p style="color: white; margin: 0 0 8px 0; font-weight: 600;">Need Help?</p>
+            <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 14px;">
+              WeChat: Shahkarhassan
             </p>
-            <p style="margin: 16px 0 0 0; font-size: 12px; color: #94a3b8;">
-              © ${new Date().getFullYear()} ChinaTourPlan. Your adventure awaits! 🌏
+            <p style="color: rgba(255,255,255,0.5); margin: 16px 0 0 0; font-size: 12px;">
+              © ChinaTourPlan - Your China Travel Expert
             </p>
           </div>
           
@@ -128,7 +130,19 @@ export default async function handler(req, res) {
 
     if (error) {
       console.error('Resend error:', error);
-      return res.status(500).json({ error: 'Failed to send email', details: error.message });
+
+      // Check for common errors
+      if (error.message?.includes('verify')) {
+        return res.status(400).json({
+          error: 'Email verification required',
+          details: 'On Resend free tier, you can only send to your verified email address. Please upgrade Resend or add a custom domain.'
+        });
+      }
+
+      return res.status(500).json({
+        error: 'Failed to send email',
+        details: error.message || 'Unknown error from email service'
+      });
     }
 
     console.log('Email sent successfully:', data);
@@ -145,6 +159,9 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error('Email send error:', error);
-    res.status(500).json({ error: 'Failed to send email', details: error.message });
+    res.status(500).json({
+      error: 'Failed to send email',
+      details: error.message || 'Server error'
+    });
   }
 }

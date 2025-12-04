@@ -30,6 +30,7 @@ import { downloadItineraryPDF } from '@/lib/pdfGenerator';
 import TravelAppsSection from './TravelAppsSection';
 import WhatToBringSection from './WhatToBringSection';
 import FAQSection from './FAQSection';
+import { ItineraryLoadingSkeleton } from '@/components/ui/LoadingSkeletons';
 
 const CONTACT_INFO = {
   wechat: 'Shahkarhassan',
@@ -369,7 +370,9 @@ export default function ItineraryResult({ formData, onBack }) {
       setSavedItineraryId(savedData.id);
       incrementItineraryUsage();
       setIsSaved(true);
-      toast.success('Itinerary saved to your dashboard!');
+      toast.success('Itinerary saved! Redirecting...');
+      // Redirect to the permanent URL with itinerary ID
+      router.push(`/itinerary/${savedData.id}`);
 
       if (openModalAfter === 'share') setShowShareModal(true);
       if (openModalAfter === 'email') setShowEmailModal(true);
@@ -448,42 +451,7 @@ export default function ItineraryResult({ formData, onBack }) {
   const isPremium = hasFullAccess; // backwards compatibility
 
   if (isGenerating) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-3xl p-8 shadow-xl"
-          >
-            <div className="w-20 h-20 mx-auto mb-6 relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#E60012] to-red-500 rounded-full animate-pulse" />
-              <div className="absolute inset-2 bg-white rounded-full flex items-center justify-center">
-                <Loader2 className="w-8 h-8 text-[#E60012] animate-spin" />
-              </div>
-            </div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-3">Creating Your Perfect Itinerary</h2>
-            <p className="text-slate-600 mb-4">
-              Our AI is optimizing your {formData.duration}-day trip across {formData.cities.length} cities...
-            </p>
-            <div className="space-y-2 text-sm text-slate-500">
-              <div className="flex items-center justify-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-500" />
-                <span>Grouping nearby attractions</span>
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <Clock className="w-4 h-4 text-blue-500" />
-                <span>Optimizing travel times</span>
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <MapPin className="w-4 h-4 text-green-500" />
-                <span>Planning efficient routes</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
+    return <ItineraryLoadingSkeleton />;
   }
 
   return (
