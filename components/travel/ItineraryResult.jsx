@@ -439,9 +439,9 @@ export default function ItineraryResult({ formData, onBack }) {
     }
   };
 
-  const isPro = purchasedPlan === 'pro' || purchasedPlan === 'lifetime';
-  const isLifetime = purchasedPlan === 'lifetime';
-  const hasFullAccess = purchasedPlan === 'pro' || purchasedPlan === 'lifetime';
+  const isPro = purchasedPlan === 'pro' || purchasedPlan === 'elite' || purchasedPlan === 'lifetime';
+  const isLifetime = purchasedPlan === 'lifetime' || purchasedPlan === 'elite';
+  const hasFullAccess = purchasedPlan === 'pro' || purchasedPlan === 'elite' || purchasedPlan === 'lifetime';
   const isPremium = hasFullAccess; // backwards compatibility
 
   if (isGenerating) {
@@ -495,14 +495,14 @@ export default function ItineraryResult({ formData, onBack }) {
           <div className="flex items-center gap-2">
             {purchasedPlan && (
               <Badge className={`${
-                purchasedPlan === 'lifetime' 
+                purchasedPlan === 'lifetime' || purchasedPlan === 'elite'
                   ? 'bg-amber-100 text-amber-800' 
                   : purchasedPlan === 'pro' 
                   ? 'bg-green-100 text-green-800' 
                   : 'bg-slate-100 text-slate-600'
               }`}>
                 <CheckCircle className="w-3 h-3 mr-1" />
-                {purchasedPlan === 'lifetime' ? 'Lifetime' : purchasedPlan === 'pro' ? 'Pro' : 'Free'} Unlocked
+                {purchasedPlan === 'lifetime' || purchasedPlan === 'elite' ? 'Elite' : purchasedPlan === 'pro' ? 'Pro' : 'Free'} Unlocked
               </Badge>
             )}
             <Button 
@@ -642,19 +642,11 @@ export default function ItineraryResult({ formData, onBack }) {
               </div>
               <div className="flex gap-3">
                 <Button 
-                  variant="outline"
-                  onClick={handleUpgradeClick}
-                  className="border-[#E60012] text-[#E60012]"
-                >
-                  <FileText className="w-4 h-4 mr-2" />
-                  From $5
-                </Button>
-                <Button 
                   onClick={handleUpgradeClick}
                   className="bg-[#E60012] hover:bg-[#cc0010] text-white"
                 >
                   <Crown className="w-4 h-4 mr-2" />
-                  Get Premium
+                  Unlock by getting Pro/Elite membership
                 </Button>
               </div>
             </div>
@@ -795,10 +787,10 @@ export default function ItineraryResult({ formData, onBack }) {
               className="bg-[#E60012] hover:bg-[#cc0010] text-white px-10 py-6 text-lg rounded-xl"
             >
               <Crown className="w-5 h-5 mr-2" />
-              Unlock Full Itinerary - From $19/month
+              Unlock Full Itinerary
             </Button>
             <p className="text-sm text-slate-500 mt-3">
-              Pro $19/month or Lifetime $99 one-time • Instant access • Money back guarantee
+              Get Pro or Elite membership • Instant access • Money back guarantee
             </p>
           </motion.div>
         )}

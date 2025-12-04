@@ -399,7 +399,7 @@ export default function DetailedDayCard({ day, isLast, isPremium, onUpgrade }) {
                             onClick={onUpgrade}
                             className="bg-[#E60012] hover:bg-[#cc0010] text-white"
                           >
-                            Unlock for $5
+                            Unlock by getting Pro/Elite membership
                           </Button>
                         </div>
                       </div>
