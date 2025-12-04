@@ -31,6 +31,8 @@ import TravelAppsSection from './TravelAppsSection';
 import WhatToBringSection from './WhatToBringSection';
 import FAQSection from './FAQSection';
 import { ItineraryLoadingSkeleton } from '@/components/ui/LoadingSkeletons';
+import WeatherWidget from './WeatherWidget';
+import BookingLinks from './BookingLinks';
 
 const CONTACT_INFO = {
   wechat: 'Shahkarhassan',
@@ -817,6 +819,15 @@ export default function ItineraryResult({ formData, onBack }) {
             ))}
           </div>
         </motion.div>
+        {/* Weather Widget */}
+        <div className="grid md:grid-cols-2 gap-6 mt-12">
+          <WeatherWidget cities={cityNames} />
+        </div>
+
+        {/* Booking Links */}
+        <BookingLinks
+          cities={cityNames}
+        />
 
         {/* Travel Apps Section */}
         <TravelAppsSection onUpgrade={handleUpgradeClick} />
