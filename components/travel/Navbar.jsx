@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Crown, User, Menu, X } from 'lucide-react';
@@ -36,10 +37,14 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <img
+            <Image
               src="/logo.jpg"
               alt="ChinaTourPlan Logo"
-              className="w-16 h-16 rounded-xl object-contain"
+              width={48}
+              height={48}
+              priority
+              className="rounded-xl object-contain"
+              style={{ width: 'auto', height: 'auto' }}
             />
             <span className={`font-bold text-2xl tracking-tight ${scrolled ? 'text-slate-900' : 'text-slate-900'}`}>
               ChinaTourPlan

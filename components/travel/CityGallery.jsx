@@ -105,7 +105,11 @@ const CITY_GALLERY_DATA = {
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80&auto=format&fit=crop';
 
 function ImageWithFallback({ src, alt, className, ...props }) {
-  const [imgSrc, setImgSrc] = useState(src);
+  const optimizedSrc = src.includes('unsplash.com') 
+    ? src.replace('w=800', 'w=400').replace('q=80', 'q=60')
+    : src;
+  
+  const [imgSrc, setImgSrc] = useState(optimizedSrc);
   const [isLoading, setIsLoading] = useState(true);
 
   return (
@@ -117,6 +121,7 @@ function ImageWithFallback({ src, alt, className, ...props }) {
         src={imgSrc}
         alt={alt}
         className={className}
+        loading="lazy"
         onError={() => setImgSrc(FALLBACK_IMAGE)}
         onLoad={() => setIsLoading(false)}
         {...props}

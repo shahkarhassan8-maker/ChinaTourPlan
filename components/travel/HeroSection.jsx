@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Button } from "@/components/ui/button";
 import { MapPin, Sparkles, Shield, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -22,24 +23,14 @@ export default function HeroSection({ onStartPlanning }) {
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
       
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-20 text-center">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm border border-slate-200 mb-8"
-        >
+        {/* Badge - No delay for faster LCP */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm border border-slate-200 mb-8">
           <MapPin className="w-4 h-4 text-[#E60012]" />
           <span className="text-sm font-medium text-slate-700">Explore the Middle Kingdom</span>
-        </motion.div>
+        </div>
 
-        {/* Main Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-5xl md:text-7xl font-bold text-slate-900 mb-6 tracking-tight"
-        >
+        {/* Main Headline - No delay for faster LCP */}
+        <h1 className="text-5xl md:text-7xl font-bold text-slate-900 mb-6 tracking-tight">
           China Travel,{' '}
           <span className="relative">
             <span className="text-[#E60012]">Demystified</span>
@@ -47,23 +38,18 @@ export default function HeroSection({ onStartPlanning }) {
               <path d="M2 8C50 2 150 2 198 8" stroke="#FFD700" strokeWidth="3" strokeLinecap="round" />
             </svg>
           </span>
-        </motion.h1>
+        </h1>
 
-        {/* Subheadline */}
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-xl md:text-2xl text-slate-600 mb-12 max-w-2xl mx-auto font-light leading-relaxed"
-        >
+        {/* Subheadline - No delay for faster LCP */}
+        <p className="text-xl md:text-2xl text-slate-600 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
           Get a custom itinerary, cost breakdown, and 24/7 live translation support in seconds.
-        </motion.p>
+        </p>
 
-        {/* CTA Button */}
+        {/* CTA Button - Minimal delay */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.4 }}
         >
           <Button
             onClick={onStartPlanning}
@@ -75,12 +61,7 @@ export default function HeroSection({ onStartPlanning }) {
         </motion.div>
 
         {/* Feature Pills */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex flex-wrap justify-center gap-4 mt-16"
-        >
+        <div className="flex flex-wrap justify-center gap-4 mt-16">
           {features.map((feature, index) => (
             <div
               key={index}
@@ -90,21 +71,25 @@ export default function HeroSection({ onStartPlanning }) {
               <span className="text-sm font-medium text-slate-700">{feature.text}</span>
             </div>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Hero Image/Illustration Area */}
+        {/* Hero Image - Optimized with Next.js Image */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           className="mt-20 relative"
         >
           <div className="relative mx-auto max-w-4xl">
             <div className="aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/10 border border-slate-200">
-              <img
-                src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=1200&q=80"
+              <Image
+                src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=70&auto=format&fit=crop"
                 alt="Great Wall of China"
+                width={800}
+                height={450}
+                priority
                 className="w-full h-full object-cover"
+                sizes="(max-width: 768px) 100vw, 800px"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
             </div>

@@ -26,6 +26,9 @@ import {
   getUpgradeMessage
 } from '@/lib/accessControl';
 import { getCurrentUser, saveItinerary } from '@/lib/supabase';
+import TravelAppsSection from './TravelAppsSection';
+import WhatToBringSection from './WhatToBringSection';
+import FAQSection from './FAQSection';
 
 const CONTACT_INFO = {
   wechat: 'Shahkarhassan',
@@ -831,6 +834,15 @@ export default function ItineraryResult({ formData, onBack }) {
             ))}
           </div>
         </motion.div>
+
+        {/* Travel Apps Section */}
+        <TravelAppsSection />
+
+        {/* What to Bring Section */}
+        <WhatToBringSection />
+
+        {/* FAQ Section */}
+        <FAQSection />
 
         {/* Trust Indicators */}
         <motion.div
