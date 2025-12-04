@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HelpCircle, ChevronDown, MessageCircle, Globe } from 'lucide-react';
+import LockedContentWrapper from './LockedContentWrapper';
 
 const FAQ_DATA = [
   {
@@ -121,8 +122,8 @@ const FAQItem = ({ question, answer }) => {
         className="w-full py-4 flex items-center justify-between text-left hover:bg-slate-50 transition-colors rounded-lg px-2"
       >
         <span className="font-medium text-slate-900 pr-4">{question}</span>
-        <ChevronDown 
-          className={`w-5 h-5 text-slate-500 flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
+        <ChevronDown
+          className={`w-5 h-5 text-slate-500 flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
       <AnimatePresence>
@@ -144,7 +145,7 @@ const FAQItem = ({ question, answer }) => {
   );
 };
 
-export default function FAQSection() {
+export default function FAQSection({ onUpgrade }) {
   const [expandedCategory, setExpandedCategory] = useState('Before You Go');
 
   return (
@@ -168,66 +169,72 @@ export default function FAQSection() {
           </p>
         </motion.div>
 
-        <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {FAQ_DATA.map((cat) => (
-            <button
-              key={cat.category}
-              onClick={() => setExpandedCategory(cat.category)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                expandedCategory === cat.category
-                  ? 'bg-[#E60012] text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-100'
-              }`}
-            >
-              {cat.category}
-            </button>
-          ))}
-        </div>
-
-        {FAQ_DATA.map((cat) => (
-          expandedCategory === cat.category && (
-            <motion.div
-              key={cat.category}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl p-6 shadow-sm"
-            >
-              <h3 className="text-lg font-bold text-slate-900 mb-4 pb-4 border-b border-slate-200">
-                {cat.category}
-              </h3>
-              <div className="space-y-1">
-                {cat.questions.map((item, index) => (
-                  <FAQItem key={index} question={item.q} answer={item.a} />
-                ))}
-              </div>
-            </motion.div>
-          )
-        ))}
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-8 p-6 bg-gradient-to-r from-[#E60012]/10 to-amber-50 rounded-2xl text-center"
+        <LockedContentWrapper
+          title="Frequently Asked Questions"
+          description="Get answers to all your China travel questions"
+          onUpgrade={onUpgrade}
+          showHeading={false}
         >
-          <MessageCircle className="w-10 h-10 text-[#E60012] mx-auto mb-3" />
-          <h4 className="font-bold text-slate-900 mb-2">Still Have Questions?</h4>
-          <p className="text-slate-600 text-sm mb-4">
-            Our travel experts are here to help you plan the perfect trip
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <div className="flex items-center justify-center gap-2 px-4 py-2 bg-green-100 rounded-lg">
-              <svg className="w-5 h-5 text-green-600" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c4.8 0 8.691-3.288 8.691-7.343 0-4.053-3.891-7.34-8.691-7.34"/>
-              </svg>
-              <span className="text-sm font-medium text-green-800">WeChat: Shahkarhassan</span>
-            </div>
-            <div className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-100 rounded-lg">
-              <Globe className="w-5 h-5 text-blue-600" />
-              <span className="text-sm font-medium text-blue-800">24/7 Support Available</span>
-            </div>
+          <div className="flex flex-wrap gap-2 mb-8 justify-center">
+            {FAQ_DATA.map((cat) => (
+              <button
+                key={cat.category}
+                onClick={() => setExpandedCategory(cat.category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${expandedCategory === cat.category
+                    ? 'bg-[#E60012] text-white'
+                    : 'bg-white text-slate-600 hover:bg-slate-100'
+                  }`}
+              >
+                {cat.category}
+              </button>
+            ))}
           </div>
-        </motion.div>
+
+          {FAQ_DATA.map((cat) => (
+            expandedCategory === cat.category && (
+              <motion.div
+                key={cat.category}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-2xl p-6 shadow-sm"
+              >
+                <h3 className="text-lg font-bold text-slate-900 mb-4 pb-4 border-b border-slate-200">
+                  {cat.category}
+                </h3>
+                <div className="space-y-1">
+                  {cat.questions.map((item, index) => (
+                    <FAQItem key={index} question={item.q} answer={item.a} />
+                  ))}
+                </div>
+              </motion.div>
+            )
+          ))}
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-8 p-6 bg-gradient-to-r from-[#E60012]/10 to-amber-50 rounded-2xl text-center"
+          >
+            <MessageCircle className="w-10 h-10 text-[#E60012] mx-auto mb-3" />
+            <h4 className="font-bold text-slate-900 mb-2">Still Have Questions?</h4>
+            <p className="text-slate-600 text-sm mb-4">
+              Our travel experts are here to help you plan the perfect trip
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="flex items-center justify-center gap-2 px-4 py-2 bg-green-100 rounded-lg">
+                <svg className="w-5 h-5 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c4.8 0 8.691-3.288 8.691-7.343 0-4.053-3.891-7.34-8.691-7.34" />
+                </svg>
+                <span className="text-sm font-medium text-green-800">WeChat: Shahkarhassan</span>
+              </div>
+              <div className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-100 rounded-lg">
+                <Globe className="w-5 h-5 text-blue-600" />
+                <span className="text-sm font-medium text-blue-800">24/7 Support Available</span>
+              </div>
+            </div>
+          </motion.div>
+        </LockedContentWrapper>
       </div>
     </section>
   );

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Luggage, Sun, Cloud, Snowflake, Leaf, 
+import LockedContentWrapper from './LockedContentWrapper';
+import {
+  Luggage, Sun, Cloud, Snowflake, Leaf,
   Shirt, Plug, Pill, FileText, CreditCard,
   Smartphone, Camera, Umbrella, ThermometerSun
 } from 'lucide-react';
@@ -125,7 +126,7 @@ const PACKING_LIST = {
   },
 };
 
-export default function WhatToBringSection() {
+export default function WhatToBringSection({ onUpgrade }) {
   const [selectedSeason, setSelectedSeason] = useState('autumn');
 
   const getSeasonalItems = (category) => {
@@ -156,96 +157,100 @@ export default function WhatToBringSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-          {Object.entries(SEASONS).map(([key, season]) => (
-            <button
-              key={key}
-              onClick={() => setSelectedSeason(key)}
-              className={`p-4 rounded-xl border-2 text-left transition-all ${
-                selectedSeason === key
+        <LockedContentWrapper
+          title="What to Bring to China"
+          description="Get the complete seasonal packing guide with insider tips"
+          onUpgrade={onUpgrade}
+          showHeading={false}
+        >
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+            {Object.entries(SEASONS).map(([key, season]) => (
+              <button
+                key={key}
+                onClick={() => setSelectedSeason(key)}
+                className={`p-4 rounded-xl border-2 text-left transition-all ${selectedSeason === key
                   ? `border-${season.color}-500 bg-${season.color}-50`
                   : 'border-slate-200 hover:border-slate-300'
-              }`}
-            >
-              <season.icon className={`w-6 h-6 mb-2 ${
-                selectedSeason === key ? `text-${season.color}-600` : 'text-slate-400'
-              }`} />
-              <h4 className={`font-semibold text-sm ${
-                selectedSeason === key ? 'text-slate-900' : 'text-slate-600'
-              }`}>
-                {season.name}
-              </h4>
-            </button>
-          ))}
-        </div>
-
-        <motion.div
-          key={selectedSeason}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl mb-8"
-        >
-          <div className="flex items-start gap-4">
-            <ThermometerSun className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
-            <div>
-              <h4 className="font-semibold text-slate-900">{SEASONS[selectedSeason].name} Weather</h4>
-              <p className="text-sm text-slate-700">{SEASONS[selectedSeason].weather}</p>
-              <p className="text-sm text-blue-700 mt-1">💡 {SEASONS[selectedSeason].tips}</p>
-            </div>
+                  }`}
+              >
+                <season.icon className={`w-6 h-6 mb-2 ${selectedSeason === key ? `text-${season.color}-600` : 'text-slate-400'
+                  }`} />
+                <h4 className={`font-semibold text-sm ${selectedSeason === key ? 'text-slate-900' : 'text-slate-600'
+                  }`}>
+                  {season.name}
+                </h4>
+              </button>
+            ))}
           </div>
-        </motion.div>
 
-        <div className="space-y-6">
-          {Object.entries(PACKING_LIST).map(([key, category], index) => (
-            <motion.div
-              key={key}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-slate-50 rounded-2xl p-6"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
-                  <category.icon className="w-5 h-5 text-[#E60012]" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900">{category.title}</h3>
+          <motion.div
+            key={selectedSeason}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl mb-8"
+          >
+            <div className="flex items-start gap-4">
+              <ThermometerSun className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+              <div>
+                <h4 className="font-semibold text-slate-900">{SEASONS[selectedSeason].name} Weather</h4>
+                <p className="text-sm text-slate-700">{SEASONS[selectedSeason].weather}</p>
+                <p className="text-sm text-blue-700 mt-1">💡 {SEASONS[selectedSeason].tips}</p>
               </div>
-              <div className="grid md:grid-cols-2 gap-2">
-                {getSeasonalItems(category).map((item, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-3 p-3 bg-white rounded-lg"
-                  >
-                    <div className="w-5 h-5 rounded border-2 border-slate-300 flex items-center justify-center flex-shrink-0">
-                      <span className="text-xs text-slate-400">✓</span>
-                    </div>
-                    <span className="text-sm text-slate-700">{item}</span>
+            </div>
+          </motion.div>
+
+          <div className="space-y-6">
+            {Object.entries(PACKING_LIST).map(([key, category], index) => (
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-slate-50 rounded-2xl p-6"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                    <category.icon className="w-5 h-5 text-[#E60012]" />
                   </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
+                  <h3 className="text-lg font-bold text-slate-900">{category.title}</h3>
+                </div>
+                <div className="grid md:grid-cols-2 gap-2">
+                  {getSeasonalItems(category).map((item, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 p-3 bg-white rounded-lg"
+                    >
+                      <div className="w-5 h-5 rounded border-2 border-slate-300 flex items-center justify-center flex-shrink-0">
+                        <span className="text-xs text-slate-400">✓</span>
+                      </div>
+                      <span className="text-sm text-slate-700">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-8 p-6 bg-amber-50 rounded-2xl border border-amber-200"
-        >
-          <h4 className="font-bold text-amber-900 mb-3 flex items-center gap-2">
-            <Umbrella className="w-5 h-5" />
-            China Travel Tips
-          </h4>
-          <ul className="space-y-2 text-sm text-amber-800">
-            <li>• Many hotels provide toiletries, but not all - bring basics just in case</li>
-            <li>• Download apps and maps before arriving - some aren't available in China</li>
-            <li>• Pack light - you'll find great shopping opportunities for anything forgotten</li>
-            <li>• Keep a small bag for day trips with essentials (phone charger, water, snacks)</li>
-            <li>• Bring comfortable shoes - you'll walk a lot exploring cities and attractions</li>
-          </ul>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-8 p-6 bg-amber-50 rounded-2xl border border-amber-200"
+          >
+            <h4 className="font-bold text-amber-900 mb-3 flex items-center gap-2">
+              <Umbrella className="w-5 h-5" />
+              China Travel Tips
+            </h4>
+            <ul className="space-y-2 text-sm text-amber-800">
+              <li>• Many hotels provide toiletries, but not all - bring basics just in case</li>
+              <li>• Download apps and maps before arriving - some aren't available in China</li>
+              <li>• Pack light - you'll find great shopping opportunities for anything forgotten</li>
+              <li>• Keep a small bag for day trips with essentials (phone charger, water, snacks)</li>
+              <li>• Bring comfortable shoes - you'll walk a lot exploring cities and attractions</li>
+            </ul>
+          </motion.div>
+        </LockedContentWrapper>
       </div>
     </section>
   );

@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Smartphone, MessageCircle, MapPin, CreditCard, 
+import LockedContentWrapper from './LockedContentWrapper';
+import {
+  Smartphone, MessageCircle, MapPin, CreditCard,
   Train, Languages, Shield, Wifi, ShoppingBag, Camera
 } from 'lucide-react';
 
@@ -153,7 +154,7 @@ const AppCard = ({ app }) => (
   </div>
 );
 
-export default function TravelAppsSection() {
+export default function TravelAppsSection({ onUpgrade }) {
   return (
     <section className="py-12 bg-gradient-to-b from-white to-slate-50">
       <div className="max-w-4xl mx-auto px-6">
@@ -175,51 +176,58 @@ export default function TravelAppsSection() {
           </p>
         </motion.div>
 
-        <div className="space-y-8">
-          {ESSENTIAL_APPS.map((category, catIndex) => (
-            <motion.div
-              key={category.category}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: catIndex * 0.1 }}
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-${category.color}-100`}>
-                  <category.icon className={`w-5 h-5 text-${category.color}-600`} />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900">{category.category}</h3>
-              </div>
-              <div className="grid md:grid-cols-2 gap-4">
-                {category.apps.map((app, appIndex) => (
-                  <AppCard key={appIndex} app={app} />
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-8 p-6 bg-gradient-to-r from-[#E60012]/10 to-amber-50 rounded-2xl border border-[#E60012]/20"
+        <LockedContentWrapper
+          title="Essential Apps for China"
+          description="Get the complete list of must-have apps with detailed setup instructions"
+          onUpgrade={onUpgrade}
+          showHeading={false}
         >
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-[#E60012] rounded-xl flex items-center justify-center flex-shrink-0">
-              <Shield className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-900 mb-2">Pro Tip: Set Up Before You Leave</h4>
-              <ul className="space-y-2 text-sm text-slate-700">
-                <li>• Download a reliable VPN and test it before traveling</li>
-                <li>• Set up WeChat and Alipay with your international bank card</li>
-                <li>• Download offline maps and translation packs</li>
-                <li>• Save important contacts and addresses in Chinese on your phone</li>
-              </ul>
-            </div>
+          <div className="space-y-8">
+            {ESSENTIAL_APPS.map((category, catIndex) => (
+              <motion.div
+                key={category.category}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: catIndex * 0.1 }}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-${category.color}-100`}>
+                    <category.icon className={`w-5 h-5 text-${category.color}-600`} />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900">{category.category}</h3>
+                </div>
+                <div className="grid md:grid-cols-2 gap-4">
+                  {category.apps.map((app, appIndex) => (
+                    <AppCard key={appIndex} app={app} />
+                  ))}
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-8 p-6 bg-gradient-to-r from-[#E60012]/10 to-amber-50 rounded-2xl border border-[#E60012]/20"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-[#E60012] rounded-xl flex items-center justify-center flex-shrink-0">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 mb-2">Pro Tip: Set Up Before You Leave</h4>
+                <ul className="space-y-2 text-sm text-slate-700">
+                  <li>• Download a reliable VPN and test it before traveling</li>
+                  <li>• Set up WeChat and Alipay with your international bank card</li>
+                  <li>• Download offline maps and translation packs</li>
+                  <li>• Save important contacts and addresses in Chinese on your phone</li>
+                </ul>
+              </div>
+            </div>
+          </motion.div>
+        </LockedContentWrapper>
       </div>
     </section>
   );

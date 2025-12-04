@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import { 
-  Calendar, MapPin, Wallet, ArrowLeft, Share2, 
+import {
+  Calendar, MapPin, Wallet, ArrowLeft, Share2,
   Download, Sparkles, DollarSign, Lock, Crown,
   MessageCircle, Phone, FileText, CheckCircle,
   Star, Quote, Globe, Shield, Clock, Users,
@@ -17,9 +17,9 @@ import EmailModal from './EmailModal';
 import AskAIModal from './AskAIModal';
 import { CITY_DATA, getFoodsForPreference } from './cityData';
 import { toast } from "sonner";
-import { 
-  isFreeUser, 
-  getRemainingItineraries, 
+import {
+  isFreeUser,
+  getRemainingItineraries,
   incrementItineraryUsage,
   hasAccess,
   FEATURES,
@@ -73,7 +73,7 @@ const getEffectiveBudgetTier = (formData) => {
 
 const convertAIItinerary = (aiData, formData) => {
   if (!aiData?.itinerary) return [];
-  
+
   const budgetMultipliers = {
     budget: { cost: 50, hotelKey: 'budget' },
     comfort: { cost: 150, hotelKey: 'comfort' },
@@ -81,18 +81,18 @@ const convertAIItinerary = (aiData, formData) => {
   };
   const effectiveBudget = getEffectiveBudgetTier(formData);
   const defaultMultiplier = budgetMultipliers[effectiveBudget] || budgetMultipliers.comfort;
-  
+
   return aiData.itinerary.map((day, index) => {
-    const cityId = formData.cities.find(c => 
+    const cityId = formData.cities.find(c =>
       CITY_DATA[c]?.name === day.city || c === day.city.toLowerCase()
     );
     const cityData = cityId ? CITY_DATA[cityId] : null;
-    
+
     const activities = (day.schedule || []).map(item => {
-      const highlightMatch = cityData?.highlights?.find(h => 
+      const highlightMatch = cityData?.highlights?.find(h =>
         h.name === item.activity || h.nameChinese === item.activityChinese
       );
-      
+
       return highlightMatch || {
         name: item.activity,
         nameChinese: item.activityChinese || '',
@@ -101,11 +101,11 @@ const convertAIItinerary = (aiData, formData) => {
         tips: item.notes,
       };
     });
-    
+
     const selectedAccommodationType = formData.accommodation?.[cityId] || defaultMultiplier.hotelKey;
     const hotel = cityData?.hotels?.[selectedAccommodationType];
     const foods = cityData?.foods?.[formData.food] || cityData?.foods?.anything || [];
-    
+
     return {
       dayNumber: day.day,
       city: day.city,
@@ -137,16 +137,16 @@ const generateDetailedItinerary = (formData) => {
 
   const effectiveBudget = getEffectiveBudgetTier(formData);
   const multiplier = budgetMultipliers[effectiveBudget];
-  
-  const selectedCities = formData.cities.length > 0 
-    ? formData.cities 
+
+  const selectedCities = formData.cities.length > 0
+    ? formData.cities
     : ['beijing', 'shanghai'];
-  
+
   const totalDays = formData.duration;
   const numCities = selectedCities.length;
   const baseDaysPerCity = Math.floor(totalDays / numCities);
   const extraDays = totalDays % numCities;
-  
+
   const itinerary = [];
   let dayCount = 1;
   let prevCityId = null;
@@ -156,12 +156,12 @@ const generateDetailedItinerary = (formData) => {
     if (!cityData) return;
 
     const daysInThisCity = baseDaysPerCity + (cityIndex < extraDays ? 1 : 0);
-    
+
     for (let i = 0; i < daysInThisCity && dayCount <= totalDays; i++) {
       // Get activities for this day (with full details)
       const activityCount = formData.pace === 'intense' ? 3 : formData.pace === 'moderate' ? 2 : 1;
       const dayActivities = [];
-      
+
       for (let j = 0; j < activityCount; j++) {
         const highlightIndex = (i * activityCount + j) % cityData.highlights.length;
         dayActivities.push(cityData.highlights[highlightIndex]);
@@ -215,10 +215,10 @@ const generateDetailedItinerary = (formData) => {
           usd: dailyCost,
         },
       });
-      
+
       dayCount++;
     }
-    
+
     prevCityId = cityId;
   });
 
@@ -239,20 +239,20 @@ export default function ItineraryResult({ formData, onBack }) {
   const [generationError, setGenerationError] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  
-  const hasSelectedPlaces = formData.selectedPlaces && 
+
+  const hasSelectedPlaces = formData.selectedPlaces &&
     Object.values(formData.selectedPlaces).some(places => places?.length > 0);
-  
+
   useEffect(() => {
     checkAuth();
   }, []);
-  
+
   useEffect(() => {
     if (hasSelectedPlaces && !aiItinerary && !isGenerating) {
       generateAIItinerary();
     }
   }, [hasSelectedPlaces]);
-  
+
   const checkAuth = async () => {
     try {
       const userData = await getCurrentUser();
@@ -266,13 +266,13 @@ export default function ItineraryResult({ formData, onBack }) {
       setIsCheckingAuth(false);
     }
   };
-  
+
   const isAuthenticated = currentUser?.user != null;
-  
+
   const generateAIItinerary = async () => {
     setIsGenerating(true);
     setGenerationError(null);
-    
+
     try {
       const response = await fetch('/api/generate-itinerary', {
         method: 'POST',
@@ -289,11 +289,11 @@ export default function ItineraryResult({ formData, onBack }) {
           duration: formData.duration || Object.values(formData.cityDays || {}).reduce((a, b) => a + b, 0)
         })
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to generate itinerary');
       }
-      
+
       const data = await response.json();
       setAiItinerary(data.itinerary);
     } catch (error) {
@@ -304,11 +304,11 @@ export default function ItineraryResult({ formData, onBack }) {
       setIsGenerating(false);
     }
   };
-  
-  const itinerary = hasSelectedPlaces && aiItinerary?.itinerary 
+
+  const itinerary = hasSelectedPlaces && aiItinerary?.itinerary
     ? convertAIItinerary(aiItinerary, formData)
     : generateDetailedItinerary(formData);
-  
+
   const totalCostUSD = itinerary.reduce((sum, day) => sum + (day.cost?.usd || 0), 0);
   const totalCostRMB = itinerary.reduce((sum, day) => sum + (day.cost?.rmb || 0), 0);
   const cityNames = [...new Set(itinerary.map(d => d.city))];
@@ -316,14 +316,14 @@ export default function ItineraryResult({ formData, onBack }) {
   useEffect(() => {
     const savedItineraries = JSON.parse(localStorage.getItem('itineraries') || '[]');
     const isAlreadySaved = savedItineraries.some(
-      i => i.duration === formData.duration && 
-           JSON.stringify(i.cities) === JSON.stringify(formData.cities)
+      i => i.duration === formData.duration &&
+        JSON.stringify(i.cities) === JSON.stringify(formData.cities)
     );
     setIsSaved(isAlreadySaved);
   }, [formData]);
 
   const [isSaving, setIsSaving] = useState(false);
-  
+
   const handleSaveItinerary = async (openModalAfter = null) => {
     if (!isAuthenticated) {
       toast.info('Please sign in to save your itinerary');
@@ -335,13 +335,13 @@ export default function ItineraryResult({ formData, onBack }) {
       router.push('/signup?redirect=itinerary');
       return null;
     }
-    
+
     if (isSaved && savedItineraryId) {
       if (openModalAfter === 'share') setShowShareModal(true);
       if (openModalAfter === 'email') setShowEmailModal(true);
       return savedItineraryId;
     }
-    
+
     const userPlan = currentUser?.profile?.plan || 'free';
     if (isFreeUser(userPlan)) {
       const remaining = getRemainingItineraries();
@@ -351,7 +351,7 @@ export default function ItineraryResult({ formData, onBack }) {
         return null;
       }
     }
-    
+
     setIsSaving(true);
     try {
       const savedData = await saveItinerary(currentUser.user.id, {
@@ -364,15 +364,15 @@ export default function ItineraryResult({ formData, onBack }) {
         itinerary: itinerary,
         selectedPlaces: formData.selectedPlaces
       });
-      
+
       setSavedItineraryId(savedData.id);
       incrementItineraryUsage();
       setIsSaved(true);
       toast.success('Itinerary saved to your dashboard!');
-      
+
       if (openModalAfter === 'share') setShowShareModal(true);
       if (openModalAfter === 'email') setShowEmailModal(true);
-      
+
       return savedData.id;
     } catch (error) {
       console.error('Error saving itinerary:', error);
@@ -382,7 +382,7 @@ export default function ItineraryResult({ formData, onBack }) {
       setIsSaving(false);
     }
   };
-  
+
   const handleShareClick = async () => {
     if (!isAuthenticated) {
       toast.info('Please sign in to share your itinerary');
@@ -401,7 +401,7 @@ export default function ItineraryResult({ formData, onBack }) {
     }
     setShowShareModal(true);
   };
-  
+
   const handleEmailClick = async () => {
     if (!isAuthenticated) {
       toast.info('Please sign in to email your itinerary');
@@ -420,7 +420,7 @@ export default function ItineraryResult({ formData, onBack }) {
     }
     setShowEmailModal(true);
   };
-  
+
   const handleUpgradeClick = () => {
     if (!isAuthenticated) {
       toast.info('Please sign in first to purchase a membership');
@@ -497,20 +497,19 @@ export default function ItineraryResult({ formData, onBack }) {
           </Button>
           <div className="flex items-center gap-2">
             {purchasedPlan && (
-              <Badge className={`${
-                purchasedPlan === 'lifetime' || purchasedPlan === 'elite'
-                  ? 'bg-amber-100 text-amber-800' 
-                  : purchasedPlan === 'pro' 
-                  ? 'bg-green-100 text-green-800' 
+              <Badge className={`${purchasedPlan === 'lifetime' || purchasedPlan === 'elite'
+                ? 'bg-amber-100 text-amber-800'
+                : purchasedPlan === 'pro'
+                  ? 'bg-green-100 text-green-800'
                   : 'bg-slate-100 text-slate-600'
-              }`}>
+                }`}>
                 <CheckCircle className="w-3 h-3 mr-1" />
                 {purchasedPlan === 'lifetime' || purchasedPlan === 'elite' ? 'Elite' : purchasedPlan === 'pro' ? 'Pro' : 'Free'} Unlocked
               </Badge>
             )}
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className={isSaved ? "text-green-600 border-green-600" : "text-slate-600"}
               onClick={() => handleSaveItinerary()}
               disabled={isSaving}
@@ -532,34 +531,35 @@ export default function ItineraryResult({ formData, onBack }) {
                 </>
               )}
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="text-slate-600"
               onClick={handleShareClick}
             >
               <Share2 className="w-4 h-4 mr-2" />
               Share
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="text-slate-600"
               onClick={handleEmailClick}
             >
               <Mail className="w-4 h-4 mr-2" />
               Email
             </Button>
-            {isPremium && (
-              <Button 
-                size="sm" 
-                className="bg-gradient-to-r from-[#E60012] to-red-600 text-white"
-                onClick={() => setShowAskAI(true)}
-              >
-                <Bot className="w-4 h-4 mr-2" />
-                Ask AI
-              </Button>
-            )}
+            <Button
+              size="sm"
+              className={isPremium
+                ? "bg-gradient-to-r from-[#E60012] to-red-600 text-white"
+                : "bg-slate-200 text-slate-600 hover:bg-slate-300"}
+              onClick={() => isPremium ? setShowAskAI(true) : handleUpgradeClick()}
+            >
+              {!isPremium && <Lock className="w-3 h-3 mr-1" />}
+              <Bot className="w-4 h-4 mr-2" />
+              Ask AI
+            </Button>
           </div>
         </div>
       </div>
@@ -607,13 +607,12 @@ export default function ItineraryResult({ formData, onBack }) {
           {(() => {
             const tier = getEffectiveBudgetTier(formData);
             return (
-              <Badge className={`px-4 py-2 text-sm ${
-                tier === 'luxury' 
-                  ? 'bg-gradient-to-r from-[#FFD700] to-amber-400 text-amber-900'
-                  : tier === 'comfort'
+              <Badge className={`px-4 py-2 text-sm ${tier === 'luxury'
+                ? 'bg-gradient-to-r from-[#FFD700] to-amber-400 text-amber-900'
+                : tier === 'comfort'
                   ? 'bg-blue-100 text-blue-800'
                   : 'bg-green-100 text-green-800'
-              }`}>
+                }`}>
                 {tier === 'luxury' && '✨ '}
                 {tier.charAt(0).toUpperCase() + tier.slice(1)} Trip
               </Badge>
@@ -644,7 +643,7 @@ export default function ItineraryResult({ formData, onBack }) {
                 </div>
               </div>
               <div className="flex gap-3">
-                <Button 
+                <Button
                   onClick={handleUpgradeClick}
                   className="bg-[#E60012] hover:bg-[#cc0010] text-white"
                 >
@@ -653,7 +652,7 @@ export default function ItineraryResult({ formData, onBack }) {
                 </Button>
               </div>
             </div>
-            
+
             {/* Feature preview */}
             <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="flex items-center gap-2 text-sm text-slate-600">
@@ -695,7 +694,7 @@ export default function ItineraryResult({ formData, onBack }) {
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-lg">
                 <svg className="w-5 h-5 text-green-400" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c4.8 0 8.691-3.288 8.691-7.343 0-4.053-3.891-7.34-8.691-7.34"/>
+                  <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c4.8 0 8.691-3.288 8.691-7.343 0-4.053-3.891-7.34-8.691-7.34" />
                 </svg>
                 <div>
                   <p className="text-xs text-green-400">WeChat</p>
@@ -704,7 +703,7 @@ export default function ItineraryResult({ formData, onBack }) {
               </div>
               <div className="flex items-center gap-2 bg-blue-500/20 px-4 py-2 rounded-lg">
                 <svg className="w-5 h-5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                 </svg>
                 <div>
                   <p className="text-xs text-blue-400">WhatsApp</p>
@@ -751,9 +750,9 @@ export default function ItineraryResult({ formData, onBack }) {
         {/* Timeline */}
         <div className="relative">
           {itinerary.map((day, index) => (
-            <DetailedDayCard 
-              key={day.dayNumber} 
-              day={day} 
+            <DetailedDayCard
+              key={day.dayNumber}
+              day={day}
               isLast={index === itinerary.length - 1}
               isPremium={hasFullAccess}
               onUpgrade={handleUpgradeClick}
@@ -784,7 +783,7 @@ export default function ItineraryResult({ formData, onBack }) {
             transition={{ delay: 0.6 }}
             className="mt-8 text-center"
           >
-            <Button 
+            <Button
               onClick={handleUpgradeClick}
               size="lg"
               className="bg-[#E60012] hover:bg-[#cc0010] text-white px-10 py-6 text-lg rounded-xl"
@@ -809,7 +808,7 @@ export default function ItineraryResult({ formData, onBack }) {
             <h3 className="text-2xl font-bold text-slate-900 mb-2">What Travelers Say</h3>
             <p className="text-slate-600">Real experiences from travelers who explored China with us</p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-6">
             {TESTIMONIALS.map((testimonial, index) => (
               <motion.div
@@ -836,13 +835,13 @@ export default function ItineraryResult({ formData, onBack }) {
         </motion.div>
 
         {/* Travel Apps Section */}
-        <TravelAppsSection />
+        <TravelAppsSection onUpgrade={handleUpgradeClick} />
 
         {/* What to Bring Section */}
-        <WhatToBringSection />
+        <WhatToBringSection onUpgrade={handleUpgradeClick} />
 
         {/* FAQ Section */}
-        <FAQSection />
+        <FAQSection onUpgrade={handleUpgradeClick} />
 
         {/* Trust Indicators */}
         <motion.div
@@ -894,14 +893,14 @@ export default function ItineraryResult({ formData, onBack }) {
           <div className="flex items-center justify-center gap-6">
             <span className="flex items-center gap-2">
               <svg className="w-4 h-4 text-green-500" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c4.8 0 8.691-3.288 8.691-7.343 0-4.053-3.891-7.34-8.691-7.34"/>
+                <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c4.8 0 8.691-3.288 8.691-7.343 0-4.053-3.891-7.34-8.691-7.34" />
               </svg>
               WeChat: <strong>{CONTACT_INFO.wechat}</strong>
             </span>
             <span className="text-slate-300">|</span>
             <span className="flex items-center gap-2">
               <svg className="w-4 h-4 text-green-500" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
               </svg>
               WhatsApp: <strong>{CONTACT_INFO.whatsapp}</strong>
             </span>
@@ -910,7 +909,7 @@ export default function ItineraryResult({ formData, onBack }) {
       </div>
 
       {/* Paywall Modal */}
-      <PaywallModal 
+      <PaywallModal
         isOpen={showPaywall}
         onClose={() => setShowPaywall(false)}
         onPurchase={handlePurchase}
@@ -943,18 +942,20 @@ export default function ItineraryResult({ formData, onBack }) {
         isPremium={isPremium}
       />
 
-      {/* Floating Ask AI Button for Premium Users */}
-      {isPremium && (
-        <motion.button
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          whileHover={{ scale: 1.1 }}
-          onClick={() => setShowAskAI(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-[#E60012] to-red-600 rounded-full shadow-lg shadow-red-500/30 flex items-center justify-center text-white z-50"
-        >
-          <Bot className="w-6 h-6" />
-        </motion.button>
-      )}
+      {/* Floating Ask AI Button - Shows for all users */}
+      <motion.button
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        whileHover={{ scale: 1.1 }}
+        onClick={() => isPremium ? setShowAskAI(true) : handleUpgradeClick()}
+        className={`fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg flex items-center justify-center z-50 ${isPremium
+            ? 'bg-gradient-to-r from-[#E60012] to-red-600 shadow-red-500/30 text-white'
+            : 'bg-slate-700 shadow-slate-500/30 text-white'
+          }`}
+      >
+        {!isPremium && <Lock className="w-3 h-3 absolute top-2 right-2" />}
+        <Bot className="w-6 h-6" />
+      </motion.button>
     </div>
   );
 }
