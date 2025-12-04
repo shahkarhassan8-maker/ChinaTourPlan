@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS itineraries (
   food_preference TEXT,
   accommodation JSONB,
   itinerary_data JSONB,
+  selected_places JSONB,
+  is_public BOOLEAN DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -74,8 +76,13 @@ CREATE POLICY "Users can insert own profile" ON profiles
   FOR INSERT WITH CHECK (auth.uid() = id);
 
 -- Itineraries policies
+-- Allow owners to view their itineraries
 CREATE POLICY "Users can view own itineraries" ON itineraries
   FOR SELECT USING (auth.uid() = user_id);
+
+-- Allow anyone to view PUBLIC itineraries (for sharing)
+CREATE POLICY "Anyone can view public itineraries" ON itineraries
+  FOR SELECT USING (is_public = true);
 
 CREATE POLICY "Users can insert own itineraries" ON itineraries
   FOR INSERT WITH CHECK (auth.uid() = user_id);
