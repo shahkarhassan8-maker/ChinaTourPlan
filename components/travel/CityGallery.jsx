@@ -46,10 +46,10 @@ const CITY_GALLERY_DATA = {
     description: 'Ancient Silk Road starting point with the world-famous Terracotta Warriors. The ancient city wall is one of the best preserved in China.',
     specialties: ['Terracotta Warriors', 'City Wall Cycling', 'Muslim Quarter', 'Biangbiang Noodles', 'Roujiamo'],
     images: [
-      'https://images.unsplash.com/photo-1591177142854-7e0e9f14c30d?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1523976105517-cffe0bcc0daa?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1576224939239-ee62a2ce4510?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1545127398-14699f92334b?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1569839333583-7375336cde4b?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1603202662747-00e33e7d1468?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1590417975119-a25ec920c7bf?w=800&q=80&auto=format&fit=crop',
     ]
   },
   guilin: {
@@ -70,10 +70,10 @@ const CITY_GALLERY_DATA = {
     description: 'Paradise on Earth with the legendary West Lake. Famous for Longjing tea, silk, and the stunning Lingyin Temple.',
     specialties: ['West Lake Boat Ride', 'Longjing Tea Plantation', 'Lingyin Temple', 'Hefang Street', 'Leifeng Pagoda'],
     images: [
-      'https://images.unsplash.com/photo-1598887142623-38433d3ed3e4?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1590559899731-a382839e5549?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1544985361-b420d7a77043?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1592461871088-cda11af48f22?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1591206369811-8e8f0f44aa16?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1584466977773-e625c37cdd50?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1517309230475-6736d926b979?w=800&q=80&auto=format&fit=crop',
     ]
   },
   zhangjiajie: {
