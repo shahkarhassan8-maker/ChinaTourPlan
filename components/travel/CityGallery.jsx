@@ -217,74 +217,84 @@ export default function CityGallery() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+              className="fixed inset-0 bg-black/95 z-50 flex flex-col items-center justify-center p-2 md:p-4"
               onClick={closeGallery}
             >
+              {/* Close button - always visible at top right */}
+              <button
+                onClick={closeGallery}
+                className="absolute top-4 right-4 z-10 p-2 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="relative max-w-4xl w-full"
+                className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
               >
-                <button
-                  onClick={closeGallery}
-                  className="absolute -top-12 right-0 p-2 text-white hover:text-white/80"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-
-                <div className="relative aspect-video rounded-2xl overflow-hidden">
+                {/* Image container */}
+                <div className="relative aspect-[4/3] md:aspect-video rounded-xl md:rounded-2xl overflow-hidden">
                   <ImageWithFallback
                     src={CITY_GALLERY_DATA[selectedCity].images[currentImageIndex]}
                     alt={CITY_GALLERY_DATA[selectedCity].name}
                     className="w-full h-full object-cover"
                   />
                   
+                  {/* Navigation buttons - smaller on mobile */}
                   <button
-                    onClick={prevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 rounded-full text-white transition-colors"
+                    onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                    className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-black/50 hover:bg-black/70 active:bg-black/80 rounded-full text-white transition-colors"
                   >
-                    <ChevronLeft className="w-6 h-6" />
+                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
                   </button>
                   
                   <button
-                    onClick={nextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 rounded-full text-white transition-colors"
+                    onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                    className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-black/50 hover:bg-black/70 active:bg-black/80 rounded-full text-white transition-colors"
                   >
-                    <ChevronRight className="w-6 h-6" />
+                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
                   </button>
+                </div>
 
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <div className="bg-black/60 backdrop-blur-sm rounded-xl p-4 text-white">
-                      <div className="flex items-center gap-2 mb-2">
-                        <MapPin className="w-5 h-5 text-[#E60012]" />
-                        <h3 className="font-bold text-xl">{CITY_GALLERY_DATA[selectedCity].name}</h3>
-                        <span className="text-[#FFD700]">{CITY_GALLERY_DATA[selectedCity].nameChinese}</span>
-                      </div>
-                      <p className="text-white/80 text-sm mb-3">
-                        {CITY_GALLERY_DATA[selectedCity].description}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {CITY_GALLERY_DATA[selectedCity].specialties.map((specialty, i) => (
-                          <span
-                            key={i}
-                            className="px-3 py-1 bg-white/20 rounded-full text-xs"
-                          >
-                            {specialty}
-                          </span>
-                        ))}
-                      </div>
+                {/* City info - below image on mobile for better touch */}
+                <div className="mt-3 md:mt-0 md:absolute md:bottom-4 md:left-4 md:right-4">
+                  <div className="bg-black/80 md:bg-black/60 backdrop-blur-sm rounded-xl p-3 md:p-4 text-white">
+                    <div className="flex items-center gap-2 mb-2">
+                      <MapPin className="w-4 h-4 md:w-5 md:h-5 text-[#E60012] flex-shrink-0" />
+                      <h3 className="font-bold text-lg md:text-xl">{CITY_GALLERY_DATA[selectedCity].name}</h3>
+                      <span className="text-[#FFD700] text-sm md:text-base">{CITY_GALLERY_DATA[selectedCity].nameChinese}</span>
+                    </div>
+                    <p className="text-white/80 text-xs md:text-sm mb-3 line-clamp-2 md:line-clamp-none">
+                      {CITY_GALLERY_DATA[selectedCity].description}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5 md:gap-2">
+                      {CITY_GALLERY_DATA[selectedCity].specialties.slice(0, 4).map((specialty, i) => (
+                        <span
+                          key={i}
+                          className="px-2 md:px-3 py-1 bg-white/20 rounded-full text-xs"
+                        >
+                          {specialty}
+                        </span>
+                      ))}
+                      {CITY_GALLERY_DATA[selectedCity].specialties.length > 4 && (
+                        <span className="px-2 py-1 text-white/60 text-xs">
+                          +{CITY_GALLERY_DATA[selectedCity].specialties.length - 4} more
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
 
+                {/* Image indicators */}
                 <div className="flex justify-center gap-2 mt-4">
                   {CITY_GALLERY_DATA[selectedCity].images.map((_, i) => (
                     <button
                       key={i}
-                      onClick={() => setCurrentImageIndex(i)}
-                      className={`w-2 h-2 rounded-full transition-colors ${
+                      onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(i); }}
+                      className={`w-2.5 h-2.5 md:w-2 md:h-2 rounded-full transition-colors ${
                         i === currentImageIndex ? 'bg-white' : 'bg-white/40'
                       }`}
                     />

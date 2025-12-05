@@ -19,7 +19,7 @@ const STEPS = [
   { id: 'pace', title: 'Travel Pace', icon: Gauge, description: 'How do you like to travel? This helps us recommend days per city' },
   { id: 'cities', title: 'Destinations', icon: MapPin, description: 'Select your dream destinations (pick multiple!)' },
   { id: 'cityDays', title: 'Days per City', icon: Calendar, description: 'See our recommendations and customize your stay' },
-  { id: 'places', title: 'Places to Visit', icon: Camera, description: 'Select attractions you want to see' },
+  { id: 'places', title: 'Places to Visit', icon: Camera, description: 'Optional: Select specific attractions or skip to let AI choose for you' },
   { id: 'hotelQuality', title: 'Hotel Quality', icon: Bed, description: 'What type of accommodation do you prefer?' },
   { id: 'food', title: 'Food Preferences', icon: Utensils, description: 'Any dietary preferences?' },
 ];
@@ -147,15 +147,8 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
       const allocatedDays = Object.values(formData.cityDays).reduce((sum, d) => sum + d, 0);
       if (allocatedDays === 0) return false;
     }
-    // Step 3: Places - need at least one place selected
-    // Step 3: Places - need at least one place selected PER CITY
-    if (currentStep === 3) {
-      // Check that EVERY selected city has at least one place
-      const allCitiesHavePlaces = formData.cities.every(cityId =>
-        formData.selectedPlaces[cityId]?.length > 0
-      );
-      if (!allCitiesHavePlaces) return false;
-    }
+    // Step 3: Places - OPTIONAL - AI will select if user doesn't choose any
+    // Users can skip or select specific attractions
     return true;
   };
 
@@ -243,8 +236,34 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
               </div>
             </div>
 
-            {/* Cities Grid */}
-            <div className="grid grid-cols-2 gap-3 max-h-[320px] overflow-y-auto pr-1">
+            {/* Cities - Horizontal scroll on mobile, Grid on desktop */}
+            <div className="md:hidden">
+              <div className="flex gap-3 overflow-x-auto pb-3 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
+                {filteredCities.map((city) => (
+                  <button
+                    key={city.id}
+                    onClick={() => toggleCity(city.id)}
+                    className={`relative flex-shrink-0 w-[140px] p-4 rounded-xl border-2 transition-all duration-300 text-left snap-start ${formData.cities.includes(city.id)
+                      ? 'border-[#E60012] bg-red-50/50'
+                      : 'border-slate-200 bg-white active:bg-slate-50'
+                      }`}
+                  >
+                    {formData.cities.includes(city.id) && (
+                      <div className="absolute top-2 right-2 w-5 h-5 bg-[#E60012] rounded-full flex items-center justify-center">
+                        <Check className="w-3 h-3 text-white" />
+                      </div>
+                    )}
+                    <div className="text-2xl mb-2">{city.emoji}</div>
+                    <div className="font-semibold text-slate-900 text-sm">{city.name}</div>
+                    <div className="text-xs text-slate-500 line-clamp-1">{city.tag}</div>
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-slate-400 mt-1 text-center">Swipe to see more destinations</p>
+            </div>
+            
+            {/* Desktop Grid */}
+            <div className="hidden md:grid grid-cols-2 gap-3 max-h-[320px] overflow-y-auto pr-1">
               {filteredCities.map((city) => (
                 <button
                   key={city.id}
@@ -281,7 +300,14 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
       case 3: // Places
         return (
           <div className="space-y-4">
-            <div className="flex gap-2 overflow-x-auto pb-2">
+            {/* Optional notice */}
+            <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-2">
+              <p className="text-sm text-blue-700">
+                <span className="font-medium">Tip:</span> This step is optional. Skip to let AI suggest the best attractions, or select specific places you want to visit.
+              </p>
+            </div>
+            
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               {formData.cities.map((cityId) => {
                 const city = CITY_DATA[cityId];
                 const placesCount = formData.selectedPlaces[cityId]?.length || 0;
@@ -289,7 +315,7 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
                   <button
                     key={cityId}
                     onClick={() => setActivePlacesCity(cityId)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all ${activePlacesCity === cityId
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all flex-shrink-0 ${activePlacesCity === cityId
                       ? 'bg-[#E60012] text-white'
                       : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'
                       }`}
