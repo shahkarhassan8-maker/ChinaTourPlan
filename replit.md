@@ -29,6 +29,21 @@ The application is built with Next.js 14.0.0, utilizing JavaScript/JSX and style
 - Share and Email modals now generate links to saved itinerary pages
 - Pending itinerary flow: stores itinerary when user signs up/in and redirects to saved itinerary
 
+### December 5, 2024
+**Mobile UX Improvements:**
+- Made attractions selection optional in the wizard - users can skip and AI will select best attractions
+- Added horizontal scrolling carousel for city selection on mobile with snap scrolling
+- Fixed logo display using container div with fill prop for proper sizing
+- Improved gallery modal for mobile: better touch targets, city info below image, visible close button
+- Added "Swipe to see more destinations" hint on mobile city selection
+- Added tip message explaining attractions step is optional
+
+**Authentication Fixes:**
+- Fixed SSR crashes by moving localStorage access to useEffect with proper guards
+- Added auth state listener in _app.js for global session tracking
+- Improved auth state sync between localStorage and Supabase session
+- Fixed redirect flow after login to return users to intended destination
+
 ### December 4, 2024
 **Performance Optimizations:**
 - Optimized HeroSection LCP by removing animation delays on critical text elements
