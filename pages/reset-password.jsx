@@ -155,6 +155,7 @@ export default function ResetPasswordPage() {
                   className="pl-11 pr-11"
                   required
                   minLength={6}
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"
@@ -180,6 +181,7 @@ export default function ResetPasswordPage() {
                   className="pl-11"
                   required
                   minLength={6}
+                  autoComplete="new-password"
                 />
               </div>
             </div>

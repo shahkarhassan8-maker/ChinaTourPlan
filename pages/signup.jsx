@@ -335,6 +335,7 @@ export default function SignupPage() {
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="pl-11"
                       required
+                      autoComplete="email"
                     />
                   </div>
                 </div>
@@ -413,6 +414,7 @@ export default function SignupPage() {
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="pl-11"
                       required
+                      autoComplete="email"
                     />
                   </div>
                 </div>
@@ -431,6 +433,7 @@ export default function SignupPage() {
                       className="pl-11 pr-11"
                       required
                       minLength={6}
+                      autoComplete={isLogin ? "current-password" : "new-password"}
                     />
                     <button
                       type="button"
