@@ -15,13 +15,42 @@ export default function Navbar() {
       setScrolled(window.scrollY > 50);
     };
 
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const checkUser = () => {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          const userData = JSON.parse(storedUser);
+          if (userData.id) {
+            setUser(userData);
+          } else {
+            setUser(null);
+          }
+        } catch (e) {
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    };
+
+    checkUser();
+
+    const handleStorageChange = (e) => {
+      if (e.key === 'user') {
+        checkUser();
+      }
+    };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('storage', handleStorageChange);
+    
+    const intervalId = setInterval(checkUser, 1000);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(intervalId);
+    };
   }, []);
 
   return (

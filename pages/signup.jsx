@@ -145,17 +145,22 @@ export default function SignupPage() {
               return;
             }
           }
+          
+          if (redirectPath === 'planning') {
+            window.location.href = '/?startPlanning=true';
+            return;
+          } else if (redirectPath && redirectPath !== '/') {
+            window.location.href = redirectPath;
+            return;
+          }
         } else {
-          // Sign up new user
           const { user } = await signUp(formData.email, formData.password, formData.name);
 
-          // Don't auto-login - user must verify email first
           setLoading(false);
           toast.success('Account created! Please check your email to verify your account before signing in.', {
             duration: 10000,
           });
 
-          // Show success message and switch to login form
           setFormData({ name: '', email: formData.email, password: '' });
           setIsLogin(true);
           return;

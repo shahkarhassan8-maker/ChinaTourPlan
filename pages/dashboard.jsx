@@ -130,35 +130,56 @@ export default function DashboardPage() {
   const loadUserData = async () => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      const userData = JSON.parse(storedUser);
-      setUser(userData);
-
-      if (supabase && userData.id) {
-        try {
-          const dbItineraries = await getUserItineraries(userData.id);
-          if (dbItineraries && dbItineraries.length > 0) {
-            const formattedItineraries = dbItineraries.map(it => ({
-              id: it.id,
-              title: it.title,
-              cities: it.cities,
-              duration: it.duration,
-              createdAt: it.created_at,
-              pace: it.pace,
-              itineraryData: it.itinerary_data,
-              selectedPlaces: it.selected_places
-            }));
-            setItineraries(formattedItineraries);
-            setIsLoading(false);
-            return;
-          }
-        } catch (error) {
-          console.log('Supabase not configured, using local storage');
+      try {
+        const userData = JSON.parse(storedUser);
+        
+        if (!userData.id) {
+          setIsLoading(false);
+          return;
         }
-      }
+        
+        setUser(userData);
 
-      const storedItineraries = localStorage.getItem('itineraries');
-      if (storedItineraries) {
-        setItineraries(JSON.parse(storedItineraries));
+        if (supabase && userData.id) {
+          try {
+            const { data: profile } = await supabase.from('profiles')
+              .select('*')
+              .eq('id', userData.id)
+              .single();
+            
+            if (profile && profile.plan !== userData.plan) {
+              const updatedUser = { ...userData, plan: profile.plan };
+              localStorage.setItem('user', JSON.stringify(updatedUser));
+              setUser(updatedUser);
+            }
+            
+            const dbItineraries = await getUserItineraries(userData.id);
+            if (dbItineraries && dbItineraries.length > 0) {
+              const formattedItineraries = dbItineraries.map(it => ({
+                id: it.id,
+                title: it.title,
+                cities: it.cities,
+                duration: it.duration,
+                createdAt: it.created_at,
+                pace: it.pace,
+                itineraryData: it.itinerary_data,
+                selectedPlaces: it.selected_places
+              }));
+              setItineraries(formattedItineraries);
+              setIsLoading(false);
+              return;
+            }
+          } catch (error) {
+            console.log('Error loading from Supabase:', error);
+          }
+        }
+
+        const storedItineraries = localStorage.getItem('itineraries');
+        if (storedItineraries) {
+          setItineraries(JSON.parse(storedItineraries));
+        }
+      } catch (e) {
+        console.error('Error parsing user data:', e);
       }
     }
     setIsLoading(false);

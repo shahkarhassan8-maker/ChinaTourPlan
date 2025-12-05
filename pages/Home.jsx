@@ -28,26 +28,77 @@ export default function Home() {
     if (storedReviews) {
       setUserReviews(JSON.parse(storedReviews));
     }
-  }, []);
+    
+    if (router.query.startPlanning === 'true') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          const localUser = JSON.parse(storedUser);
+          if (localUser.id) {
+            setIsWizardOpen(true);
+            router.replace('/', undefined, { shallow: true });
+          }
+        } catch (e) {
+          console.error('Error auto-opening wizard:', e);
+        }
+      }
+    }
+  }, [router.query.startPlanning]);
 
   const checkAuth = async () => {
     try {
       const userData = await getCurrentUser();
       console.log('Auth check result:', userData);
-      setCurrentUser(userData);
+      
+      if (userData?.user) {
+        setCurrentUser(userData);
+      } else {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          try {
+            const localUser = JSON.parse(storedUser);
+            if (localUser.id) {
+              setCurrentUser({ user: localUser, profile: localUser });
+            }
+          } catch (e) {
+            console.error('Error parsing stored user:', e);
+          }
+        }
+      }
     } catch (error) {
       console.error('Error checking auth:', error);
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          const localUser = JSON.parse(storedUser);
+          if (localUser.id) {
+            setCurrentUser({ user: localUser, profile: localUser });
+          }
+        } catch (e) {
+          console.error('Error parsing stored user:', e);
+        }
+      }
     } finally {
       setIsCheckingAuth(false);
     }
   };
 
   const handleStartPlanning = () => {
-    // getCurrentUser returns { user, profile } or null
-    // We need to check if user object exists
-    if (!currentUser || !currentUser.user) {
+    const storedUser = localStorage.getItem('user');
+    let isAuthenticated = currentUser?.user != null;
+    
+    if (!isAuthenticated && storedUser) {
+      try {
+        const localUser = JSON.parse(storedUser);
+        isAuthenticated = !!localUser.id;
+      } catch (e) {
+        isAuthenticated = false;
+      }
+    }
+    
+    if (!isAuthenticated) {
       toast.info('Please sign in to start planning your trip');
-      router.push('/signup?redirect=/');
+      router.push('/signup?redirect=planning');
       return;
     }
     setIsWizardOpen(true);

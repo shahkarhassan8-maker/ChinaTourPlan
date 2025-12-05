@@ -260,18 +260,76 @@ export default function ItineraryResult({ formData, onBack }) {
   const checkAuth = async () => {
     try {
       const userData = await getCurrentUser();
-      setCurrentUser(userData);
-      if (userData?.profile?.plan) {
-        setPurchasedPlan(userData.profile.plan === 'free' ? null : userData.profile.plan);
+      
+      if (userData?.user) {
+        setCurrentUser(userData);
+        if (userData.profile?.plan) {
+          setPurchasedPlan(userData.profile.plan === 'free' ? null : userData.profile.plan);
+        }
+      } else {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          try {
+            const localUser = JSON.parse(storedUser);
+            if (localUser.id) {
+              setCurrentUser({ user: localUser, profile: localUser });
+              if (localUser.plan && localUser.plan !== 'free') {
+                setPurchasedPlan(localUser.plan);
+              }
+            }
+          } catch (e) {
+            console.error('Error parsing stored user:', e);
+          }
+        }
       }
     } catch (error) {
       console.error('Error checking auth:', error);
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          const localUser = JSON.parse(storedUser);
+          if (localUser.id) {
+            setCurrentUser({ user: localUser, profile: localUser });
+            if (localUser.plan && localUser.plan !== 'free') {
+              setPurchasedPlan(localUser.plan);
+            }
+          }
+        } catch (e) {
+          console.error('Error parsing stored user:', e);
+        }
+      }
     } finally {
       setIsCheckingAuth(false);
     }
   };
 
-  const isAuthenticated = currentUser?.user != null;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkAuthenticated = () => {
+      if (currentUser?.user != null) {
+        setIsAuthenticated(true);
+        return;
+      }
+      
+      if (typeof window !== 'undefined') {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          try {
+            const localUser = JSON.parse(storedUser);
+            setIsAuthenticated(!!localUser.id);
+            return;
+          } catch (e) {
+            setIsAuthenticated(false);
+            return;
+          }
+        }
+      }
+      setIsAuthenticated(false);
+    };
+    
+    checkAuthenticated();
+  }, [currentUser]);
 
   const generateAIItinerary = async () => {
     setIsGenerating(true);
@@ -346,7 +404,28 @@ export default function ItineraryResult({ formData, onBack }) {
       return savedItineraryId;
     }
 
-    const userPlan = currentUser?.profile?.plan || 'free';
+    let userId = currentUser?.user?.id;
+    let userPlan = currentUser?.profile?.plan || 'free';
+    
+    if (!userId && typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          const localUser = JSON.parse(storedUser);
+          userId = localUser.id;
+          userPlan = localUser.plan || 'free';
+        } catch (e) {
+          console.error('Error getting user ID from localStorage:', e);
+        }
+      }
+    }
+    
+    if (!userId) {
+      toast.error('Unable to save. Please sign in again.');
+      router.push('/signup?redirect=itinerary');
+      return null;
+    }
+    
     if (isFreeUser(userPlan)) {
       const remaining = getRemainingItineraries();
       if (remaining <= 0) {
@@ -358,7 +437,7 @@ export default function ItineraryResult({ formData, onBack }) {
 
     setIsSaving(true);
     try {
-      const savedData = await saveItinerary(currentUser.user.id, {
+      const savedData = await saveItinerary(userId, {
         title: `${formData.duration} Days in China`,
         cities: cityNames,
         duration: formData.duration,
