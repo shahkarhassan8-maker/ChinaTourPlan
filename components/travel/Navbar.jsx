@@ -65,20 +65,18 @@ export default function Navbar() {
     >
       <div className="max-w-6xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 md:gap-3">
-            <div className="w-10 h-10 md:w-12 md:h-12 relative flex-shrink-0 rounded-xl overflow-hidden">
+          <Link href="/" className="flex items-center">
+            <div className="relative flex-shrink-0">
               <Image
                 src="/logo.jpg"
                 alt="ChinaTourPlan Logo"
-                fill
+                width={160}
+                height={60}
                 priority
-                className="object-cover"
-                sizes="(max-width: 768px) 40px, 48px"
+                className="object-contain"
+                style={{ width: 'auto', height: '55px' }}
               />
             </div>
-            <span className={`font-bold text-xl md:text-2xl tracking-tight ${scrolled ? 'text-slate-900' : 'text-slate-900'}`}>
-              ChinaTourPlan
-            </span>
           </Link>
 
           <div className="hidden md:flex items-center gap-6">
