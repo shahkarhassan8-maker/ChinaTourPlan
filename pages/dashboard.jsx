@@ -502,12 +502,111 @@ export default function DashboardPage() {
           </motion.div>
         </div>
 
-        {/* Pricing Plans Section - Always Visible */}
+        {/* Itineraries Section - Now Above Plans */}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">Your Itineraries</h2>
+          <Link href="/">
+            <Button className="bg-[#E60012] hover:bg-[#cc0010] text-white">
+              <Plus className="w-4 h-4 mr-2" />
+              New Itinerary
+            </Button>
+          </Link>
+        </div>
+
+        {itineraries.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-16 bg-white rounded-2xl border border-slate-200"
+          >
+            <MapPin className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">No itineraries yet</h3>
+            <p className="text-slate-600 mb-6">Start planning your China adventure!</p>
+            <Link href="/">
+              <Button className="bg-[#E60012] hover:bg-[#cc0010] text-white">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Create Your First Itinerary
+              </Button>
+            </Link>
+          </motion.div>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-6">
+            {itineraries.map((itinerary, index) => (
+              <motion.div
+                key={itinerary.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-lg transition-shadow"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-900">{itinerary.title}</h3>
+                    <p className="text-sm text-slate-500">{itinerary.cities?.join(' → ')}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-blue-500 hover:text-blue-600 hover:bg-blue-50"
+                      onClick={() => handleViewItinerary(itinerary)}
+                      title="View Itinerary"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+                      onClick={() => setDeleteConfirm(itinerary)}
+                      title="Delete Itinerary"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 text-sm text-slate-600">
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    {itinerary.duration} days
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <MapPin className="w-4 h-4" />
+                    {itinerary.cities?.length} cities
+                  </span>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-xs text-slate-400">
+                    Created {new Date(itinerary.createdAt).toLocaleDateString()}
+                  </span>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                      onClick={() => handleOpenReviewModal(itinerary)}
+                    >
+                      <Star className="w-4 h-4 mr-1" />
+                      Review
+                    </Button>
+                    <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full capitalize">
+                      {itinerary.pace}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {/* Membership Plans Section - Now Below Itineraries */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mb-12"
+          className="mt-12"
         >
           <h2 className="text-2xl font-bold text-slate-900 mb-6">Membership Plans</h2>
           <div className="grid md:grid-cols-3 gap-6">
@@ -610,104 +709,6 @@ export default function DashboardPage() {
             })}
           </div>
         </motion.div>
-
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-slate-900">Your Itineraries</h2>
-          <Link href="/">
-            <Button className="bg-[#E60012] hover:bg-[#cc0010] text-white">
-              <Plus className="w-4 h-4 mr-2" />
-              New Itinerary
-            </Button>
-          </Link>
-        </div>
-
-        {itineraries.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-16 bg-white rounded-2xl border border-slate-200"
-          >
-            <MapPin className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">No itineraries yet</h3>
-            <p className="text-slate-600 mb-6">Start planning your China adventure!</p>
-            <Link href="/">
-              <Button className="bg-[#E60012] hover:bg-[#cc0010] text-white">
-                <Sparkles className="w-4 h-4 mr-2" />
-                Create Your First Itinerary
-              </Button>
-            </Link>
-          </motion.div>
-        ) : (
-          <div className="grid md:grid-cols-2 gap-6">
-            {itineraries.map((itinerary, index) => (
-              <motion.div
-                key={itinerary.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-lg transition-shadow"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-slate-900">{itinerary.title}</h3>
-                    <p className="text-sm text-slate-500">{itinerary.cities?.join(' → ')}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-blue-500 hover:text-blue-600 hover:bg-blue-50"
-                      onClick={() => handleViewItinerary(itinerary)}
-                      title="View Itinerary"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
-                      onClick={() => setDeleteConfirm(itinerary)}
-                      title="Delete Itinerary"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4 text-sm text-slate-600">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    {itinerary.duration} days
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-4 h-4" />
-                    {itinerary.cities?.length} cities
-                  </span>
-                </div>
-
-                <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-xs text-slate-400">
-                    Created {new Date(itinerary.createdAt).toLocaleDateString()}
-                  </span>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
-                      onClick={() => handleOpenReviewModal(itinerary)}
-                    >
-                      <Star className="w-4 h-4 mr-1" />
-                      Review
-                    </Button>
-                    <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full capitalize">
-                      {itinerary.pace}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
       </div>
 
       {showReviewModal && reviewItinerary && (

@@ -11,9 +11,9 @@ const CITY_GALLERY_DATA = {
     specialties: ['Peking Duck', 'Great Wall', 'Forbidden City', 'Temple of Heaven', 'Hutong Alleys'],
     images: [
       'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1584114614576-49f6f4813ed7?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1599571234909-29ed5d1321d6?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1599571234909-29ed5d1321d6?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1584114614576-49f6f4813ed7?w=800&q=80&auto=format&fit=crop',
     ]
   },
   shanghai: {
@@ -23,9 +23,9 @@ const CITY_GALLERY_DATA = {
     specialties: ['The Bund', 'Yu Garden', 'Xiaolongbao', 'French Concession', 'Nanjing Road'],
     images: [
       'https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548919973-5cef591cdbc9?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1538428494232-9c0d8a3ab403?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1545893835-abaa50cbe628?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1517309246141-d22814846ee0?w=800&q=80&auto=format&fit=crop',
     ]
   },
   chengdu: {
@@ -35,8 +35,8 @@ const CITY_GALLERY_DATA = {
     specialties: ['Giant Pandas', 'Sichuan Hot Pot', 'Jinli Street', 'Tea Houses', 'Mapo Tofu'],
     images: [
       'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1610053012285-0a56e69a94cd?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1527838832700-5059252407fa?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1566996533071-2c578080c06e?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80&auto=format&fit=crop',
     ]
   },
@@ -46,10 +46,10 @@ const CITY_GALLERY_DATA = {
     description: 'Ancient Silk Road starting point with the world-famous Terracotta Warriors. The ancient city wall is one of the best preserved in China.',
     specialties: ['Terracotta Warriors', 'City Wall Cycling', 'Muslim Quarter', 'Biangbiang Noodles', 'Roujiamo'],
     images: [
+      'https://images.unsplash.com/photo-1591177142854-7e0e9f14c30d?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1523976105517-cffe0bcc0daa?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1576224939239-ee62a2ce4510?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1591177142854-7e0e9f14c30d?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1569254979014-1408605dcb11?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80&auto=format&fit=crop',
     ]
   },
   guilin: {
@@ -61,7 +61,7 @@ const CITY_GALLERY_DATA = {
       'https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1580650051573-a7e70b0a3508?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1529921879218-f99546d03a44?w=800&q=80&auto=format&fit=crop',
     ]
   },
   hangzhou: {
@@ -73,7 +73,7 @@ const CITY_GALLERY_DATA = {
       'https://images.unsplash.com/photo-1598887142623-38433d3ed3e4?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1590559899731-a382839e5549?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1569254979014-1408605dcb11?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1544985361-b420d7a77043?w=800&q=80&auto=format&fit=crop',
     ]
   },
   zhangjiajie: {
@@ -85,7 +85,7 @@ const CITY_GALLERY_DATA = {
       'https://images.unsplash.com/photo-1513415564515-763d91423bdd?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1564221710304-0b37c8b9d729?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1509023464722-18d996393ca8?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1540390769625-2fc3f8b1280d?w=800&q=80&auto=format&fit=crop',
     ]
   },
   hongkong: {
@@ -95,9 +95,9 @@ const CITY_GALLERY_DATA = {
     specialties: ['Victoria Peak', 'Dim Sum', 'Star Ferry', 'Temple Street Night Market', 'Big Buddha'],
     images: [
       'https://images.unsplash.com/photo-1536599018102-9f803c979b5d?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1507941097613-9f2157b69f48?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1518599807935-37015b9cefcb?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1532364158125-02d75a0f7fb0?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1507941097613-9f2157b69f48?w=800&q=80&auto=format&fit=crop',
     ]
   },
 };

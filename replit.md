@@ -29,6 +29,13 @@ The application is built with Next.js 14.0.0, utilizing JavaScript/JSX and style
 - Share and Email modals now generate links to saved itinerary pages
 - Pending itinerary flow: stores itinerary when user signs up/in and redirects to saved itinerary
 
+### December 5, 2024 (Afternoon Update)
+**QA Fixes and Improvements:**
+- **Gallery Images:** Updated city-specific images for all 8 cities (Beijing, Shanghai, Chengdu, Xi'an, Guilin, Hangzhou, Zhangjiajie, Hong Kong) with more accurate representative Unsplash photos
+- **Dashboard Layout:** Reorganized dashboard to show "Your Itineraries" section above "Membership Plans" section
+- **TravelAppsSection:** Replaced emoji icons with professional SVG/Lucide icons for all travel apps (WeChat, Alipay, VPN, Amap, Didi, 12306, Trip.com, Meituan, etc.)
+- **PDF Generator Enhanced:** Added comprehensive "Travel Essentials" section including must-have apps list, emergency numbers (Police 110, Ambulance 120, Fire 119, Tourist Hotline 12301), and essential Chinese phrases with pinyin. Added page footer with page numbers.
+
 ### December 5, 2024
 **Mobile UX Improvements:**
 - Made attractions selection optional in the wizard - users can skip and AI will select best attractions
