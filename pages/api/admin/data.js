@@ -13,7 +13,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  console.log('Admin API - URL exists:', !!supabaseUrl);
+  console.log('Admin API - Key exists:', !!supabaseServiceKey);
+
   if (!supabaseUrl || !supabaseServiceKey) {
+    console.error('Admin API - Missing config:', { url: !!supabaseUrl, key: !!supabaseServiceKey });
     return res.status(500).json({ error: 'Server configuration error' });
   }
 
@@ -37,6 +41,8 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'Forbidden - Admin access required' });
     }
 
+    console.log('Admin API - Fetching data from Supabase...');
+    
     const [usersResult, itinerariesResult] = await Promise.all([
       supabase.from('profiles').select('*').order('created_at', { ascending: false }),
       supabase.from('itineraries').select(`
@@ -45,10 +51,15 @@ export default async function handler(req, res) {
       `).order('created_at', { ascending: false })
     ]);
 
+    console.log('Admin API - Users result:', usersResult.error ? usersResult.error.message : `${usersResult.data?.length} users`);
+    console.log('Admin API - Itineraries result:', itinerariesResult.error ? itinerariesResult.error.message : `${itinerariesResult.data?.length} itineraries`);
+
     if (usersResult.error) {
+      console.error('Admin API - Users error:', usersResult.error);
       throw usersResult.error;
     }
     if (itinerariesResult.error) {
+      console.error('Admin API - Itineraries error:', itinerariesResult.error);
       throw itinerariesResult.error;
     }
 
