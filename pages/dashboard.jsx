@@ -113,11 +113,15 @@ export default function DashboardPage() {
             return;
           }
 
+          // Get the plan from localStorage (set when user clicks upgrade button)
+          const pendingPlan = localStorage.getItem('pendingUpgradePlan') || selectedPlan;
+          const planToUpdate = pendingPlan === 'elite' ? 'elite' : 'pro';
+
           // Update plan in Supabase database first
           if (supabase && userData.id) {
             try {
-              await updateUserPlan(userData.id, selectedPlan);
-              console.log('Plan updated in Supabase:', selectedPlan);
+              await updateUserPlan(userData.id, planToUpdate);
+              console.log('Plan updated in Supabase:', planToUpdate);
             } catch (error) {
               console.error('Error updating plan in Supabase:', error);
               toast.error('Payment received but failed to update account. Please contact support at contact@chinatourplan.com');
@@ -126,11 +130,12 @@ export default function DashboardPage() {
           }
 
           // Then update localStorage
-          userData.plan = selectedPlan;
+          userData.plan = planToUpdate;
           localStorage.setItem('user', JSON.stringify(userData));
+          localStorage.removeItem('pendingUpgradePlan');
           setUser(userData);
           setShowUpgradeModal(false);
-          toast.success(`Upgraded to ${selectedPlan === 'elite' ? 'Elite' : 'Pro'}! Enjoy your premium features.`);
+          toast.success(`Upgraded to ${planToUpdate === 'elite' ? 'Elite' : 'Pro'}! Enjoy your premium features.`);
 
           setTimeout(() => {
             window.location.reload();
@@ -756,6 +761,10 @@ export default function DashboardPage() {
                   ) : plan.lemonSqueezyUrl ? (
                     <a
                       href={plan.lemonSqueezyUrl + `&checkout[custom][plan]=${plan.id}`}
+                      onClick={() => {
+                        localStorage.setItem('pendingUpgradePlan', plan.id);
+                        setSelectedPlan(plan.id);
+                      }}
                       className={`lemonsqueezy-button flex items-center justify-center w-full py-3 rounded-lg font-semibold text-white transition-colors ${plan.popular
                         ? 'bg-[#E60012] hover:bg-[#cc0010]'
                         : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700'
@@ -1126,6 +1135,9 @@ export default function DashboardPage() {
                   {selectedPlan !== 'free' && selectedPlan !== user?.plan ? (
                     <a
                       href={PLANS.find(p => p.id === selectedPlan)?.lemonSqueezyUrl + `&checkout[custom][plan]=${selectedPlan}`}
+                      onClick={() => {
+                        localStorage.setItem('pendingUpgradePlan', selectedPlan);
+                      }}
                       className={`lemonsqueezy-button flex items-center justify-center flex-1 py-3 text-lg font-semibold rounded-lg cursor-pointer transition-colors ${selectedPlan === 'elite'
                         ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
                         : 'bg-[#E60012] hover:bg-[#cc0010] text-white'

@@ -163,7 +163,10 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
           return;
         }
 
-        const planToUpdate = selectedPlan;
+        // Get the plan from localStorage (set when user clicks upgrade button)
+        const pendingPlan = localStorage.getItem('pendingUpgradePlan') || selectedPlan;
+        const planToUpdate = pendingPlan === 'elite' ? 'elite' : pendingPlan === 'pro' ? 'pro' : selectedPlan;
+        
         if (!planToUpdate || planToUpdate === 'basic') {
           console.error('Invalid plan selected for payment');
           return;
@@ -175,6 +178,7 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
           
           userData.plan = planToUpdate;
           localStorage.setItem('user', JSON.stringify(userData));
+          localStorage.removeItem('pendingUpgradePlan');
           onClose();
           toast.success(`Upgraded to ${planToUpdate === 'elite' ? 'Elite' : 'Pro'}! Redirecting to dashboard...`);
 
@@ -378,6 +382,9 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
           {selectedPlanData?.lemonSqueezyUrl && currentUser?.id ? (
             <a 
               href={getCheckoutUrl(selectedPlanData.lemonSqueezyUrl)} 
+              onClick={() => {
+                localStorage.setItem('pendingUpgradePlan', selectedPlan);
+              }}
               className={`lemonsqueezy-button flex items-center justify-center w-full mt-4 py-4 text-lg font-semibold rounded-xl cursor-pointer ${
                 selectedPlan === 'elite' 
                   ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
