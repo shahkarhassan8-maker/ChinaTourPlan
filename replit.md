@@ -40,7 +40,16 @@ The application is built with Next.js 14.0.0, utilizing JavaScript/JSX and style
 - Set NEXT_PUBLIC_SITE_URL environment variable for correct email redirect URLs
 - Email confirmation is enforced: signIn function checks email_confirmed_at and blocks unverified users with clear error message
 
-**Payment Flow Fixes:**
+**Payment Flow Fixes (Session 2):**
+- Fixed Elite plan purchases incorrectly updating to Pro: Payment handlers now parse plan from LemonSqueezy event data (`first_order_item.product_name`) as primary source
+- Added `pendingUpgradePlan` localStorage tracking across all upgrade entry points (dashboard buttons, PaywallModal)
+- All upgrade buttons now set `localStorage.pendingUpgradePlan` before opening LemonSqueezy checkout overlay
+- Three-tier plan detection fallback: (1) LemonSqueezy product name parsing, (2) localStorage pendingUpgradePlan, (3) component state
+- Fixed dashboard itinerary loading to properly handle empty arrays from Supabase
+- Dashboard now explicitly clears stale localStorage data when Supabase returns empty itineraries
+- Itineraries sync to localStorage for offline access when loaded from database
+
+**Payment Flow Fixes (Session 1):**
 - Fixed `canUserCreateItinerary` in lib/supabase.js to recognize all paid plans (pro, premium, elite, lifetime, admin) for unlimited itineraries
 - Added LemonSqueezy checkout event listener to PaywallModal.jsx for handling payment success
 - PaywallModal now updates Supabase profile with purchased plan and redirects to dashboard after payment
