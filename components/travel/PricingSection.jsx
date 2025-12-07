@@ -60,29 +60,52 @@ const PRICING_PLANS = [
 ];
 
 export default function PricingSection() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
     const checkUser = async () => {
-      // Fast check with local storage
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        setIsVisible(false);
-        return;
-      }
-
-      // Verify with Supabase session
-      if (supabase) {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-          setIsVisible(false);
+      try {
+        // Fast check with local storage first
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          try {
+            const userData = JSON.parse(storedUser);
+            if (userData && userData.id) {
+              setIsVisible(false);
+              setIsChecking(false);
+              return;
+            }
+          } catch (e) {
+            // Invalid JSON, continue to Supabase check
+          }
         }
+
+        // Verify with Supabase session
+        if (supabase) {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) {
+            setIsVisible(false);
+            setIsChecking(false);
+            return;
+          }
+        }
+
+        // No user found, show pricing
+        setIsVisible(true);
+      } catch (error) {
+        console.error('Error checking user:', error);
+        setIsVisible(true);
+      } finally {
+        setIsChecking(false);
       }
     };
 
     checkUser();
   }, []);
 
+  // Don't render while checking to prevent flash
+  if (isChecking) return null;
   if (!isVisible) return null;
 
   return (

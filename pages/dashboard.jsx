@@ -8,7 +8,7 @@ import {
   ArrowLeft, Crown, MapPin, Calendar, Trash2,
   Plus, Star, Settings, LogOut, Edit, Eye,
   MessageCircle, Sparkles, Clock, User, AlertTriangle, X,
-  Lock, Zap, Download, Bot, Check
+  Lock, Zap, Download, Bot, Check, Shield
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -20,7 +20,9 @@ import {
   FEATURES,
   getRemainingItineraries,
   getUpgradeMessage,
-  getPlanDisplayName
+  getPlanDisplayName,
+  isAdmin,
+  ADMIN_EMAILS
 } from '@/lib/accessControl';
 import {
   supabase,
@@ -138,22 +140,26 @@ export default function DashboardPage() {
           return;
         }
         
+        // Set user immediately for faster UI render
         setUser(userData);
 
         if (supabase && userData.id) {
           try {
-            const { data: profile } = await supabase.from('profiles')
-              .select('*')
-              .eq('id', userData.id)
-              .single();
+            // Parallel fetch for profile and itineraries
+            const [profileResult, dbItineraries] = await Promise.all([
+              supabase.from('profiles').select('*').eq('id', userData.id).single(),
+              getUserItineraries(userData.id)
+            ]);
             
+            const profile = profileResult.data;
+            
+            // Sync plan if different
             if (profile && profile.plan !== userData.plan) {
               const updatedUser = { ...userData, plan: profile.plan };
               localStorage.setItem('user', JSON.stringify(updatedUser));
               setUser(updatedUser);
             }
             
-            const dbItineraries = await getUserItineraries(userData.id);
             if (dbItineraries && dbItineraries.length > 0) {
               const formattedItineraries = dbItineraries.map(it => ({
                 id: it.id,
@@ -166,9 +172,9 @@ export default function DashboardPage() {
                 selectedPlaces: it.selected_places
               }));
               setItineraries(formattedItineraries);
-              setIsLoading(false);
-              return;
             }
+            setIsLoading(false);
+            return;
           } catch (error) {
             console.log('Error loading from Supabase:', error);
           }
@@ -426,10 +432,22 @@ export default function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">
-            Welcome back, {user.name?.split(' ')[0] || 'Traveler'}!
-          </h1>
-          <p className="text-slate-600">Manage your itineraries and member benefits</p>
+          <div className="flex items-start justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">
+                Welcome back, {user.name?.split(' ')[0] || 'Traveler'}!
+              </h1>
+              <p className="text-slate-600">Manage your itineraries and member benefits</p>
+            </div>
+            {ADMIN_EMAILS.includes(user.email?.toLowerCase()) && (
+              <Link href="/admin">
+                <Button className="bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 text-white">
+                  <Shield className="w-4 h-4 mr-2" />
+                  Open Admin Dashboard
+                </Button>
+              </Link>
+            )}
+          </div>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-6 mb-12">
