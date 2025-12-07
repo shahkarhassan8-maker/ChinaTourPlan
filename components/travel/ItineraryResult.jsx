@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import {
   Calendar, MapPin, Wallet, ArrowLeft, Share2,
-  Download, Sparkles, DollarSign, Lock, Crown,
+  Sparkles, DollarSign, Lock, Crown,
   MessageCircle, Phone, FileText, CheckCircle,
   Star, Quote, Globe, Shield, Clock, Users,
   Bookmark, BookmarkCheck, Mail, Bot, Loader2, LogIn
@@ -26,7 +26,6 @@ import {
   getUpgradeMessage
 } from '@/lib/accessControl';
 import { getCurrentUser, saveItinerary } from '@/lib/supabase';
-import { downloadItineraryPDF } from '@/lib/pdfGenerator';
 import TravelAppsSection from './TravelAppsSection';
 import WhatToBringSection from './WhatToBringSection';
 import FAQSection from './FAQSection';
@@ -598,22 +597,6 @@ export default function ItineraryResult({ formData, onBack }) {
             >
               <Mail className="w-4 h-4 mr-2" />
               Email
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-green-600 border-green-200 hover:bg-green-50"
-              onClick={() => {
-                downloadItineraryPDF({
-                  itinerary,
-                  formData,
-                  title: `${formData.duration} Days in China`
-                });
-                toast.success('PDF downloaded successfully!');
-              }}
-            >
-              <Download className="w-4 h-4 mr-2" />
-              PDF
             </Button>
             <Button
               size="sm"

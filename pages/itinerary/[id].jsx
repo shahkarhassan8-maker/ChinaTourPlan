@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { motion } from 'framer-motion';
 import {
   Calendar, MapPin, DollarSign, ArrowLeft, Share2,
-  Mail, Clock, Sparkles, Loader2, AlertCircle, Download,
+  Mail, Clock, Sparkles, Loader2, AlertCircle,
   MessageCircle, Bot
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,6 @@ import TravelAppsSection from '@/components/travel/TravelAppsSection';
 import WhatToBringSection from '@/components/travel/WhatToBringSection';
 import FAQSection from '@/components/travel/FAQSection';
 import { getItineraryById, getCurrentUser } from '@/lib/supabase';
-import { downloadItineraryPDF } from '@/lib/pdfGenerator';
 import { toast } from "sonner";
 import { generateMetaTags, generateTripSchema } from '@/lib/seo';
 
@@ -160,24 +159,6 @@ export default function ItineraryViewPage() {
     duration,
   });
 
-  const handleDownloadPDF = () => {
-    try {
-      if (!itinerary || itinerary.length === 0) {
-        toast.error('No itinerary data available to generate PDF');
-        return;
-      }
-      downloadItineraryPDF({
-        itinerary,
-        formData,
-        title: pageTitle
-      });
-      toast.success('PDF downloaded successfully!');
-    } catch (error) {
-      console.error('PDF generation error:', error);
-      toast.error('Failed to generate PDF. Please try again.');
-    }
-  };
-
   return (
     <>
       <Head>
@@ -232,15 +213,6 @@ export default function ItineraryViewPage() {
               >
                 <Mail className="w-4 h-4 mr-2" />
                 Email
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-green-600 border-green-200 hover:bg-green-50"
-                onClick={handleDownloadPDF}
-              >
-                <Download className="w-4 h-4 mr-2" />
-                PDF
               </Button>
             </div>
           </div>

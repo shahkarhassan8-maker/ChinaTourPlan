@@ -31,7 +31,7 @@ const PRICING_PLANS = [
       'Premium details',
       'Local tips',
       'AI BOT',
-      'Offline PDF downloads',
+      'Priority support',
     ],
     cta: 'Sign Up for Pro',
     popular: true,

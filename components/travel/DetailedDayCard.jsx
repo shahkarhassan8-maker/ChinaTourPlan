@@ -219,20 +219,20 @@ export default function DetailedDayCard({ day, isLast, isPremium, onUpgrade }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: day.dayNumber * 0.05 }}
-      className="relative pl-8 md:pl-12"
+      className="relative"
     >
-      {/* Timeline connector */}
-      <div className="absolute left-0 top-0 bottom-0 w-px bg-slate-200">
-        {!isLast && <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-200 rounded-full" />}
-      </div>
-      
-      {/* Day marker */}
-      <div className="absolute left-0 top-0 -translate-x-1/2 w-10 h-10 bg-gradient-to-br from-[#E60012] to-red-700 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-red-500/30">
-        {day.dayNumber}
+      {/* Day marker - centered above card with connector */}
+      <div className="flex flex-col items-center mb-4">
+        <div className="w-12 h-12 bg-gradient-to-br from-[#E60012] to-red-700 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-red-500/30 z-10">
+          {day.dayNumber}
+        </div>
+        {!isLast && (
+          <div className="w-0.5 h-4 bg-gradient-to-b from-[#E60012] to-slate-200 mt-1" />
+        )}
       </div>
 
       {/* Card */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden mb-8">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden mb-6">
         {/* Header Image */}
         <div className="relative h-48 overflow-hidden">
           <img 

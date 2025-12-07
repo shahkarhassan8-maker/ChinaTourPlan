@@ -29,6 +29,17 @@ The application is built with Next.js 14.0.0, utilizing JavaScript/JSX and style
 - Share and Email modals now generate links to saved itinerary pages
 - Pending itinerary flow: stores itinerary when user signs up/in and redirects to saved itinerary
 
+### December 7, 2024
+**UI/UX Improvements:**
+- Centered itinerary layout: Redesigned DetailedDayCard to center day markers above cards instead of left-aligned timeline for better visual balance
+- Added subtle gradient connectors between day cards for visual flow
+- Removed PDF download functionality from all pages (ItineraryResult, itinerary/[id], PricingSection)
+- Deleted lib/pdfGenerator.js file
+
+**Authentication:**
+- Set NEXT_PUBLIC_SITE_URL environment variable for correct email redirect URLs
+- Email confirmation is enforced: signIn function checks email_confirmed_at and blocks unverified users with clear error message
+
 ### December 5, 2024 (Afternoon Update)
 **QA Fixes and Improvements:**
 - **Gallery Images:** Updated city-specific images for all 8 cities (Beijing, Shanghai, Chengdu, Xi'an, Guilin, Hangzhou, Zhangjiajie, Hong Kong) with more accurate representative Unsplash photos
