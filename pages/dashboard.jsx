@@ -177,7 +177,10 @@ export default function DashboardPage() {
             return;
           } catch (error) {
             console.log('Error loading from Supabase:', error);
+            setIsLoading(false);
           }
+        } else {
+          setIsLoading(false);
         }
 
         const storedItineraries = localStorage.getItem('itineraries');

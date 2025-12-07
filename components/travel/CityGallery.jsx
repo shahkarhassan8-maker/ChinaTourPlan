@@ -13,7 +13,7 @@ const CITY_GALLERY_DATA = {
       'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1599571234909-29ed5d1321d6?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1584114614576-49f6f4813ed7?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1516496636080-14fb876e029d?w=800&q=80&auto=format&fit=crop',
     ]
   },
   shanghai: {
@@ -35,9 +35,9 @@ const CITY_GALLERY_DATA = {
     specialties: ['Giant Pandas', 'Sichuan Hot Pot', 'Jinli Street', 'Tea Houses', 'Mapo Tofu'],
     images: [
       'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1610053012285-0a56e69a94cd?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1527838832700-5059252407fa?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1540611025311-01df3cef54b5?w=800&q=80&auto=format&fit=crop',
     ]
   },
   xian: {
@@ -49,7 +49,7 @@ const CITY_GALLERY_DATA = {
       'https://images.unsplash.com/photo-1545127398-14699f92334b?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1569839333583-7375336cde4b?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1603202662747-00e33e7d1468?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1590417975119-a25ec920c7bf?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=800&q=80&auto=format&fit=crop',
     ]
   },
   guilin: {
@@ -61,7 +61,7 @@ const CITY_GALLERY_DATA = {
       'https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1529921879218-f99546d03a44?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1513415564515-763d91423bdd?w=800&q=80&auto=format&fit=crop',
     ]
   },
   hangzhou: {
@@ -70,8 +70,8 @@ const CITY_GALLERY_DATA = {
     description: 'Paradise on Earth with the legendary West Lake. Famous for Longjing tea, silk, and the stunning Lingyin Temple.',
     specialties: ['West Lake Boat Ride', 'Longjing Tea Plantation', 'Lingyin Temple', 'Hefang Street', 'Leifeng Pagoda'],
     images: [
-      'https://images.unsplash.com/photo-1592461871088-cda11af48f22?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1591206369811-8e8f0f44aa16?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1598887142487-3c854d51eabb?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1470004914212-05527e49370b?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1584466977773-e625c37cdd50?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1517309230475-6736d926b979?w=800&q=80&auto=format&fit=crop',
     ]
@@ -85,7 +85,7 @@ const CITY_GALLERY_DATA = {
       'https://images.unsplash.com/photo-1513415564515-763d91423bdd?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1564221710304-0b37c8b9d729?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1509023464722-18d996393ca8?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1540390769625-2fc3f8b1280d?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1560813962-ff3d8fcf59ba?w=800&q=80&auto=format&fit=crop',
     ]
   },
   hongkong: {
@@ -94,10 +94,10 @@ const CITY_GALLERY_DATA = {
     description: 'Where traditional temples meet towering skyscrapers. A culinary paradise with world-class dim sum and street food.',
     specialties: ['Victoria Peak', 'Dim Sum', 'Star Ferry', 'Temple Street Night Market', 'Big Buddha'],
     images: [
-      'https://images.unsplash.com/photo-1536599018102-9f803c979b5d?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1507941097613-9f2157b69f48?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1506970845246-18f21d533b20?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1576788369575-4ab045b9287e?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1518599807935-37015b9cefcb?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1532364158125-02d75a0f7fb0?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800&q=80&auto=format&fit=crop',
     ]
   },
 };

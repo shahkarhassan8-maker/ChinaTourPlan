@@ -101,13 +101,15 @@ export default function Navbar() {
             >
               Reviews
             </a>
-            <a
-              href="#pricing"
-              className={`text-sm font-medium transition-colors ${scrolled ? 'text-slate-600 hover:text-slate-900' : 'text-slate-700 hover:text-slate-900'
-                }`}
-            >
-              Pricing
-            </a>
+            {!user && (
+              <a
+                href="#pricing"
+                className={`text-sm font-medium transition-colors ${scrolled ? 'text-slate-600 hover:text-slate-900' : 'text-slate-700 hover:text-slate-900'
+                  }`}
+              >
+                Pricing
+              </a>
+            )}
           </div>
 
           <div className="hidden md:flex items-center gap-3">
@@ -160,7 +162,7 @@ export default function Navbar() {
               <a href="#features" className="text-slate-700 font-medium" onClick={() => setMobileMenuOpen(false)}>Features</a>
               <a href="#gallery" className="text-slate-700 font-medium" onClick={() => setMobileMenuOpen(false)}>Gallery</a>
               <a href="#reviews" className="text-slate-700 font-medium" onClick={() => setMobileMenuOpen(false)}>Reviews</a>
-              <a href="#pricing" className="text-slate-700 font-medium" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
+              {!user && <a href="#pricing" className="text-slate-700 font-medium" onClick={() => setMobileMenuOpen(false)}>Pricing</a>}
               <div className="border-t border-slate-200 pt-4 flex flex-col gap-3">
                 {user ? (
                   <Link href="/dashboard">

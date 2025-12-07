@@ -915,14 +915,33 @@ export default function ItineraryResult({ formData, onBack }) {
         {/* What to Bring Section */}
         <WhatToBringSection onUpgrade={handleUpgradeClick} />
 
-        {/* FAQ Section */}
-        <FAQSection onUpgrade={handleUpgradeClick} />
-
         {/* Previous Travelers Section - Elite Only */}
         <PreviousTravelersSection
           isElite={isLifetime}
           onUpgrade={() => setShowPaywall(true)}
         />
+
+        {/* FAQ Section */}
+        <FAQSection onUpgrade={handleUpgradeClick} />
+
+        {/* WeChat Contact Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200 text-center"
+        >
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <svg className="w-8 h-8 text-green-500" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c4.8 0 8.691-3.288 8.691-7.343 0-4.053-3.891-7.34-8.691-7.34" />
+            </svg>
+            <h3 className="text-xl font-bold text-slate-900">Still Have Questions?</h3>
+          </div>
+          <p className="text-slate-600 mb-4">We're here to help with your China travel planning!</p>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-green-300 shadow-sm">
+            <span className="text-slate-600">Add us on WeChat:</span>
+            <span className="font-bold text-green-600">{CONTACT_INFO.wechat}</span>
+          </div>
+        </motion.div>
 
         {/* Trust Indicators */}
         <motion.div
