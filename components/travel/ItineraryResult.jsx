@@ -436,8 +436,10 @@ export default function ItineraryResult({ formData, onBack }) {
     }
 
     setIsSaving(true);
+    let timeoutId = null;
     try {
-      const savedData = await saveItinerary(userId, {
+      // Add timeout to prevent infinite loading
+      const savePromise = saveItinerary(userId, {
         title: `${formData.duration} Days in China`,
         cities: cityNames,
         duration: formData.duration,
@@ -448,11 +450,17 @@ export default function ItineraryResult({ formData, onBack }) {
         selectedPlaces: formData.selectedPlaces
       });
 
+      const timeoutPromise = new Promise((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error('Save timed out')), 15000);
+      });
+
+      const savedData = await Promise.race([savePromise, timeoutPromise]);
+      clearTimeout(timeoutId);
+
       setSavedItineraryId(savedData.id);
       incrementItineraryUsage();
       setIsSaved(true);
       toast.success('Itinerary saved! Redirecting...');
-      // Redirect to the permanent URL with itinerary ID
       router.push(`/itinerary/${savedData.id}`);
 
       if (openModalAfter === 'share') setShowShareModal(true);
@@ -460,8 +468,13 @@ export default function ItineraryResult({ formData, onBack }) {
 
       return savedData.id;
     } catch (error) {
+      if (timeoutId) clearTimeout(timeoutId);
       console.error('Error saving itinerary:', error);
-      toast.error('Failed to save itinerary. Please try again.');
+      if (error.message === 'Save timed out') {
+        toast.error('Saving took too long. Please check your connection and try again.');
+      } else {
+        toast.error('Failed to save itinerary. Please try again.');
+      }
       return null;
     } finally {
       setIsSaving(false);

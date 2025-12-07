@@ -87,7 +87,15 @@ function MyApp({ Component, pageProps }) {
     <LanguageProvider>
       <Component {...pageProps} />
       <Toaster position="top-center" richColors />
-      <Script src="https://assets.lemonsqueezy.com/lemon.js" strategy="lazyOnload" />
+      <Script 
+        src="https://assets.lemonsqueezy.com/lemon.js" 
+        strategy="afterInteractive"
+        onLoad={() => {
+          if (typeof window !== 'undefined' && window.createLemonSqueezy) {
+            window.createLemonSqueezy();
+          }
+        }}
+      />
     </LanguageProvider>
   )
 }

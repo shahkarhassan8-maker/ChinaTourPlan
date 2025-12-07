@@ -48,6 +48,8 @@ The application is built with Next.js 14.0.0, utilizing JavaScript/JSX and style
 - Fixed dashboard itinerary loading to properly handle empty arrays from Supabase
 - Dashboard now explicitly clears stale localStorage data when Supabase returns empty itineraries
 - Itineraries sync to localStorage for offline access when loaded from database
+- Fixed LemonSqueezy checkout button not opening: Changed script loading from "lazyOnload" to "afterInteractive" with onLoad initialization
+- Fixed save itinerary infinite loading: Added 15-second timeout with proper cleanup to prevent stuck loading state
 
 **Payment Flow Fixes (Session 1):**
 - Fixed `canUserCreateItinerary` in lib/supabase.js to recognize all paid plans (pro, premium, elite, lifetime, admin) for unlimited itineraries
