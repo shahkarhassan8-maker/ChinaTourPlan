@@ -19,7 +19,7 @@ const STEPS = [
   { id: 'pace', title: 'Travel Pace', icon: Gauge, description: 'How do you like to travel? This helps us recommend days per city' },
   { id: 'cities', title: 'Destinations', icon: MapPin, description: 'Select your dream destinations (pick multiple!)' },
   { id: 'cityDays', title: 'Days per City', icon: Calendar, description: 'See our recommendations and customize your stay' },
-  { id: 'places', title: 'Places to Visit', icon: Camera, description: 'Optional: Select specific attractions or skip to let AI choose for you' },
+  { id: 'places', title: 'Places to Visit', icon: Camera, description: 'Skip this step and AI will pick the best spots for you!' },
   { id: 'hotelQuality', title: 'Hotel Quality', icon: Bed, description: 'What type of accommodation do you prefer?' },
   { id: 'food', title: 'Food Preferences', icon: Utensils, description: 'Any dietary preferences?' },
 ];
@@ -300,11 +300,19 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
       case 3: // Places
         return (
           <div className="space-y-4">
-            {/* Optional notice */}
-            <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-2">
-              <p className="text-sm text-blue-700">
-                <span className="font-medium">Tip:</span> This step is optional. Skip to let AI suggest the best attractions, or select specific places you want to visit.
-              </p>
+            {/* AI will choose notice - more prominent */}
+            <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-xl p-4 mb-2">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-800">Don't know what to visit? No problem!</p>
+                  <p className="text-sm text-slate-600 mt-1">
+                    Simply skip this step and our <span className="font-medium text-purple-600">AI will automatically select the best attractions</span> for each city based on your travel pace and available time.
+                  </p>
+                </div>
+              </div>
             </div>
             
             {/* Sticky city tabs for easy switching on mobile */}
