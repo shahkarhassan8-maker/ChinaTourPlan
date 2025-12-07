@@ -12,6 +12,15 @@ export default function Document() {
         <meta name="theme-color" content="#E60012" />
         <meta name="format-detection" content="telephone=no" />
         <link rel="manifest" href="/manifest.json" />
+        
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="ChinaTourPlan" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <body>
         <Main />

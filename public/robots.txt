@@ -1,11 +1,22 @@
-# Allow all crawlers
+# ChinaTourPlan robots.txt
+
 User-agent: *
 Allow: /
 
-# Disallow private areas
+# Disallow private/authenticated areas
 Disallow: /dashboard
+Disallow: /admin
 Disallow: /api/
 Disallow: /auth/
+Disallow: /itinerary/
+Disallow: /reset-password
+
+# Allow search engine crawlers full access to public pages
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
 
 # Sitemap location
 Sitemap: https://chinatourplan.com/sitemap.xml

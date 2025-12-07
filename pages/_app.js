@@ -4,9 +4,25 @@ import { LanguageProvider } from '@/lib/LanguageContext'
 import Script from 'next/script'
 import { useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { 
+  startSessionMonitoring, 
+  stopSessionMonitoring, 
+  onUserLogin, 
+  onUserLogout,
+  checkSessionOnLoad 
+} from '@/lib/sessionManager'
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    checkSessionOnLoad();
+    
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      startSessionMonitoring();
+    }
+
     if (!supabase) return;
 
     const syncUserToLocalStorage = async (session) => {
@@ -26,6 +42,7 @@ function MyApp({ Component, pageProps }) {
           };
           
           localStorage.setItem('user', JSON.stringify(userData));
+          onUserLogin();
         } catch (error) {
           console.error('Error syncing user profile:', error);
         }
@@ -41,6 +58,7 @@ function MyApp({ Component, pageProps }) {
           const userData = JSON.parse(storedUser);
           if (userData.id) {
             localStorage.removeItem('user');
+            onUserLogout();
           }
         }
       }
@@ -53,6 +71,7 @@ function MyApp({ Component, pageProps }) {
         await syncUserToLocalStorage(session);
       } else if (event === 'SIGNED_OUT') {
         localStorage.removeItem('user');
+        onUserLogout();
       } else if (event === 'TOKEN_REFRESHED' && session) {
         await syncUserToLocalStorage(session);
       }
@@ -60,6 +79,7 @@ function MyApp({ Component, pageProps }) {
 
     return () => {
       subscription?.unsubscribe();
+      stopSessionMonitoring();
     };
   }, []);
 

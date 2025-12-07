@@ -43,10 +43,19 @@ export default function SignupPage() {
   }, []);
 
   useEffect(() => {
-    if (router.isReady && router.query.redirect) {
-      setRedirectPath(router.query.redirect);
+    if (router.isReady) {
+      if (router.query.redirect) {
+        setRedirectPath(router.query.redirect);
+      }
+      if (router.query.session === 'expired') {
+        toast.info('Your session has expired due to inactivity. Please sign in again.', {
+          duration: 5000,
+        });
+        setIsLogin(true);
+        router.replace('/signup', undefined, { shallow: true });
+      }
     }
-  }, [router.isReady, router.query.redirect]);
+  }, [router.isReady, router.query.redirect, router.query.session]);
 
   const savePendingItinerary = async (userId) => {
     const pendingData = localStorage.getItem('pendingItinerary');
