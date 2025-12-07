@@ -140,20 +140,44 @@ export default function DashboardPage() {
           return;
         }
         
-        // Set user immediately for faster UI render
         setUser(userData);
 
         if (supabase && userData.id) {
+          let timeoutId;
+          let hasTimedOut = false;
+          
           try {
-            // Parallel fetch for profile and itineraries
-            const [profileResult, dbItineraries] = await Promise.all([
-              supabase.from('profiles').select('*').eq('id', userData.id).single(),
-              getUserItineraries(userData.id)
-            ]);
+            const timeoutPromise = new Promise((resolve) => {
+              timeoutId = setTimeout(() => {
+                hasTimedOut = true;
+                resolve({ timedOut: true });
+              }, 10000);
+            });
+
+            const fetchPromise = (async () => {
+              const [profileResult, dbItineraries] = await Promise.all([
+                supabase.from('profiles').select('*').eq('id', userData.id).single(),
+                getUserItineraries(userData.id)
+              ]);
+              return { profileResult, dbItineraries, timedOut: false };
+            })();
+
+            const result = await Promise.race([fetchPromise, timeoutPromise]);
+            clearTimeout(timeoutId);
             
-            const profile = profileResult.data;
+            if (result.timedOut || hasTimedOut) {
+              console.log('Database load timed out, using cached data');
+              const storedItineraries = localStorage.getItem('itineraries');
+              if (storedItineraries) {
+                setItineraries(JSON.parse(storedItineraries));
+              }
+              setIsLoading(false);
+              return;
+            }
+
+            const { profileResult, dbItineraries } = result;
+            const profile = profileResult?.data;
             
-            // Sync plan if different
             if (profile && profile.plan !== userData.plan) {
               const updatedUser = { ...userData, plan: profile.plan };
               localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -176,7 +200,12 @@ export default function DashboardPage() {
             setIsLoading(false);
             return;
           } catch (error) {
+            clearTimeout(timeoutId);
             console.log('Error loading from Supabase:', error);
+            const storedItineraries = localStorage.getItem('itineraries');
+            if (storedItineraries) {
+              setItineraries(JSON.parse(storedItineraries));
+            }
             setIsLoading(false);
           }
         } else {
@@ -189,6 +218,7 @@ export default function DashboardPage() {
         }
       } catch (e) {
         console.error('Error parsing user data:', e);
+        setIsLoading(false);
       }
     }
     setIsLoading(false);

@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 import { Button } from "@/components/ui/button";
 import { MapPin, Sparkles, Shield, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -82,14 +81,13 @@ export default function HeroSection({ onStartPlanning }) {
         >
           <div className="relative mx-auto max-w-4xl">
             <div className="aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/10 border border-slate-200">
-              <Image
+              <img
                 src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=70&auto=format&fit=crop"
                 alt="Great Wall of China"
                 width={800}
                 height={450}
-                priority
                 className="w-full h-full object-cover"
-                sizes="(max-width: 768px) 100vw, 800px"
+                loading="eager"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
             </div>

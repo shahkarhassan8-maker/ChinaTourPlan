@@ -58,15 +58,37 @@ export default function ItineraryViewPage() {
   const loadItinerary = async () => {
     setLoading(true);
     setError(null);
+    let timeoutId;
+    let hasTimedOut = false;
 
     try {
-      const data = await getItineraryById(id);
-      if (!data) {
+      const timeoutPromise = new Promise((resolve) => {
+        timeoutId = setTimeout(() => {
+          hasTimedOut = true;
+          resolve({ timedOut: true, data: null });
+        }, 15000);
+      });
+      
+      const fetchPromise = (async () => {
+        const data = await getItineraryById(id);
+        return { timedOut: false, data };
+      })();
+      
+      const result = await Promise.race([fetchPromise, timeoutPromise]);
+      clearTimeout(timeoutId);
+      
+      if (result.timedOut || hasTimedOut) {
+        setError('Loading timed out. Please refresh the page.');
+        return;
+      }
+      
+      if (!result.data) {
         setError('Itinerary not found');
       } else {
-        setItineraryData(data);
+        setItineraryData(result.data);
       }
     } catch (err) {
+      clearTimeout(timeoutId);
       console.error('Error loading itinerary:', err);
       setError('Failed to load itinerary');
     } finally {
@@ -139,12 +161,21 @@ export default function ItineraryViewPage() {
   });
 
   const handleDownloadPDF = () => {
-    downloadItineraryPDF({
-      itinerary,
-      formData,
-      title: pageTitle
-    });
-    toast.success('PDF downloaded successfully!');
+    try {
+      if (!itinerary || itinerary.length === 0) {
+        toast.error('No itinerary data available to generate PDF');
+        return;
+      }
+      downloadItineraryPDF({
+        itinerary,
+        formData,
+        title: pageTitle
+      });
+      toast.success('PDF downloaded successfully!');
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      toast.error('Failed to generate PDF. Please try again.');
+    }
   };
 
   return (
