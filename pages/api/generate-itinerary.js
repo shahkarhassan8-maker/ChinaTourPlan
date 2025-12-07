@@ -1,4 +1,5 @@
 import Groq from 'groq-sdk';
+import { canUserCreateItinerary, supabase } from '../../lib/supabase';
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -44,6 +45,26 @@ export default async function handler(req, res) {
   }
 
   try {
+    const authHeader = req.headers.authorization;
+    let userId = null;
+
+    if (authHeader && authHeader.startsWith('Bearer ') && supabase) {
+      const token = authHeader.replace('Bearer ', '');
+      const { data: { user } } = await supabase.auth.getUser(token);
+      if (user) {
+        userId = user.id;
+        const limitCheck = await canUserCreateItinerary(userId);
+        if (!limitCheck.canCreate) {
+          return res.status(403).json({ 
+            error: limitCheck.reason,
+            limitReached: true,
+            used: limitCheck.used,
+            limit: limitCheck.limit
+          });
+        }
+      }
+    }
+
     const {
       cities,
       cityDays,

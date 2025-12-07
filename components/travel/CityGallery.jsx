@@ -10,10 +10,10 @@ const CITY_GALLERY_DATA = {
     description: 'The ancient capital where imperial palaces meet modern skyscrapers. Home to the majestic Forbidden City and the iconic Great Wall.',
     specialties: ['Peking Duck', 'Great Wall', 'Forbidden City', 'Temple of Heaven', 'Hutong Alleys'],
     images: [
-      'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1599571234909-29ed5d1321d6?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1516496636080-14fb876e029d?w=800&q=80&auto=format&fit=crop',
+      '/gallery/beijing_forbidden_ci_3d92628e.jpg',
+      '/gallery/beijing_forbidden_ci_f8e6ac96.jpg',
+      '/gallery/beijing_forbidden_ci_cefa3e84.jpg',
+      '/gallery/beijing_forbidden_ci_b56fc88e.jpg',
     ]
   },
   shanghai: {
@@ -22,10 +22,10 @@ const CITY_GALLERY_DATA = {
     description: 'A dazzling metropolis where East meets West. The Bund showcases colonial architecture while Pudong gleams with futuristic towers.',
     specialties: ['The Bund', 'Yu Garden', 'Xiaolongbao', 'French Concession', 'Nanjing Road'],
     images: [
-      'https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1548919973-5cef591cdbc9?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1538428494232-9c0d8a3ab403?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1545893835-abaa50cbe628?w=800&q=80&auto=format&fit=crop',
+      '/gallery/shanghai_bund_pudong_0abe3633.jpg',
+      '/gallery/shanghai_bund_pudong_3c4a1aa2.jpg',
+      '/gallery/shanghai_bund_pudong_335ad24e.jpg',
+      '/gallery/shanghai_bund_pudong_5b2cbebd.jpg',
     ]
   },
   chengdu: {
@@ -34,10 +34,10 @@ const CITY_GALLERY_DATA = {
     description: 'Home to giant pandas and the spiciest cuisine in China. A laid-back city famous for tea houses and mahjong culture.',
     specialties: ['Giant Pandas', 'Sichuan Hot Pot', 'Jinli Street', 'Tea Houses', 'Mapo Tofu'],
     images: [
-      'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1527838832700-5059252407fa?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1540611025311-01df3cef54b5?w=800&q=80&auto=format&fit=crop',
+      '/gallery/chengdu_giant_panda__67795690.jpg',
+      '/gallery/chengdu_giant_panda__bb1aef8d.jpg',
+      '/gallery/chengdu_giant_panda__9747f266.jpg',
+      '/gallery/chengdu_giant_panda__e4dcd236.jpg',
     ]
   },
   xian: {
@@ -46,10 +46,10 @@ const CITY_GALLERY_DATA = {
     description: 'Ancient Silk Road starting point with the world-famous Terracotta Warriors. The ancient city wall is one of the best preserved in China.',
     specialties: ['Terracotta Warriors', 'City Wall Cycling', 'Muslim Quarter', 'Biangbiang Noodles', 'Roujiamo'],
     images: [
-      'https://images.unsplash.com/photo-1545127398-14699f92334b?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1569839333583-7375336cde4b?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1603202662747-00e33e7d1468?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=800&q=80&auto=format&fit=crop',
+      '/gallery/xian_china_terracot_0abd0ed3.jpg',
+      '/gallery/xian_china_terracot_0b6463f7.jpg',
+      '/gallery/xian_china_terracot_c9c89f94.jpg',
+      '/gallery/xian_china_terracot_8862ef4b.jpg',
     ]
   },
   guilin: {
@@ -58,10 +58,10 @@ const CITY_GALLERY_DATA = {
     description: 'Stunning karst landscapes that inspired countless Chinese paintings. The Li River cruise offers some of China\'s most iconic scenery.',
     specialties: ['Li River Cruise', 'Karst Mountains', 'Longji Rice Terraces', 'Bamboo Rafting', 'Moon Hill'],
     images: [
-      'https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1513415564515-763d91423bdd?w=800&q=80&auto=format&fit=crop',
+      '/gallery/guilin_li_river_kars_48468f4f.jpg',
+      '/gallery/guilin_li_river_kars_023b6545.jpg',
+      '/gallery/guilin_li_river_kars_1c204737.jpg',
+      '/gallery/guilin_li_river_kars_a91db4a9.jpg',
     ]
   },
   hangzhou: {
@@ -70,10 +70,10 @@ const CITY_GALLERY_DATA = {
     description: 'Paradise on Earth with the legendary West Lake. Famous for Longjing tea, silk, and the stunning Lingyin Temple.',
     specialties: ['West Lake Boat Ride', 'Longjing Tea Plantation', 'Lingyin Temple', 'Hefang Street', 'Leifeng Pagoda'],
     images: [
-      'https://images.unsplash.com/photo-1598887142487-3c854d51eabb?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1470004914212-05527e49370b?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1584466977773-e625c37cdd50?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1517309230475-6736d926b979?w=800&q=80&auto=format&fit=crop',
+      '/gallery/hangzhou_west_lake_c_3192226a.jpg',
+      '/gallery/hangzhou_west_lake_c_2016c468.jpg',
+      '/gallery/hangzhou_west_lake_c_018296fc.jpg',
+      '/gallery/hangzhou_west_lake_c_6056928c.jpg',
     ]
   },
   zhangjiajie: {
@@ -82,10 +82,10 @@ const CITY_GALLERY_DATA = {
     description: "The inspiration for Avatar's floating mountains. Home to the world's highest glass bridge and breathtaking pillar formations.",
     specialties: ['Avatar Mountains', 'Glass Skywalk Bridge', 'Tianmen Mountain', 'Baofeng Lake', 'Golden Whip Stream'],
     images: [
-      'https://images.unsplash.com/photo-1513415564515-763d91423bdd?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1564221710304-0b37c8b9d729?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1509023464722-18d996393ca8?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1560813962-ff3d8fcf59ba?w=800&q=80&auto=format&fit=crop',
+      '/gallery/zhangjiajie_avatar_m_0f0d757d.jpg',
+      '/gallery/zhangjiajie_avatar_m_64a4f436.jpg',
+      '/gallery/zhangjiajie_avatar_m_5f9f77a5.jpg',
+      '/gallery/zhangjiajie_avatar_m_b8f5b513.jpg',
     ]
   },
   hongkong: {
@@ -94,15 +94,15 @@ const CITY_GALLERY_DATA = {
     description: 'Where traditional temples meet towering skyscrapers. A culinary paradise with world-class dim sum and street food.',
     specialties: ['Victoria Peak', 'Dim Sum', 'Star Ferry', 'Temple Street Night Market', 'Big Buddha'],
     images: [
-      'https://images.unsplash.com/photo-1506970845246-18f21d533b20?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1576788369575-4ab045b9287e?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1518599807935-37015b9cefcb?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800&q=80&auto=format&fit=crop',
+      '/gallery/hong_kong_victoria_p_6a606bb1.jpg',
+      '/gallery/hong_kong_victoria_p_4e71e215.jpg',
+      '/gallery/hong_kong_victoria_p_7c5ab565.jpg',
+      '/gallery/hong_kong_victoria_p_b39ca656.jpg',
     ]
   },
 };
 
-const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80&auto=format&fit=crop';
+const FALLBACK_IMAGE = '/gallery/beijing_forbidden_ci_3d92628e.jpg';
 
 function ImageWithFallback({ src, alt, className, ...props }) {
   const optimizedSrc = src.includes('unsplash.com') 
@@ -232,36 +232,38 @@ export default function CityGallery() {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                className="relative max-w-5xl w-full flex flex-col items-center"
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* Image container */}
-                <div className="relative aspect-[4/3] md:aspect-video rounded-xl md:rounded-2xl overflow-hidden">
+                {/* Image container - shows full image without cropping */}
+                <div className="relative w-full flex items-center justify-center bg-black/50 rounded-xl md:rounded-2xl overflow-hidden min-h-[50vh] max-h-[70vh]">
                   <ImageWithFallback
                     src={CITY_GALLERY_DATA[selectedCity].images[currentImageIndex]}
                     alt={CITY_GALLERY_DATA[selectedCity].name}
-                    className="w-full h-full object-cover"
+                    className="max-w-full max-h-[70vh] w-auto h-auto object-contain"
                   />
-                  
-                  {/* Navigation buttons - smaller on mobile */}
-                  <button
-                    onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                    className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-black/50 hover:bg-black/70 active:bg-black/80 rounded-full text-white transition-colors"
-                  >
-                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
-                  </button>
-                  
-                  <button
-                    onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                    className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-black/50 hover:bg-black/70 active:bg-black/80 rounded-full text-white transition-colors"
-                  >
-                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
-                  </button>
                 </div>
+                
+                {/* Navigation buttons - positioned outside image for better visibility */}
+                <button
+                  onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                  className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-black/70 hover:bg-black/90 active:bg-black rounded-full text-white transition-colors z-20 shadow-lg"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
+                </button>
+                
+                <button
+                  onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                  className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-black/70 hover:bg-black/90 active:bg-black rounded-full text-white transition-colors z-20 shadow-lg"
+                  aria-label="Next image"
+                >
+                  <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
+                </button>
 
-                {/* City info - below image on mobile for better touch */}
-                <div className="mt-3 md:mt-0 md:absolute md:bottom-4 md:left-4 md:right-4">
-                  <div className="bg-black/80 md:bg-black/60 backdrop-blur-sm rounded-xl p-3 md:p-4 text-white">
+                {/* City info - below image */}
+                <div className="w-full mt-4 px-2">
+                  <div className="bg-black/80 backdrop-blur-sm rounded-xl p-3 md:p-4 text-white max-w-4xl mx-auto">
                     <div className="flex items-center gap-2 mb-2">
                       <MapPin className="w-4 h-4 md:w-5 md:h-5 text-[#E60012] flex-shrink-0" />
                       <h3 className="font-bold text-lg md:text-xl">{CITY_GALLERY_DATA[selectedCity].name}</h3>

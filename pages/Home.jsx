@@ -21,6 +21,7 @@ export default function Home() {
   const [userReviews, setUserReviews] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isCheckingLimit, setIsCheckingLimit] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -29,20 +30,44 @@ export default function Home() {
       setUserReviews(JSON.parse(storedReviews));
     }
     
-    if (router.query.startPlanning === 'true') {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        try {
-          const localUser = JSON.parse(storedUser);
-          if (localUser.id) {
-            setIsWizardOpen(true);
-            router.replace('/', undefined, { shallow: true });
+    const checkLimitAndOpenWizard = async () => {
+      if (router.query.startPlanning === 'true') {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          try {
+            const localUser = JSON.parse(storedUser);
+            if (localUser.id) {
+              let accessToken = null;
+              const storedSession = localStorage.getItem('supabase.auth.token');
+              if (storedSession) {
+                try {
+                  const sessionData = JSON.parse(storedSession);
+                  accessToken = sessionData?.currentSession?.access_token;
+                } catch (e) {}
+              }
+
+              const headers = {};
+              if (accessToken) {
+                headers['Authorization'] = `Bearer ${accessToken}`;
+              }
+
+              const response = await fetch('/api/check-itinerary-limit', { headers });
+              const limitData = await response.json();
+
+              if (!limitData.canCreate) {
+                toast.error(limitData.reason || 'You have reached your monthly itinerary limit.');
+              } else {
+                setIsWizardOpen(true);
+              }
+              router.replace('/', undefined, { shallow: true });
+            }
+          } catch (e) {
+            console.error('Error auto-opening wizard:', e);
           }
-        } catch (e) {
-          console.error('Error auto-opening wizard:', e);
         }
       }
-    }
+    };
+    checkLimitAndOpenWizard();
   }, [router.query.startPlanning]);
 
   const checkAuth = async () => {
@@ -83,9 +108,10 @@ export default function Home() {
     }
   };
 
-  const handleStartPlanning = () => {
+  const handleStartPlanning = async () => {
     const storedUser = localStorage.getItem('user');
     let isAuthenticated = currentUser?.user != null;
+    let accessToken = null;
     
     if (!isAuthenticated && storedUser) {
       try {
@@ -101,6 +127,40 @@ export default function Home() {
       router.push('/signup?redirect=planning');
       return;
     }
+
+    setIsCheckingLimit(true);
+    try {
+      const storedSession = localStorage.getItem('supabase.auth.token');
+      if (storedSession) {
+        try {
+          const sessionData = JSON.parse(storedSession);
+          accessToken = sessionData?.currentSession?.access_token;
+        } catch (e) {}
+      }
+
+      const headers = {};
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
+      const response = await fetch('/api/check-itinerary-limit', { headers });
+      const limitData = await response.json();
+
+      if (!limitData.canCreate) {
+        toast.error(limitData.reason || 'You have reached your monthly itinerary limit. Upgrade to Pro for unlimited itineraries!');
+        router.push('/#pricing');
+        return;
+      }
+
+      if (limitData.remaining !== 'unlimited' && limitData.remaining <= 1) {
+        toast.info(`You have ${limitData.remaining} itinerary${limitData.remaining === 1 ? '' : 's'} remaining this month`);
+      }
+    } catch (error) {
+      console.error('Error checking itinerary limit:', error);
+    } finally {
+      setIsCheckingLimit(false);
+    }
+
     setIsWizardOpen(true);
   };
 
