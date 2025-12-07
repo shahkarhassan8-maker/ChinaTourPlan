@@ -6,7 +6,7 @@ import {
   Sparkles, DollarSign, Lock, Crown,
   MessageCircle, Phone, FileText, CheckCircle,
   Star, Quote, Globe, Shield, Clock, Users,
-  Bookmark, BookmarkCheck, Mail, Bot, Loader2, LogIn
+  Bookmark, BookmarkCheck, Mail, Bot, Loader2, LogIn, Download
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -260,7 +260,7 @@ export default function ItineraryResult({ formData, onBack }) {
   const checkAuth = async () => {
     try {
       const userData = await getCurrentUser();
-      
+
       if (userData?.user) {
         setCurrentUser(userData);
         if (userData.profile?.plan) {
@@ -311,7 +311,7 @@ export default function ItineraryResult({ formData, onBack }) {
         setIsAuthenticated(true);
         return;
       }
-      
+
       if (typeof window !== 'undefined') {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
@@ -327,7 +327,7 @@ export default function ItineraryResult({ formData, onBack }) {
       }
       setIsAuthenticated(false);
     };
-    
+
     checkAuthenticated();
   }, [currentUser]);
 
@@ -406,7 +406,7 @@ export default function ItineraryResult({ formData, onBack }) {
 
     let userId = currentUser?.user?.id;
     let userPlan = currentUser?.profile?.plan || 'free';
-    
+
     if (!userId && typeof window !== 'undefined') {
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
@@ -419,13 +419,13 @@ export default function ItineraryResult({ formData, onBack }) {
         }
       }
     }
-    
+
     if (!userId) {
       toast.error('Unable to save. Please sign in again.');
       router.push('/signup?redirect=itinerary');
       return null;
     }
-    
+
     if (isFreeUser(userPlan)) {
       const remaining = getRemainingItineraries();
       if (remaining <= 0) {

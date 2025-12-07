@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -261,7 +261,7 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
               </div>
               <p className="text-xs text-slate-400 mt-1 text-center">Swipe to see more destinations</p>
             </div>
-            
+
             {/* Desktop Grid */}
             <div className="hidden md:grid grid-cols-2 gap-3 max-h-[320px] overflow-y-auto pr-1">
               {filteredCities.map((city) => (
@@ -314,7 +314,7 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
                 </div>
               </div>
             </div>
-            
+
             {/* Sticky city tabs for easy switching on mobile */}
             <div className="sticky top-0 z-10 bg-slate-50 py-2 -mx-4 px-4 sm:-mx-8 sm:px-8">
               <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
@@ -424,8 +424,8 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
             {React.createElement(STEPS[currentStep].icon, { className: "w-4 h-4" })}
             <span>Step {currentStep + 1} of {STEPS.length}</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900">{STEPS[currentStep].title}</h2>
-          <p className="text-sm sm:text-base text-slate-500 mt-1">{STEPS[currentStep].description}</p>
+          <DialogTitle className="text-xl sm:text-2xl font-bold text-slate-900">{STEPS[currentStep].title}</DialogTitle>
+          <DialogDescription className="text-sm sm:text-base text-slate-500 mt-1">{STEPS[currentStep].description}</DialogDescription>
         </div>
 
         {/* Step Content */}
