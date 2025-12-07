@@ -103,7 +103,7 @@ NEXT_PUBLIC_SUPABASE_URL = "https://wmgodyektmyjqsovpmfi.supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtZ29keWVrdG15anFzb3ZwbWZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODM5OTgsImV4cCI6MjA4MDI1OTk5OH0.S1mG1dvtsFT95gT24a7tw9--1XCk_CiAlgfltQer6ug"
 
 [userenv.development]
-NEXT_PUBLIC_SITE_URL = "https://54526dee-f46b-491f-9065-f5c419cc421e-00-mgtuzj049h1w.picard.replit.dev"
+NEXT_PUBLIC_SITE_URL = "https://chinatourplan.com"
 
 [userenv.production]
 NEXT_PUBLIC_SITE_URL = "https://chinatourplan.com"
