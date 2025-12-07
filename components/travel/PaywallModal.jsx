@@ -85,6 +85,7 @@ const PLANS = [
     icon: Crown,
     features: [
       'Everything in Pro',
+      'Chat with previous travelers',
       'Lifetime access - pay once',
       'VIP support channel',
       'Early access to new features',

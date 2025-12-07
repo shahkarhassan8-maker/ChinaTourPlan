@@ -33,6 +33,7 @@ import FAQSection from './FAQSection';
 import { ItineraryLoadingSkeleton } from '@/components/ui/LoadingSkeletons';
 import WeatherWidget from './WeatherWidget';
 import BookingLinks from './BookingLinks';
+import PreviousTravelersSection from './PreviousTravelersSection';
 
 const CONTACT_INFO = {
   wechat: 'Shahkarhassan',
@@ -916,6 +917,12 @@ export default function ItineraryResult({ formData, onBack }) {
 
         {/* FAQ Section */}
         <FAQSection onUpgrade={handleUpgradeClick} />
+
+        {/* Previous Travelers Section - Elite Only */}
+        <PreviousTravelersSection
+          isElite={isLifetime}
+          onUpgrade={() => setShowPaywall(true)}
+        />
 
         {/* Trust Indicators */}
         <motion.div

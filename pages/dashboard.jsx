@@ -59,7 +59,7 @@ const PLANS = [
     period: 'one-time',
     description: 'Best value forever',
     popular: false,
-    features: ['Everything in Pro', 'Priority support', 'Fully funded Exhibition Alerts', 'Admin-suggested itineraries on WeChat', '24/7 live support', 'Flight ticket booking assistance'],
+    features: ['Everything in Pro', 'Chat with previous travelers', 'Priority support', 'Fully funded Exhibition Alerts', 'Admin-suggested itineraries on WeChat', '24/7 live support', 'Flight ticket booking assistance'],
     lemonSqueezyUrl: 'https://chinatourplan.lemonsqueezy.com/buy/72ccffc3-b57d-4b9c-aa22-52fe3e597389?embed=1',
   },
 ];

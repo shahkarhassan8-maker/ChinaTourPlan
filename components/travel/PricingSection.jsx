@@ -45,6 +45,7 @@ const PRICING_PLANS = [
     description: 'Best value forever',
     features: [
       'Everything in Pro',
+      'Chat with previous travelers',
       'Priority support',
       'Fully funded Exhibition Alerts',
       'Admin-suggested itineraries on WeChat',
