@@ -5,7 +5,9 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <meta charSet="utf-8" />
-        <link rel="icon" href="/logo.jpg" type="image/jpg" />
+        <link rel="icon" href="/logo.jpg" type="image/jpeg" sizes="any" />
+        <link rel="icon" href="/logo.jpg" type="image/jpeg" />
+        <link rel="shortcut icon" href="/logo.jpg" type="image/jpeg" />
         <link rel="apple-touch-icon" href="/logo.jpg" />
         <meta name="theme-color" content="#E60012" />
         <meta name="format-detection" content="telephone=no" />

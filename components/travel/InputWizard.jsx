@@ -307,29 +307,32 @@ export default function InputWizard({ isOpen, onClose, onSubmit }) {
               </p>
             </div>
             
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              {formData.cities.map((cityId) => {
-                const city = CITY_DATA[cityId];
-                const placesCount = formData.selectedPlaces[cityId]?.length || 0;
-                return (
-                  <button
-                    key={cityId}
-                    onClick={() => setActivePlacesCity(cityId)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all flex-shrink-0 ${activePlacesCity === cityId
-                      ? 'bg-[#E60012] text-white'
-                      : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'
-                      }`}
-                  >
-                    <span className="font-medium">{city?.name || cityId}</span>
-                    {placesCount > 0 && (
-                      <span className={`w-5 h-5 rounded-full text-xs flex items-center justify-center ${activePlacesCity === cityId ? 'bg-white text-[#E60012]' : 'bg-[#E60012] text-white'
-                        }`}>
-                        {placesCount}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
+            {/* Sticky city tabs for easy switching on mobile */}
+            <div className="sticky top-0 z-10 bg-slate-50 py-2 -mx-4 px-4 sm:-mx-8 sm:px-8">
+              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                {formData.cities.map((cityId) => {
+                  const city = CITY_DATA[cityId];
+                  const placesCount = formData.selectedPlaces[cityId]?.length || 0;
+                  return (
+                    <button
+                      key={cityId}
+                      onClick={() => setActivePlacesCity(cityId)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all flex-shrink-0 ${activePlacesCity === cityId
+                        ? 'bg-[#E60012] text-white'
+                        : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'
+                        }`}
+                    >
+                      <span className="font-medium">{city?.name || cityId}</span>
+                      {placesCount > 0 && (
+                        <span className={`w-5 h-5 rounded-full text-xs flex items-center justify-center ${activePlacesCity === cityId ? 'bg-white text-[#E60012]' : 'bg-[#E60012] text-white'
+                          }`}>
+                          {placesCount}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {activePlacesCity && (

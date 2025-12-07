@@ -73,6 +73,23 @@ export function ItineraryLoadingSkeleton() {
             </div>
 
             <div className="max-w-4xl mx-auto px-6 py-12">
+                {/* Generating Message */}
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center mb-8"
+                >
+                    <div className="inline-flex items-center gap-3 px-6 py-3 bg-[#E60012]/10 text-[#E60012] rounded-full text-sm font-medium mb-4">
+                        <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                            className="w-5 h-5 border-2 border-[#E60012] border-t-transparent rounded-full"
+                        />
+                        Generating your personalized itinerary...
+                    </div>
+                    <p className="text-slate-500 text-sm">This may take a few moments</p>
+                </motion.div>
+
                 {/* Title Skeleton */}
                 <div className="text-center mb-12 animate-pulse">
                     <div className="w-32 h-8 bg-slate-200 rounded-full mx-auto mb-6" />
