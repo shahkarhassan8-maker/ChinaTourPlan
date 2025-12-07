@@ -234,11 +234,15 @@ export default function DetailedDayCard({ day, isLast, isPremium, onUpgrade }) {
       {/* Card */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden mb-6">
         {/* Header Image */}
-        <div className="relative h-48 overflow-hidden">
+        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-slate-200 to-slate-300">
           <img 
-            src={day.image} 
+            src={day.image || `https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80`} 
             alt={day.city}
             className="w-full h-full object-cover"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = `https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80`;
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
           <div className="absolute bottom-4 left-4 right-4">

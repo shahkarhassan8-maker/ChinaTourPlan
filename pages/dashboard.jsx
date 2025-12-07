@@ -92,21 +92,35 @@ export default function DashboardPage() {
 
     // Listen for payment success
     const handleMessageEvent = async (event) => {
-      if (!event.origin.includes('lemonsqueezy.com')) return;
+      if (!event.origin || !event.origin.includes('lemonsqueezy.com')) return;
+      
+      console.log('LemonSqueezy event received:', event.data);
 
       if (event.data && event.data.event === 'Checkout.Success') {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
-          const userData = JSON.parse(storedUser);
+          let userData;
+          try {
+            userData = JSON.parse(storedUser);
+          } catch (e) {
+            console.error('Error parsing stored user:', e);
+            toast.error('Session error. Please refresh and try again.');
+            return;
+          }
+
+          if (!userData?.id) {
+            toast.error('Please sign in to complete your purchase.');
+            return;
+          }
 
           // Update plan in Supabase database first
           if (supabase && userData.id) {
             try {
               await updateUserPlan(userData.id, selectedPlan);
-              console.log('✅ Plan updated in Supabase:', selectedPlan);
+              console.log('Plan updated in Supabase:', selectedPlan);
             } catch (error) {
-              console.error('❌ Error updating plan in Supabase:', error);
-              toast.error('Payment received but failed to update account. Please contact support.');
+              console.error('Error updating plan in Supabase:', error);
+              toast.error('Payment received but failed to update account. Please contact support at contact@chinatourplan.com');
               return;
             }
           }

@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { 
   Check, Lock, MapPin, MessageCircle, Phone, 
   FileText, Clock, Shield, Star, Sparkles,
-  Zap, Crown, Gift, Plane, Bell, Users
+  Zap, Crown, Gift, Plane, Bell, Users, LogIn
 } from 'lucide-react';
 import { updateUserPlan } from '@/lib/supabase';
 import { toast } from 'sonner';
@@ -119,6 +119,20 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState('pro');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          setCurrentUser(JSON.parse(storedUser));
+        } catch (e) {
+          console.error('Error parsing stored user:', e);
+        }
+      }
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -129,6 +143,8 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
 
     const handleMessageEvent = async (event) => {
       if (!event.origin || !event.origin.includes('lemonsqueezy.com')) return;
+      
+      console.log('LemonSqueezy event received:', event.data);
 
       if (event.data && event.data.event === 'Checkout.Success') {
         let userData = null;
@@ -175,6 +191,19 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
     window.addEventListener('message', handleMessageEvent);
     return () => window.removeEventListener('message', handleMessageEvent);
   }, [isOpen, selectedPlan, onClose, router]);
+
+  const getCheckoutUrl = (baseUrl) => {
+    if (!baseUrl) return null;
+    const url = new URL(baseUrl);
+    url.searchParams.set('checkout[custom][plan]', selectedPlan);
+    if (currentUser?.email) {
+      url.searchParams.set('checkout[email]', currentUser.email);
+    }
+    if (currentUser?.id) {
+      url.searchParams.set('checkout[custom][user_id]', currentUser.id);
+    }
+    return url.toString();
+  };
 
   const handlePurchase = async () => {
     setIsProcessing(true);
@@ -346,9 +375,9 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
             </div>
           </div>
 
-          {selectedPlanData?.lemonSqueezyUrl ? (
+          {selectedPlanData?.lemonSqueezyUrl && currentUser?.id ? (
             <a 
-              href={selectedPlanData.lemonSqueezyUrl} 
+              href={getCheckoutUrl(selectedPlanData.lemonSqueezyUrl)} 
               className={`lemonsqueezy-button flex items-center justify-center w-full mt-4 py-4 text-lg font-semibold rounded-xl cursor-pointer ${
                 selectedPlan === 'elite' 
                   ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
@@ -358,6 +387,17 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
               {selectedPlanData?.cta} - ${selectedPlanData?.price}
               <Sparkles className="w-5 h-5 ml-2" />
             </a>
+          ) : selectedPlanData?.lemonSqueezyUrl && !currentUser?.id ? (
+            <Button 
+              onClick={() => {
+                onClose();
+                router.push('/signup?redirect=itinerary');
+              }}
+              className="w-full mt-4 py-6 text-lg font-semibold rounded-xl bg-[#E60012] hover:bg-[#cc0010] text-white"
+            >
+              Sign in to Purchase
+              <LogIn className="w-5 h-5 ml-2" />
+            </Button>
           ) : (
             <Button 
               onClick={handlePurchase}
