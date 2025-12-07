@@ -40,6 +40,14 @@ The application is built with Next.js 14.0.0, utilizing JavaScript/JSX and style
 - Set NEXT_PUBLIC_SITE_URL environment variable for correct email redirect URLs
 - Email confirmation is enforced: signIn function checks email_confirmed_at and blocks unverified users with clear error message
 
+**Payment Flow Fixes:**
+- Fixed `canUserCreateItinerary` in lib/supabase.js to recognize all paid plans (pro, premium, elite, lifetime, admin) for unlimited itineraries
+- Added LemonSqueezy checkout event listener to PaywallModal.jsx for handling payment success
+- PaywallModal now updates Supabase profile with purchased plan and redirects to dashboard after payment
+- Added proper error handling and user feedback for payment flow issues
+- Updated WhatsApp contact number from placeholder to +923456578970 in ItineraryResult and itinerary detail pages
+- Server.js configured to use 0.0.0.0:5000 for Replit hosting compatibility
+
 ### December 5, 2024 (Afternoon Update)
 **QA Fixes and Improvements:**
 - **Gallery Images:** Updated city-specific images for all 8 cities (Beijing, Shanghai, Chengdu, Xi'an, Guilin, Hangzhou, Zhangjiajie, Hong Kong) with more accurate representative Unsplash photos
