@@ -30,11 +30,15 @@ export default async function handler(req, res) {
     }
 
     const token = authHeader.split(' ')[1];
+    console.log('Admin API - Token length:', token?.length);
     
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     
+    console.log('Admin API - Auth result:', authError ? authError.message : user?.email);
+    
     if (authError || !user) {
-      return res.status(401).json({ error: 'Unauthorized - Invalid token' });
+      console.error('Admin API - Auth error:', authError);
+      return res.status(401).json({ error: 'Unauthorized - Invalid token', details: authError?.message });
     }
 
     if (!ADMIN_EMAILS.includes(user.email?.toLowerCase())) {

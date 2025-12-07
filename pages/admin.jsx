@@ -62,7 +62,17 @@ export default function AdminDashboard() {
         return;
       }
 
-      const { data: { session } } = await supabase.auth.getSession();
+      // Refresh the session to get a fresh token
+      const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+      
+      if (refreshError) {
+        console.error('Session refresh error:', refreshError);
+        toast.error('Session expired. Please sign in again.');
+        router.push('/signup');
+        return;
+      }
+
+      const session = refreshData?.session;
       if (!session?.access_token) {
         toast.error('Session expired. Please sign in again.');
         router.push('/signup');
