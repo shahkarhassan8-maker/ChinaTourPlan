@@ -76,12 +76,14 @@ export default function AdminDashboard() {
       });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Admin API response error:', response.status, errorData);
         if (response.status === 403) {
           toast.error('Access denied. Admin only.');
           router.push('/dashboard');
           return;
         }
-        throw new Error('Failed to fetch admin data');
+        throw new Error(errorData.error || 'Failed to fetch admin data');
       }
 
       const data = await response.json();
