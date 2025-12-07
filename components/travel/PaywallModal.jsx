@@ -163,9 +163,25 @@ export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration
           return;
         }
 
-        // Get the plan from localStorage (set when user clicks upgrade button)
+        // Try to get the plan from multiple sources
+        // 1. First try to parse from event data (product name)
+        let planFromEvent = null;
+        try {
+          const productName = event.data?.data?.attributes?.first_order_item?.product_name?.toLowerCase() || '';
+          if (productName.includes('elite')) {
+            planFromEvent = 'elite';
+          } else if (productName.includes('pro')) {
+            planFromEvent = 'pro';
+          }
+        } catch (e) {
+          console.log('Could not parse plan from event data');
+        }
+        
+        // 2. Get from localStorage as fallback
         const pendingPlan = localStorage.getItem('pendingUpgradePlan') || selectedPlan;
-        const planToUpdate = pendingPlan === 'elite' ? 'elite' : pendingPlan === 'pro' ? 'pro' : selectedPlan;
+        
+        // 3. Prioritize event data, then localStorage, then default
+        const planToUpdate = planFromEvent || (pendingPlan === 'elite' ? 'elite' : pendingPlan === 'pro' ? 'pro' : selectedPlan);
         
         if (!planToUpdate || planToUpdate === 'basic') {
           console.error('Invalid plan selected for payment');

@@ -113,9 +113,25 @@ export default function DashboardPage() {
             return;
           }
 
-          // Get the plan from localStorage (set when user clicks upgrade button)
+          // Try to get the plan from multiple sources
+          // 1. First try to parse from event data (product name)
+          let planFromEvent = null;
+          try {
+            const productName = event.data?.data?.attributes?.first_order_item?.product_name?.toLowerCase() || '';
+            if (productName.includes('elite')) {
+              planFromEvent = 'elite';
+            } else if (productName.includes('pro')) {
+              planFromEvent = 'pro';
+            }
+          } catch (e) {
+            console.log('Could not parse plan from event data');
+          }
+          
+          // 2. Get from localStorage as fallback
           const pendingPlan = localStorage.getItem('pendingUpgradePlan') || selectedPlan;
-          const planToUpdate = pendingPlan === 'elite' ? 'elite' : 'pro';
+          
+          // 3. Prioritize event data, then localStorage, then default
+          const planToUpdate = planFromEvent || (pendingPlan === 'elite' ? 'elite' : 'pro');
 
           // Update plan in Supabase database first
           if (supabase && userData.id) {
@@ -203,18 +219,28 @@ export default function DashboardPage() {
               setUser(updatedUser);
             }
             
-            if (dbItineraries && dbItineraries.length > 0) {
-              const formattedItineraries = dbItineraries.map(it => ({
-                id: it.id,
-                title: it.title,
-                cities: it.cities,
-                duration: it.duration,
-                createdAt: it.created_at,
-                pace: it.pace,
-                itineraryData: it.itinerary_data,
-                selectedPlaces: it.selected_places
-              }));
-              setItineraries(formattedItineraries);
+            // Always set itineraries from database (even if empty)
+            if (dbItineraries && Array.isArray(dbItineraries)) {
+              if (dbItineraries.length > 0) {
+                const formattedItineraries = dbItineraries.map(it => ({
+                  id: it.id,
+                  title: it.title,
+                  cities: it.cities,
+                  duration: it.duration,
+                  createdAt: it.created_at,
+                  pace: it.pace,
+                  itineraryData: it.itinerary_data,
+                  selectedPlaces: it.selected_places
+                }));
+                setItineraries(formattedItineraries);
+                // Also sync to localStorage for offline access
+                localStorage.setItem('itineraries', JSON.stringify(formattedItineraries));
+              } else {
+                // Explicitly set empty array if database returns empty
+                setItineraries([]);
+                // Clear stale localStorage data
+                localStorage.removeItem('itineraries');
+              }
             }
             setIsLoading(false);
             return;
