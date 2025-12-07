@@ -105,12 +105,18 @@ const CITY_GALLERY_DATA = {
 const FALLBACK_IMAGE = '/gallery/beijing_forbidden_ci_3d92628e.jpg';
 
 function ImageWithFallback({ src, alt, className, ...props }) {
-  const optimizedSrc = src.includes('unsplash.com') 
+  const optimizedSrc = src.includes('unsplash.com')
     ? src.replace('w=800', 'w=400').replace('q=80', 'q=60')
     : src;
-  
-  const [imgSrc, setImgSrc] = useState(optimizedSrc);
-  const [isLoading, setIsLoading] = useState(true);
+
+  const [imgSrc, setImgSrc] = React.useState(optimizedSrc);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  // Update image when src changes
+  React.useEffect(() => {
+    setImgSrc(optimizedSrc);
+    setIsLoading(true);
+  }, [optimizedSrc]);
 
   return (
     <div className="relative w-full h-full">
@@ -220,12 +226,29 @@ export default function CityGallery() {
               className="fixed inset-0 bg-black/95 z-50 flex flex-col items-center justify-center p-2 md:p-4"
               onClick={closeGallery}
             >
-              {/* Close button - always visible at top right */}
+              {/* Close button */}
               <button
-                onClick={closeGallery}
-                className="absolute top-4 right-4 z-10 p-2 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors"
+                onClick={(e) => { e.stopPropagation(); closeGallery(); }}
+                className="absolute top-4 right-4 z-50 p-2 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors"
               >
                 <X className="w-6 h-6" />
+              </button>
+
+              {/* Navigation buttons */}
+              <button
+                onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-black/70 hover:bg-black/90 active:bg-black rounded-full text-white transition-colors z-50 shadow-lg"
+                aria-label="Previous image"
+              >
+                <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
+              </button>
+
+              <button
+                onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-black/70 hover:bg-black/90 active:bg-black rounded-full text-white transition-colors z-50 shadow-lg"
+                aria-label="Next image"
+              >
+                <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
               </button>
 
               <motion.div
@@ -233,37 +256,19 @@ export default function CityGallery() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 className="relative max-w-5xl w-full flex flex-col items-center"
-                onClick={(e) => e.stopPropagation()}
               >
-                {/* Image container - shows full image without cropping */}
-                <div className="relative w-full flex items-center justify-center bg-black/50 rounded-xl md:rounded-2xl overflow-hidden min-h-[50vh] max-h-[70vh]">
+                {/* Image container */}
+                <div className="relative w-full flex items-center justify-center bg-black/50 rounded-xl md:rounded-2xl overflow-hidden min-h-[50vh] max-h-[70vh] pointer-events-none">
                   <ImageWithFallback
                     src={CITY_GALLERY_DATA[selectedCity].images[currentImageIndex]}
                     alt={CITY_GALLERY_DATA[selectedCity].name}
-                    className="max-w-full max-h-[70vh] w-auto h-auto object-contain"
+                    className="max-w-full max-h-[70vh] w-auto h-auto object-contain mx-auto"
                   />
                 </div>
-                
-                {/* Navigation buttons - positioned outside image for better visibility */}
-                <button
-                  onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                  className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-black/70 hover:bg-black/90 active:bg-black rounded-full text-white transition-colors z-20 shadow-lg"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
-                </button>
-                
-                <button
-                  onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                  className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-black/70 hover:bg-black/90 active:bg-black rounded-full text-white transition-colors z-20 shadow-lg"
-                  aria-label="Next image"
-                >
-                  <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
-                </button>
 
-                {/* City info - below image */}
-                <div className="w-full mt-4 px-2">
-                  <div className="bg-black/80 backdrop-blur-sm rounded-xl p-3 md:p-4 text-white max-w-4xl mx-auto">
+                {/* City info */}
+                <div className="w-full mt-4 px-2 pointer-events-auto">
+                  <div className="bg-black/80 backdrop-blur-sm rounded-xl p-3 md:p-4 text-white max-w-4xl mx-auto" onClick={(e) => e.stopPropagation()}>
                     <div className="flex items-center gap-2 mb-2">
                       <MapPin className="w-4 h-4 md:w-5 md:h-5 text-[#E60012] flex-shrink-0" />
                       <h3 className="font-bold text-lg md:text-xl">{CITY_GALLERY_DATA[selectedCity].name}</h3>
@@ -291,14 +296,13 @@ export default function CityGallery() {
                 </div>
 
                 {/* Image indicators */}
-                <div className="flex justify-center gap-2 mt-4">
+                <div className="flex justify-center gap-2 mt-4 pointer-events-auto">
                   {CITY_GALLERY_DATA[selectedCity].images.map((_, i) => (
                     <button
                       key={i}
                       onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(i); }}
-                      className={`w-2.5 h-2.5 md:w-2 md:h-2 rounded-full transition-colors ${
-                        i === currentImageIndex ? 'bg-white' : 'bg-white/40'
-                      }`}
+                      className={`w-2.5 h-2.5 md:w-2 md:h-2 rounded-full transition-colors ${i === currentImageIndex ? 'bg-white' : 'bg-white/40'
+                        }`}
                     />
                   ))}
                 </div>
