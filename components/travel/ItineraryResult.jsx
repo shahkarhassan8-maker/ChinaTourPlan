@@ -36,7 +36,7 @@ import PreviousTravelersSection from './PreviousTravelersSection';
 
 const CONTACT_INFO = {
   wechat: 'Shahkarhassan',
-  whatsapp: 'Coming Soon',
+  whatsapp: '+923456578970',
 };
 
 const TESTIMONIALS = [

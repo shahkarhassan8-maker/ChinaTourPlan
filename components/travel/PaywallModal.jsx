@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
@@ -7,6 +8,8 @@ import {
   FileText, Clock, Shield, Star, Sparkles,
   Zap, Crown, Gift, Plane, Bell, Users
 } from 'lucide-react';
+import { updateUserPlan } from '@/lib/supabase';
+import { toast } from 'sonner';
 
 const VisuallyHidden = ({ children }) => (
   <span style={{
@@ -113,8 +116,65 @@ const FeatureItem = ({ text, included = true }) => (
 );
 
 export default function PaywallModal({ isOpen, onClose, onPurchase, tripDuration }) {
+  const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState('pro');
   const [isProcessing, setIsProcessing] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (typeof window !== 'undefined' && window.createLemonSqueezy) {
+      window.createLemonSqueezy();
+    }
+
+    const handleMessageEvent = async (event) => {
+      if (!event.origin || !event.origin.includes('lemonsqueezy.com')) return;
+
+      if (event.data && event.data.event === 'Checkout.Success') {
+        let userData = null;
+        const storedUser = localStorage.getItem('user');
+        
+        if (storedUser) {
+          try {
+            userData = JSON.parse(storedUser);
+          } catch (e) {
+            console.error('Error parsing stored user:', e);
+          }
+        }
+
+        if (!userData?.id) {
+          toast.error('Please sign in to complete your purchase. Contact support if you need help.');
+          return;
+        }
+
+        const planToUpdate = selectedPlan;
+        if (!planToUpdate || planToUpdate === 'basic') {
+          console.error('Invalid plan selected for payment');
+          return;
+        }
+
+        try {
+          await updateUserPlan(userData.id, planToUpdate);
+          console.log('Plan updated in Supabase:', planToUpdate);
+          
+          userData.plan = planToUpdate;
+          localStorage.setItem('user', JSON.stringify(userData));
+          onClose();
+          toast.success(`Upgraded to ${planToUpdate === 'elite' ? 'Elite' : 'Pro'}! Redirecting to dashboard...`);
+
+          setTimeout(() => {
+            router.push('/dashboard');
+          }, 1500);
+        } catch (error) {
+          console.error('Error updating plan in Supabase:', error);
+          toast.error('Payment received but failed to update account. Please contact support at contact@chinatourplan.com');
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessageEvent);
+    return () => window.removeEventListener('message', handleMessageEvent);
+  }, [isOpen, selectedPlan, onClose, router]);
 
   const handlePurchase = async () => {
     setIsProcessing(true);

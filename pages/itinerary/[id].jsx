@@ -21,7 +21,7 @@ import { generateMetaTags, generateTripSchema } from '@/lib/seo';
 
 const CONTACT_INFO = {
   wechat: 'Shahkarhassan',
-  whatsapp: 'Coming Soon',
+  whatsapp: '+923456578970',
 };
 
 export default function ItineraryViewPage() {
